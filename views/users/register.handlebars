@@ -1,0 +1,34 @@
+ {{> _errors}}
+
+
+<div class="container">
+          <div class="row">
+              <div class="col-md-4 offset-md-4 form-div">
+                  <form action="/users/register" method="post">
+                      <h3 class="text-center">Register</h3>
+                      
+              
+                      <div class="form-group">
+                         <label for="userName">Username</label>
+                          <input type="text" name="userName" value="{{userName}}" class="form-control form-control-lg" required>
+                      </div>
+                      <div class="form-group">
+                         <label for="email">Email</label>
+                          <input type="email" name="email" 
+                          value="{{email}}" 
+                          class="form-control form-control-lg" required>
+                      </div>
+                      <div class="form-group">
+                         <label for="password">Password</label>
+                          <input type="password" name="password" value="{{password}}" class="form-control form-control-lg" required>
+                      </div>
+                       <div class="form-group">
+                         <label for="password2">Confirm Password</label>
+                          <input type="password" name="password2" value="{{password2}}" class="form-control form-control-lg" required>
+                      </div>
+                          <button type="submit" class="btn btn-primary btn-block btn-lg">Sign up</button>
+                  </form>
+                  <p class="text-center">Already a member?<a href="login"> Sign in</a></p>
+              </div>
+          </div>
+      </div>
