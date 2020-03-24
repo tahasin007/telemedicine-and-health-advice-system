@@ -16,9 +16,15 @@ router.use(methodOverride('_method'));
 require('../models/Schedule');
 require('../models/Users');
 require('../models/Appointmet');
+require('../models/Disease');
+require('../models/Diagnosis');
+require('../models/Report');
 const Users = mongoose.model('users');
 const Schedule = mongoose.model('schedule');
 const Appointmet = mongoose.model('appointment');
+const Diagnosis = mongoose.model('diagnosis');
+const Disease = mongoose.model('disease');
+const Report = mongoose.model('report')
 
 app.use(express.static(path.join(__dirname, 'public')));
 const {
@@ -31,6 +37,7 @@ const dayArr=['Saturday','Sunday','Monday','Tuesday','Wednesday','Thursday','Fri
 
 router.get('/:userName', (req, res) => {
   const userName=req.params.userName;
+  const navClass = ["current","sidebar-link","sidebar-link","sidebar-link"];
   Users.findOne({userName:userName}).then((user) => {
       Appointmet.find({$and:[{docId:user._id},{status:'pending'}]}).populate('docId').populate('patientId').exec().then(result => {
       res.render('doctor/doctorHome',{
@@ -38,7 +45,8 @@ router.get('/:userName', (req, res) => {
         formatDate:formatDate},
         layout:'mainDoc',
         userName:userName,
-        apts:result
+        apts:result,
+        navClass:navClass
         });
     });
   });
@@ -46,24 +54,17 @@ router.get('/:userName', (req, res) => {
 
 
 router.get('/:userName/notification', (req, res) => {
+  const navClass = ["sidebar-link","current","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
   res.render('doctor/notification',{
   	layout:'mainDoc',
-    userName:userName
+    userName:userName,
+    navClass:navClass
   });
 });
-
-
-router.get('/:userName/changePassword', (req, res) => {
-  const userName=req.params.userName;
-  res.render('doctor/changePassword',{
-  	layout:'mainDoc',
-    userName:userName
-  });
-});
-
 
 router.get('/:userName/doctorProfile', (req, res) => {
+  const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
   Users.findOne({userName:userName}).then((user) => {
     const dob=dateFormat(user.dob, "isoDate");
@@ -71,7 +72,8 @@ router.get('/:userName/doctorProfile', (req, res) => {
   	layout:'mainDoc',
     userName:userName,
     user:user,
-    dob:dob
+    dob:dob,
+    navClass:navClass
   });
   });
 });
@@ -79,6 +81,7 @@ router.get('/:userName/doctorProfile', (req, res) => {
 
 router.get('/:userName/patient', (req, res) => {
   const userName=req.params.userName;
+  const navClass = ["sidebar-link","sidebar-link","current","sidebar-link"];
   Users.findOne({userName:userName}).then((user) => {
       Appointmet.find({$and:[{docId:user._id},{status:'done'}]}).populate('docId').populate('patientId').exec().then(result => {
       res.render('doctor/patientTable',{
@@ -86,7 +89,8 @@ router.get('/:userName/patient', (req, res) => {
         formatDate:formatDate},
         layout:'mainDoc',
         userName:userName,
-        apts:result
+        apts:result,
+        navClass:navClass
         });
     });
   });
@@ -96,6 +100,7 @@ router.get('/:userName/patient', (req, res) => {
 
 router.get('/:userName/appointment', (req, res) => {
   const userName=req.params.userName;
+  const navClass = ["sidebar-link","sidebar-link","sidebar-link","current"];
   Users.findOne({userName:userName}).then((user) => {
       Appointmet.find({$and:[{docId:user._id},{status:'accepted'}]}).populate('docId').populate('patientId').exec().then(result => {
       res.render('doctor/appointmentTable',{
@@ -103,7 +108,8 @@ router.get('/:userName/appointment', (req, res) => {
         formatDate:formatDate},
         layout:'mainDoc',
         userName:userName,
-        apts:result
+        apts:result,
+        navClass:navClass
         });
     });
   });
@@ -112,6 +118,7 @@ router.get('/:userName/appointment', (req, res) => {
 
 
 router.get('/:userName/schedule', (req, res) => {
+  const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
   Users.findOne({userName:userName}).then((user)=>{
     Schedule.findOne({doctorId:user._id}).then((doctor)=>{
@@ -119,7 +126,8 @@ router.get('/:userName/schedule', (req, res) => {
     res.render('doctor/docSchedule',{
     layout:'mainDoc',
     userName:userName,
-    schedule:doctor
+    schedule:doctor,
+    navClass:navClass
       });
     });
   });
@@ -127,6 +135,7 @@ router.get('/:userName/schedule', (req, res) => {
 
 
 router.get('/:userName/viewPatient/:aptId', (req, res) => {
+  const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
   const patient=req.params.patientId;
   const aptId=req.params.aptId;
@@ -137,7 +146,8 @@ router.get('/:userName/viewPatient/:aptId', (req, res) => {
         formatDate:formatDate},
         layout:'mainDoc',
         userName:userName,
-        apt:result
+        apt:result,
+        navClass:navClass
         });
     });
   })
@@ -157,29 +167,59 @@ router.get('/:userName/acceptPatient/:aptId', (req, res) => {
 });
 
 
-router.get('/:userName/rejectPatient/:aptId', (req, res) => {
+router.get('/:userName/rejectPatient/:patId/:aptId', (req, res) => {
   const userName=req.params.userName;
   const aptId=req.params.aptId;
   Appointmet.findById({_id:aptId}).then(result=>{
     result.status = 'rejected';
     result.save().then((r)=>{
       res.redirect('/doctor/'+userName);
-    })
-  })
-  
-});
-
-
-router.get('/:userName/patientForm', (req, res) => {
-  const userName=req.params.userName;
-  res.render('doctor/patientForm',{
-  	layout:'mainDoc',
-    userName:userName
+    });
   });
 });
 
 
+router.get('/:userName/patientForm/:patId/:aptId', (req, res) => {
+  const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
+  const userName=req.params.userName;
+  const patientId=req.params.patientId;
+  Users.findOne({userName:userName}).then((user) => {
+      Appointmet.findOne({_id:req.params.aptId}).populate('docId').populate('patientId').exec().then(result => {
+      res.render('doctor/patientForm',{
+      layout:'mainDoc',
+      userName:userName,
+      apt:result,
+      navClass:navClass
+      });
+    });
+  });
+});
+
+router.post('/:userName/patientForm/:patId/:aptId',(req, res)=>{
+  const userName=req.params.userName;
+  const patientId=req.params.patId;
+  const aptId=req.params.aptId; 
+  const symptom=req.body.symptom;
+  const medication=req.body.medication;
+  const ovservation =req.body.info;   
+  Users.findOne({userName:userName}).then((user) =>{
+      const report = new Report({
+        aptId:aptId,
+        patientId:patientId,
+        docId:user._id,
+        symptom:symptom,
+        medication:medication,
+        observation:ovservation
+      });
+      report.save().then((result)=>{
+        res.redirect('/doctor/'+userName+'/patient')
+      })
+  });  
+});
+
+
 router.get('/:userName/editDoctorProfile', (req, res) => {
+  const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
   Users.findOne({userName:userName}).then((user=>{
     const dob=dateFormat(user.dob, "isoDate");
@@ -187,7 +227,8 @@ router.get('/:userName/editDoctorProfile', (req, res) => {
   	layout:'mainDoc',
     userName:userName,
     user:user,
-    dob:dob
+    dob:dob,
+    navClass:navClass
   });
   }));
 });
@@ -210,12 +251,14 @@ router.put('/:userName/editDoctorProfile',(req, res) =>{
 
 
 router.get('/:userName/changePassword', (req, res) =>{
+  const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
   Users.findOne({userName:userName}).then((user=>{
     res.render('doctor/changePassword',{
       layout:'mainDoc',
       userName:userName,
-      user:user
+      user:user,
+      navClass:navClass
     })
   }));
 });
@@ -245,21 +288,25 @@ router.put('/:userName/changePassword', (req, res) =>{
 
 
 router.get('/:userName/doctorMail', (req, res) => {
+  const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
   res.render('doctor/doctorMail',{
     layout:'mainDoc',
-    userName:userName
+    userName:userName,
+    navClass:navClass
   });
 });
 
 router.get('/:userName/editSchedule', (req, res) => {
+  const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
   Users.findOne({userName:userName}).then((user =>{
     Schedule.findOne({doctorId:user._id}).then((schedule ) =>{
       res.render('doctor/editSchedule',{
       layout:'mainDoc',
       userName:userName,
-      schedule:schedule 
+      schedule:schedule ,
+      navClass:navClass
       });
     });
   }));
@@ -379,7 +426,8 @@ router.put('/:userName/editSchedule', (req, res) => {
 });
 
 //Will show Slots of a Particular Day
-router.get('/:userName/:dayNo',(req,res) =>{
+router.get('/:userName/showSlot/:dayNo',(req,res) =>{
+  const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   const timeObj = [];
   const userName=req.params.userName;
   const dayNo=req.params.dayNo;
@@ -387,7 +435,8 @@ router.get('/:userName/:dayNo',(req,res) =>{
   Users.findOne({userName:userName}).then((user) =>{
     Schedule.findOne({doctorId:user._id}).then((schedule) =>{
       tempTime=schedule.start[dayNo];
-        for(let i=0;i<schedule.slot[dayNo].length;i++){
+      const len=schedule.slot[dayNo].length;
+        for(let i=0;i<len;i++){
           const tempArr=addThirtyMin(tempTime);
           tempTime=tempArr[1];
           const status = schedule.slot[dayNo][i];
@@ -400,7 +449,8 @@ router.get('/:userName/:dayNo',(req,res) =>{
         layout:'mainDoc',
         userName:userName,
         day:dayArr[dayNo],
-        timeObj:timeObj
+        timeObj:timeObj,
+        navClass:navClass
       });
     });
   });

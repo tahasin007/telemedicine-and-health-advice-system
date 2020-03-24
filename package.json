@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "@handlebars/allow-prototype-access": "^1.0.3",
+    "async": "^3.2.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "bootstrap": "^4.4.1",
@@ -21,6 +22,7 @@
     "currency-formatter": "^1.5.5",
     "date-and-time": "^0.13.1",
     "dateformat": "^3.0.3",
+    "email-existence": "^0.1.6",
     "express": "^4.17.1",
     "express-handlebars": "^3.1.0",
     "express-session": "^1.17.0",
@@ -28,6 +30,7 @@
     "handlebars-dateformat": "^1.1.1",
     "handlebars-helpers": "^0.10.0",
     "jquery": "^3.4.1",
+    "jspdf": "^1.5.3",
     "just-handlebars-helpers": "^1.0.17",
     "method-override": "^3.0.0",
     "moment": "^2.24.0",

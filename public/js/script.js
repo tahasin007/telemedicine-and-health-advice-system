@@ -3,3 +3,7 @@ window.setTimeout(function() {
         $(this).remove(); 
     });
 }, 2000);
+
+CKEDITOR.replace('mail',{
+	plugins: 'wysiwygarea,toolbar,basicstyles,link',
+});

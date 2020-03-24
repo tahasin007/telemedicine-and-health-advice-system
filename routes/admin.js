@@ -16,6 +16,7 @@ const Users = mongoose.model('users');
 
 
 router.get('/:userName',(req,res) => {
+  const navClass = ["current","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
 	Users.find({}).then(users =>{
     Users.countDocuments({role:'patient'}).then(countUser =>{
@@ -25,7 +26,8 @@ router.get('/:userName',(req,res) => {
       users: users,
       userName:userName,
       userCount:countUser,
-      docCount:countDocs
+      docCount:countDocs,
+      navClass:navClass
     });
       });
     });
@@ -34,36 +36,43 @@ router.get('/:userName',(req,res) => {
 
 
 router.get('/:userName/notification', (req, res) => {
+  const navClass = ["sidebar-link","current","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
   res.render('admin/notification',{
   	layout:'mainAdmin',
-    userName:userName
+    userName:userName,
+    navClass:navClass
   });
 });
 
 router.get('/:userName/patientTable', (req, res) => {
+  const navClass = ["sidebar-link","sidebar-link","current","sidebar-link"];
   const userName=req.params.userName;
   Users.find({role:'patient'}).then((users) => {
     res.render('admin/patientTable',{
     layout:'mainAdmin',
     userName:userName,
-    users:users
+    users:users,
+    navClass:navClass
   });
   })
 });
 
 router.get('/:userName/doctorTable', (req, res) => {
+  const navClass = ["sidebar-link","sidebar-link","sidebar-link","current"];
   const userName=req.params.userName;
   Users.find({role:'doctor'}).then((users) => {
     res.render('admin/doctorTable',{
     layout:'mainAdmin',
     userName:userName,
-    users:users
+    users:users,
+    navClass:navClass
   });
   })
 });
 
 router.get('/:userName/adminProfile', (req, res) => {
+  const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
   Users.findOne({userName:userName}).then((user) => {
     const dob=dateFormat(user.dob, "isoDate");
@@ -71,29 +80,35 @@ router.get('/:userName/adminProfile', (req, res) => {
     layout:'mainAdmin',
     userName:userName,
     user:user,
-    dob:dob
+    dob:dob,
+    navClass:navClass
   });
   })
 });
 
 router.get('/:userName/changePassword', (req, res) => {
+  const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
   res.render('admin/changePassword',{
   	layout:'mainAdmin',
-    userName:userName
+    userName:userName,
+    navClass:navClass
   });
 });
 
 
 router.get('/:userName/adminMail', (req, res) => {
+  const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
   res.render('admin/adminMail',{
   	layout:'mainAdmin',
-    userName:userName
+    userName:userName,
+    navClass:navClass
   });
 });
 
 router.get('/:userName/patientTable/:id', (req, res) => {
+  const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
   const id=req.params.id;
   Users.findOne({_id:id}).then((user) =>{
@@ -102,7 +117,8 @@ router.get('/:userName/patientTable/:id', (req, res) => {
     layout:'mainAdmin',
     userName:userName,
     patient:user,
-    ptDob:dob
+    ptDob:dob,
+    navClass:navClass
   });
   });
 });
@@ -115,6 +131,7 @@ router.delete('/:userName/patientTable/:id', (req,res) =>{
 });
 
 router.get('/:userName/doctorTable/:id', (req, res) => {
+  const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
   const id=req.params.id;
   Users.findOne({_id:id}).then((user) =>{
@@ -123,7 +140,8 @@ router.get('/:userName/doctorTable/:id', (req, res) => {
     layout:'mainAdmin',
     userName:userName,
     doctor:user,
-    docDob:dob
+    docDob:dob,
+    navClass:navClass
   });
   });
 });
@@ -137,6 +155,7 @@ router.delete('/:userName/doctorTable/:id', (req,res) =>{
 
 
 router.get('/:userName/editAdminProfile', (req, res) =>{
+  const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
   Users.findOne({userName:userName}).then((user=>{
     const dob=dateFormat(user.dob, "isoDate");
@@ -144,7 +163,8 @@ router.get('/:userName/editAdminProfile', (req, res) =>{
     layout:'mainAdmin',
     userName:userName,
     user:user,
-    dob:dob
+    dob:dob,
+    navClass:navClass
   });
   }));
 });
@@ -165,12 +185,14 @@ router.put('/:userName/editAdminProfile',(req, res) =>{
 
 
 router.get('/:userName/changePassword', (req, res) =>{
+  const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
   Users.findOne({userName:userName}).then((user=>{
     res.render('admin/changePassword',{
       layout:'mainAdmin',
       userName:userName,
-      user:user
+      user:user,
+      navClass:navClass
     })
   }));
 });

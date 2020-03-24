@@ -8,7 +8,7 @@ const methodOverride = require('method-override');
 const dateFormat = require('dateformat');
 const bcrypt = require('bcryptjs');
 const moment = require('moment');
-  
+const nodemailer = require('nodemailer');
 // Method override middleware
 router.use(methodOverride('_method'));
 
@@ -17,36 +17,51 @@ require('../models/Users');
 require('../models/Appointmet');
 require('../models/Disease');
 require('../models/Diagnosis');
+require('../models/Report');
 const Users = mongoose.model('users');
 const Schedule = mongoose.model('schedule');
 const Appointmet = mongoose.model('appointment');
 const Diagnosis = mongoose.model('diagnosis');
 const Disease = mongoose.model('disease');
+const Report = mongoose.model('report')
 
+const dayArr=['Saturday','Sunday','Monday','Tuesday','Wednesday','Thursday','Friday'];
+const {
+  formatDate,
+  formatDateSub
+} = require('../helpers/hbs');
+
+//Patient Home Route
 router.get('/:userName',(req, res) => {
+  const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
   Users.findOne({userName:userName}).then((users) =>{
     res.render('patient/patientHome',{
     layout:'mainPatient',
     userName:userName,
-    user:users
+    user:users,
+    navClass:navClass
   });
   });
 });
 
 router.get('/:userName/notification', (req, res) => {
+  const navClass = ["current","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
   res.render('patient/notification',{
   	layout:'mainPatient',
-    userName:userName
+    userName:userName,
+    navClass:navClass
   });
 });
 
 router.get('/:userName/symptompChecker', (req, res) => {
+  const navClass = ["sidebar-link","current","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
   res.render('patient/symptompChecker',{
     layout:'mainPatient',
-    userName:userName
+    userName:userName,
+    navClass:navClass
   });
 });
 
@@ -103,24 +118,85 @@ router.post('/:userName/symptompChecker', (req, res ,next) => {
 });
 
 router.get('/:userName/doctors', (req, res) => {
+  const navClass = ["sidebar-link","sidebar-link","current","sidebar-link"];
   const userName=req.params.userName;
-  Users.find({role:'doctor'}).then((users) => {
+  const search=req.query.search;
+  if(search == undefined){
+    Users.find({role:'doctor'}).then((users) => {
     res.render('patient/doctors',{
     layout:'mainPatient',
     userName:userName,
-    doctors:users
+    doctors:users,
+    navClass:navClass
   });
-  })
+  });
+  }else{
+    const regex = new RegExp(escapeRegex(search),'gi');
+    Users.find({$and:[{$or:[{userName:regex},{email:regex},{name:regex}]},{role:'doctor'}]}).then((users) => {
+    res.render('patient/doctors',{
+    layout:'mainPatient',
+    userName:userName,
+    doctors:users,
+    navClass:navClass
+  });
+  });
+  }
+  
 });
 
+//Routing for Show medical history of patient
+router.get('/:userName/report',(req, res) =>{
+  const navClass = ["sidebar-link","sidebar-link","sidebar-link","current"];
+  const userName=req.params.userName;
+  Users.findOne({userName:userName}).then((user) => {
+      Appointmet.find({$and:[{patientId:user._id},{status:'done'}]}).populate('docId').populate('patientId').exec().then(result => {
+      res.render('patient/medicalRecord',{
+      helpers : {
+        formatDate:formatDate},
+      layout:'mainPatient',
+      userName:userName,
+      navClass:navClass,
+      apts:result
+      });
+    });
+  });
+});
+
+//Routing for Showing report from a  doctor
+router.get('/:userName/report/:aptId',(req, res) =>{
+  const navClass = ["sidebar-link","sidebar-link","sidebar-link","current"];
+  const userName=req.params.userName;
+  Users.findOne({userName:userName}).then((user) => {
+      Report.findOne({aptId:req.params.aptId}).populate('docId').populate('patientId').exec().then(result => {
+      res.render('patient/prescription',{
+      helpers : {
+        formatDate:formatDate},
+      layout:'mainPatient',
+      userName:userName,
+      navClass:navClass,
+      report:result
+      });
+      
+    });
+  });
+});
+
+router.post('/:userName/patientFormDownload/:reportId',(req, res) =>{
+  var doc = new jsPDF();
+  res.send('fuck')
+});
+
+
 router.get('/:userName/diagnosisRes', (req, res) =>{
+  const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
   Users.findOne({userName:userName }).then((user) => {
     Diagnosis.find({patientId:user._id }).populate('diseaseId').limit(3).sort({probability:-1}).then((rpts)=>{
         res.render('patient/symptomRes',{
         layout:'mainPatient',
         userName:userName,
-        rpts:rpts
+        rpts:rpts,
+        navClass:navClass
       });
     })
     
@@ -128,32 +204,28 @@ router.get('/:userName/diagnosisRes', (req, res) =>{
   
 });
 
-router.get('/:userName/changePassword', (req, res) => {
-  const userName=req.params.userName;
-  res.render('patient/changePassword',{
-  	layout:'mainPatient',
-    userName:userName
-  });
-});
 
 
 
 router.get('/:userName/patientProfile', (req, res) => {
   const userName=req.params.userName;
+  const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   Users.findOne({userName:userName}).then((users) =>{
     const dob=dateFormat(users.dob, "isoDate");
     res.render('patient/patientProfile',{
     layout:'mainPatient',
     userName:userName,
     user:users,
-    dob:dob
-  });
+    dob:dob,
+    navClass:navClass
+    });
   });
 });
 
 
 
 router.get('/:userName/viewDocProfile/:id', (req, res) => {
+  const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
   const id=req.params.id;
   Users.findOne({_id:req.params.id}).then((user) => {
@@ -162,22 +234,54 @@ router.get('/:userName/viewDocProfile/:id', (req, res) => {
       layout:'mainPatient',
       userName:userName,
       doctor:user,
-      schedule:schedule
-  });
+      schedule:schedule,
+      navClass:navClass
+      });
     })
   });
 });
 
-
-router.get('/:userName/patientMail', (req, res) => {
+//Get Route for Sending email
+router.get('/:userName/:docId/sendMail', (req, res) => {
+  const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
-  res.render('patient/patientMail',{
-  	layout:'mainPatient',
-    userName:userName
+  Users.findOne({userName:userName}).then((patient) => {
+    Users.findOne({_id:req.params.docId}).then((doctor) => {
+      res.render('patient/patientMail',{
+      layout:'mainPatient',
+      userName:userName,
+      sender:patient,
+      receiver:doctor,
+      navClass:navClass
+      });
+    });
   });
+});
+//Post Route for Sending Email
+router.post('/:userName/:docId/sendMail',(req, res) =>{
+  const sender=req.body.sender;
+  const receiver=req.body.receiver;
+  const subject=req.body.subject;
+  const message=req.body.mail;
+  const password=req.body.password;
+  const flag=sendEmailFunc(sender,password,receiver,subject,message);
+  if(flag){
+    // req.session.message ={
+    //   type:'success',
+    //   msg:'Email Sent Successfully'
+    // }
+    res.redirect('/patient/'+req.params.userName);
+  }else{
+    // req.session.message ={
+    // type:'danger',
+    // msg:'Email Couldn\'t be sent'
+    //  }
+    res.redirect('/patient/'+req.params.userName);
+  }
 });
 
 router.get('/:userName/editPatientProfile', (req, res) => {
+  const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
   Users.findOne({userName:userName}).then((user) => {
     const dob=dateFormat(user.dob, "isoDate");
@@ -185,7 +289,8 @@ router.get('/:userName/editPatientProfile', (req, res) => {
     layout:'mainPatient',
     userName:userName,
     user:user,
-    dob:dob
+    dob:dob, 
+    navClass:navClass
   });
   })
 });
@@ -206,15 +311,18 @@ router.put('/:userName/editPatientProfile',(req, res) =>{
 
 
 router.get('/:userName/changePassword', (req, res) =>{
+  const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
   Users.findOne({userName:userName}).then((user=>{
     res.render('patient/changePassword',{
       layout:'mainPatient',
       userName:userName,
-      user:user
+      user:user,
+      navClass:navClass
     })
   }));
 });
+ 
 
 router.put('/:userName/changePassword', (req, res) =>{
   const userName=req.params.userName;
@@ -238,7 +346,7 @@ router.put('/:userName/changePassword', (req, res) =>{
 });
 
 
-//routing for  appointment
+//routing for  automatic appointment
 router.get('/:userName/viewDocProfile/:doc/:dayNo', (req, res) => {
   const patient=req.params.userName;
   const docID = req.params.doc;
@@ -346,7 +454,79 @@ router.get('/:userName/viewDocProfile/:doc/:dayNo', (req, res) => {
    // res.redirect('/patient/'+req.params.userName+'/patientProfile');
 });
 
+//routing for appointments by slot
+router.get('/:userName/makeAppointment/:doc/:dayNo', (req, res) =>{
+  const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
+  const userName=req.params.userName;
+  const timeObj = [];
+  const docId=req.params.doc;
+  const dayNo=req.params.dayNo;
+  var tempTime;
+  Users.findOne({userName:userName}).then((user=>{
+    Schedule.findOne({doctorId:docId}).then((schedule)=>{
+        tempTime=schedule.start[dayNo];
+        for(let i=0;i<schedule.slot[dayNo].length;i++){
+          const tempArr=addThirtyMin(tempTime);
+          tempTime=tempArr[1];
+          const status = schedule.slot[dayNo][i];
+          let condition;
+          if(status == 0)condition = 'Free'
+          else if(status == 1)condition = 'Booked'
+          timeObj.push({start:tempArr[0],end:tempArr[1],status:condition,dayNo:dayNo})
+        }
+        res.render('patient/viewScheduleBySlot',{
+        layout:'mainPatient',
+        userName:userName,
+        day:dayArr[dayNo],
+        timeObj:timeObj,
+        user:user,
+        navClass:navClass,
+        docId:docId
+        });
+    });
+  }));
+});
 
+//routing for appointments booking by slot
+router.get('/:userName/makeAppointment/:doc/:dayNo/:slot',(req, res) => {
+  const patient=req.params.userName;
+  const docID = req.params.doc;
+  const dayNo=req.params.dayNo;
+  const slot=req.params.slot;
+  let nextDay = (Number(dayNo)+6-1)%6;
+  if(dayNo == 0)nextDay = 6;
+  Users.findOne({userName:patient}).then((user) => {
+    Schedule.findOne({doctorId:docID}).then((schedule) => {
+      Appointmet.countDocuments({$and:[{scheduleId:schedule._id},{docId:docID}]}).then((appointment) => {
+
+        const slotNo=slot;
+        const start=schedule.start[dayNo];
+        const time=start.split(':');
+        var i1=Number(time[0]*60)+Number(time[1]);
+        for(var j=0; j<slotNo; j++)i1=i1+30;
+        const div=Math.floor(i1/60);
+        const rem=i1%60;
+        let s1,s2,startTime;
+        if(div<10)s1='0'+String(div);
+        if(div>=10 && div<24)s1=String(div);
+        if(div>=24)s1=String("00");
+        if(rem==0)s2=String("00")
+        if(rem>0)s2=String(rem);
+        startTime=s1+":"+s2;
+        schedule.slot.set(dayNo,changeSlotToOne(schedule.slot[dayNo],slotNo));
+        schedule.save();
+        createAppointment(nextDay,startTime,docID,user._id,schedule._id,'regular',slotNo,'pending');
+        req.session.message ={
+          type:'success',
+          msg:'Appointmet Schedule has been scheduled'
+        }
+        res.redirect('/patient/'+user.userName+'/viewDocProfile/'+docID);
+      });
+    });
+  }); 
+});
+
+//create Appointment and save to MongoDB
 function createAppointment(datNo,stime,docId,patientId,scheduleId,type,slotNo,status){
         const d = new Date();
         d.setDate(d.getDate() + (datNo - 1 - d.getDay() + 7) % 7 + 1);
@@ -391,5 +571,64 @@ function changeSlotToOne(slotArr,changeSlot){
   slotArr[changeSlot] = 1;
   return slotArr;
 }
+
+//Parameter will be a string(12:30/HH:MM) and will return two string inverval Ex:12:30,13:00
+function addThirtyMin(str){
+const start=str.split(':');
+const minS=Number(start[0]*60)+Number(start[1]);
+const minE=minS+30;
+return [minToStrTime(minS),minToStrTime(minE)];
+}
+
+//Parameter will be  minutes in number and will return HH:MM formatted string
+function minToStrTime(min){
+  const div=Math.floor(min/60);
+  const rem=min%60;
+  let s1,s2,time;
+  if(div<10)s1='0'+String(div);
+  if(div>=10)s1=String(div);
+  if(div>=24)s1=String("00");
+  if(rem==0)s2=String("00");
+  if(rem>0)s2=String(rem);
+  time=s1+":"+s2;
+  return time;
+}
+
+//Function to Send Email
+function sendEmailFunc(sender,password,receiver,subject,message){
+  var flag;
+  let transporter = nodemailer.createTransport({
+    service: 'gmail',
+    port: 587,
+    secure: false,
+    auth: {
+        user: sender, 
+        pass: password 
+    },
+    tls: { rejectUnauthorized: false }
+});
+
+
+let mailOptions = {
+    from: sender, 
+    to: receiver, 
+    subject: subject,
+    html: message
+};
+
+
+transporter.sendMail(mailOptions, (err, data) => {
+    if (err) {
+    }
+    else {
+    }
+    done();
+});
+return flag;
+}
+
+function escapeRegex(text) {
+    return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+};
 
 module.exports = router;
