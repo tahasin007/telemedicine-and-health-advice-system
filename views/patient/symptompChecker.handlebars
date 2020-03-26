@@ -1,71 +1,124 @@
 
-    {{> _patientNav}}
-    <!-- end of navbar -->
+{{> _patientNav}}
+<!-- end of navbar -->
 
-    <!-- patient table -->
-    <section>
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col-xl-10 col-lg-9 col-md-8 ml-auto mt-4">
-            <div class="pt-md-5 mt-md-3 mb-5 col-xl-12">
-              <div class="container">
-                <h3 class="text-info font-weight-bold text-center mb-3">Enter Your Conditions</h3>
-              </div>
-              <div class="col-12 rounded"  style="border:0px solid grey;">
-                <!-- Search box -->
-                <form action="symptompChecker" method="POST">
-                <div class="row d-flex justify-content-center">
-                <div class="input-group md-form form-sm form-1 pl-0 col-6  text-center">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text cyan lighten-2" id="basic-text1"><i class="fas fa-search text-dark" aria-hidden="true"></i></span>
+<!-- patient table -->
+<section>
+  <div class="container-fluid" >
+    <div class="row" >
+      <div class="col-xl-10 col-lg-9 col-md-8 ml-auto mt-4">
+        <div class="pt-md-5 mt-md-3 mb-5 col-xl-12" >
+          <div class="col-12 rounded"  style="border:0px solid grey;">
+            <!-- Search box -->
+            <form action="symptompChecker" method="POST" id="booking-form">
+              <div class="tab-content">
+                <div class="tab-pane" id="step1">
+                  <ul>
+                    <div class="container">
+                      <h3 class="text-info font-weight-bold text-center mb-3">Info</h3>
+                    </div>
+                    <li>
+                      <label>Gender</label>
+                      <select name="gender" id="gender">
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                      </select>
+                    </li>
+
+                    <li>
+                      <label>Age</label>
+                      <input name="age" type="number" min="10" max="100" id="age">
+                    </li>
+                    <li style="list-style: none; display: inline">
+                      <button class="next-btn next-btn1 " type="button">Next</button>
+                    </li>
+                  </ul>
+                </div>
+
+                <div class="tab-pane" id="step2">
+                  <div class="container">
+                    <h3 class="text-info font-weight-bold text-center mb-3">Enter Your Conditions</h3>
                   </div>
-                    <input class="form-control my-0 py-1" type="text" name="symptom" placeholder="Search" aria-label="Search">
+                  <div class="row d-flex justify-content-center">
+                    <div class="input-group md-form form-sm form-1 pl-0 col-6  text-center">
+                      <input class="form-control my-0 py-1" type="text" name="symptom" placeholder="Search" aria-label="Search">
+                    </div>
+                  </div>
+
+                  <div class="row justify-content-left" >
+                    <div class="containerCB col-12" style="border:0px solid grey;">
+                      <ul class="ks-cboxtags">
+                        <li><input type="checkbox" id="checkboxOne" name="fever" value="fever"><label for="checkboxOne">Fever</label></li>
+                        <li><input type="checkbox" id="checkboxTwo" name="vomiting" value="vomiting"><label for="checkboxTwo">Vomiting</label></li>
+                        <li><input type="checkbox" id="checkboxThree" name="nausea" value="nausea"><label for="checkboxThree">Nausea</label></li>
+                        <li><input type="checkbox" id="checkboxFour" name="loss_of_appetite" value="loss of appetite"><label for="checkboxFour">Loss of Appetite</label></li>
+                        <li><input type="checkbox" id="checkboxFive" name="weight_loss" value="weight loss"><label for="checkboxFive">Weight Loss</label></li>
+                        <li><input type="checkbox" id="checkboxSix" name="abdominal_pain" value="abdominal pain"><label for="checkboxSix">Abdominal Pain</label></li>
+                        <li><input type="checkbox" id="checkboxSeven" name="fatigue" value="fatigue"><label for="checkboxSeven">Fatigue</label></li>
+                        <li><input type="checkbox" id="checkboxEight" name="shortness_of_breath" value="shortness of breath"><label for="checkboxEight">Shortness of Breath</label></li>
+                        <li><input type="checkbox" id="checkboxNine" name="sweating" value="sweating"><label for="checkboxNine">Sweating</label></li>
+                        <li><input type="checkbox" id="checkboxTen" name="cough" value="cough"><label for="checkboxTen">Cough</label></li>
+                        <li class="ks-selected"><input type="checkbox" id="checkboxEleven" name="wheezing" value="wheezing"><label for="checkboxEleven">Wheezing</label></li>
+                        <li><input type="checkbox" id="checkboxTwelve" name="headache" value="headache"><label for="checkboxTwelve">Headache</label></li>
+                        <li><input type="checkbox" id="checkboxThirteen" name="chest_pain" value="chest pain"><label for="checkboxThirteen">Chest Pain</label></li>
+                        <li><input type="checkbox" id="checkboxFourteen" name="chills" value="chills"><label for="checkboxFourteen">Chills</label></li>
+                        <li><input type="checkbox" id="checkboxFifteen" name="breathing_difficulties" value="breathing difficulties"><label for="checkboxFifteen">Breathing Difficulties</label></li>
+                      </ul>
+                    </div>
+
+                  </div>
+
+                  <li>
+                    <button class="next-btn next-btn2 mb-3" type="button">Next</button>
+                  </li>
+
+                </div>
+
+                <div class="tab-pane" id="step3">
+                  <ul>
+                    <li>
+                      <label>What is your first and last name?</label>
+                      <div class="errorTxt"></div>
+                      <input type="text" name="bf_fullname">
+                    </li>
+                    <li>
+                      <label>Which email address should we send your free estimate to?</label>
+                      <div class="errorTxt"></div>
+                      <input type="email" name="bf_email">
+                    </li>
+                    <li>
+                      <label>Do you have any questions or a message? (Optional)</label>
+                      <textarea name="bf_message"></textarea>
+                    </li>
+                    <li>
+                      <button class="submit-btn" type="submit">Request My Free Estimate</button>
+                    </li>
+                  </ul>
                 </div>
               </div>
 
-                <!-- End of SearchBox               -->
-
-
-                <!-- CheckBox Input for Symptomp start-->
-            <div class="row justify-content-center">
-              <div class="containerCB col-12">
-                <ul class="ks-cboxtags">
-                <li><input type="checkbox" id="checkboxOne" name="fever" value="fever"><label for="checkboxOne">Fever</label></li>
-                <li><input type="checkbox" id="checkboxTwo" name="vomiting" value="vomiting"><label for="checkboxTwo">Vomiting</label></li>
-                <li><input type="checkbox" id="checkboxThree" name="nausea" value="nausea"><label for="checkboxThree">Nausea</label></li>
-                <li><input type="checkbox" id="checkboxFour" name="loss_of_appetite" value="loss of appetite"><label for="checkboxFour">Loss of Appetite</label></li>
-                <li><input type="checkbox" id="checkboxFive" name="weight_loss" value="weight loss"><label for="checkboxFive">Weight Loss</label></li>
-                <li><input type="checkbox" id="checkboxSix" name="abdominal_pain" value="abdominal pain"><label for="checkboxSix">Abdominal Pain</label></li>
-                <li><input type="checkbox" id="checkboxSeven" name="fatigue" value="fatigue"><label for="checkboxSeven">Fatigue</label></li>
-                <li><input type="checkbox" id="checkboxEight" name="shortness_of_breath" value="shortness of breath"><label for="checkboxEight">Shortness of Breath</label></li>
-                <li><input type="checkbox" id="checkboxNine" name="sweating" value="sweating"><label for="checkboxNine">Sweating</label></li>
-                <li><input type="checkbox" id="checkboxTen" name="cough" value="cough"><label for="checkboxTen">Cough</label></li>
-                <li class="ks-selected"><input type="checkbox" id="checkboxEleven" name="wheezing" value="wheezing"><label for="checkboxEleven">Wheezing</label></li>
-                <li><input type="checkbox" id="checkboxTwelve" name="headache" value="headache"><label for="checkboxTwelve">Headache</label></li>
-                <li><input type="checkbox" id="checkboxThirteen" name="chest_pain" value="chest pain"><label for="checkboxThirteen">Chest Pain</label></li>
-                <li><input type="checkbox" id="checkboxFourteen" name="chills" value="chills"><label for="checkboxFourteen">Chills</label></li>
-                <li><input type="checkbox" id="checkboxFifteen" name="breathing_difficulties" value="breathing difficulties"><label for="checkboxFifteen">Breathing Difficulties</label></li>
-  
-                </ul>
-
+              <div class="progress-wrap">
+                <div class="line-progress-bar">
+                  <div class="line"></div>
+                  <ul class="checkout-bar">
+                    <li class="progressbar-dots active"><span>step 1</span></li>
+                    <li class="progressbar-dots"><span>step 2</span></li>
+                    <li class="progressbar-dots"><span>Final step</span></li>
+                  </ul>
+                </div>
               </div>
-             </div>
-             <!-- CheckBox for Symptomps Checker End -->
-              
-              <div classs="row d-flex justify-content-center">
-                <div class="container col-12 text-center">
-                <button type="submit" class="btn btn-primary">Submit</button>
-              </div>
-              </div>
+
             </form>
 
-
-              </div>
-            </div>
-         </div>
+          </div>
+        </div>
       </div>
     </div>
-    </section>
-    <!-- end of table -->
+  </div>
+</section>
+<!-- end of table -->
 
+<script>
+
+</script> 
 

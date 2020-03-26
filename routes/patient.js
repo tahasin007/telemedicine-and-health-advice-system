@@ -56,6 +56,7 @@ router.get('/:userName/notification', (req, res) => {
 });
 
 router.get('/:userName/symptompChecker', (req, res) => {
+  console.log(req.query["term"]);
   const navClass = ["sidebar-link","current","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
   res.render('patient/symptompChecker',{
@@ -66,10 +67,10 @@ router.get('/:userName/symptompChecker', (req, res) => {
 });
 
 router.post('/:userName/symptompChecker', (req, res ,next) => {
-  const arr=[];
+  let arr=[];
   const userName=req.params.userName;
-  var text=req.body.symptom.split(":");
-  for(var i=0; i<text.length;i++)text[i]=text[i].trim();
+  const gender=req.body.gender;
+  const age=req.body.age;
   if(req.body.fever)arr.push(req.body.fever);
   if(req.body.vomiting)arr.push(req.body.vomiting);
   if(req.body.nausea)arr.push(req.body.nausea);
@@ -85,42 +86,49 @@ router.post('/:userName/symptompChecker', (req, res ,next) => {
   if(req.body.breathing_difficulties)arr.push(req.body.breathing_difficulties);
   if(req.body.wheezing)arr.push(req.body.wheezing);
   if(req.body.weight_loss)arr.push(req.body.weight_loss);
-  let difference = text.filter(x => !arr.includes(x));
-  const aggArr = arr.concat(difference);
-  Diagnosis.find().then((report)=>{
-        report.forEach(rpt=>{
-          rpt.remove();})
-        });
-  Users.findOne({userName:req.params.userName}).then((user) => {
-    Disease.find().then(diseases =>{
-    diseases.forEach(disease =>{
-      const arrLen = disease.symptom.length;
-      var match =0;
-      for (var i = 0; i < arrLen;i++){
-        for (var j = 0; j < aggArr.length;j++){
-            if(disease.symptom[i] == aggArr[j])match++;
-        }
-      }
-      var Res=0;
-      if(match>0)Res=(match/arrLen)*90;
-      disease.probability = Res;
-      disease.save();
-      const newDiagnosis =new Diagnosis({
-          diseaseId:disease._id,
-          patientId:user._id,
-          probability:Res
-      });
-        newDiagnosis.save();
-    });
-  })
-  });
-  res.redirect('/patient/'+userName+'/diagnosisRes');
+
+  if(req.body.symptom!=""){
+    let text=req.body.symptom.toLowerCase().split(",");
+    for(let i=0; i<text.length;i++)text[i]=text[i].trim();
+    let difference = text.filter(x => !arr.includes(x));
+    arr = arr.concat(difference);
+  }
+    
+  // Diagnosis.find().then((report)=>{
+  //       report.forEach(rpt=>{
+  //         rpt.remove();})
+  //       });
+  console.log(arr)
+  // Users.findOne({userName:req.params.userName}).then((user) => {
+  //   Disease.find().then(diseases =>{
+  //   diseases.forEach(disease =>{
+  //     const arrLen = disease.symptom.length;
+  //     var match =0;
+  //     for (var i = 0; i < arr;i++){
+  //       for (var j = 0; j < arr.length;j++){
+  //           if(disease.symptom[i] == arr[j])match++;
+  //       }
+  //     }
+  //     var Res=0;
+  //     if(match>0)Res=(match/arrLen)*90;
+  //     disease.probability = Res;
+  //     disease.save();
+  //     const newDiagnosis =new Diagnosis({
+  //         diseaseId:disease._id,
+  //         patientId:user._id,
+  //         probability:Res
+  //     });
+  //       newDiagnosis.save();
+  //   });
+  // })
+  // });
+  // res.redirect('/patient/'+userName+'/diagnosisRes');
 });
 
+//show all doctors
 router.get('/:userName/doctors', (req, res) => {
   const navClass = ["sidebar-link","sidebar-link","current","sidebar-link"];
   const userName=req.params.userName;
-  const search=req.query.search;
   if(search == undefined){
     Users.find({role:'doctor'}).then((users) => {
     res.render('patient/doctors',{
@@ -140,8 +148,22 @@ router.get('/:userName/doctors', (req, res) => {
     navClass:navClass
   });
   });
-  }
-  
+  } 
+});
+router.get('/:userName/autocomplete', (req,res,next) => {
+  var regex= new RegExp(req.query["term"],'i');
+  Users.find({$and:[{name:regex},{role:'doctor'}]}).then((users) => {
+
+    var result=[];
+    users.forEach(user=>{
+       let obj={
+         id:user._id,
+         label: user.name
+       };
+       result.push(obj);
+     });
+    res.jsonp(result);
+  });
 });
 
 //Routing for Show medical history of patient
@@ -183,7 +205,6 @@ router.get('/:userName/report/:aptId',(req, res) =>{
 
 router.post('/:userName/patientFormDownload/:reportId',(req, res) =>{
   var doc = new jsPDF();
-  res.send('fuck')
 });
 
 
@@ -208,7 +229,6 @@ router.get('/:userName/diagnosisRes', (req, res) =>{
 
 
 router.get('/:userName/patientProfile', (req, res) => {
-  const userName=req.params.userName;
   const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   Users.findOne({userName:userName}).then((users) =>{
     const dob=dateFormat(users.dob, "isoDate");

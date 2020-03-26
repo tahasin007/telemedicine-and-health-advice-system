@@ -1,72 +1,70 @@
-  <!-- navbar -->
-    {{> _patientNav}}
-    <!-- end of navbar -->
+<!-- navbar -->
+{{> _patientNav}}
+<!-- end of navbar -->
 
-    <!-- email sending -->
-    <section>
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col-xl-10 col-lg-9 col-md-8 ml-auto mt-4">
-            <div class="pt-md-5 mt-md-3 mb-5 col-xl-12">
+<!-- email sending -->
+<section>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-xl-10 col-lg-9 col-md-8 ml-auto mt-4">
+        <div class="pt-md-5 mt-md-3 mb-5 col-xl-12">
 
-              <div class="container mt-2">
-                <h3 class="text-info font-weight-bold text-center mb-3">Patient Report</h3>
-              </div>
-              <form method="post" action="/patient/{{userName}}/patientFormDownload/{{report._id}}">
-
-
-
-              <div class="form-row mt-2">
+          <div class="container mt-2">
+            <h3 class="text-info font-weight-bold text-center mb-3">Patient Report</h3>
+          </div>
+          <form method="post" action="/patient/{{userName}}/patientFormDownload/{{report._id}}">
+            
+            <div class="form-row mt-2">
               <div class="form-group col-md-6">
-              <label for="docName">Doctor Name:</label>
-              <input type="text" readonly class="form-control" name="docName" id="docName" placeholder="{{report.docId.name}}">
+                <label for="docName">Doctor Name:</label>
+                <input type="text" readonly class="form-control" name="docName" id="docName" placeholder="{{report.docId.name}}">
               </div>
               <div class="form-group col-md-6">
-              <label for="patName">Patient Name:</label>
-              <input type="text" readonly class="form-control" name="patName" id="patName" placeholder="{{report.patientId.name}}">
+                <label for="patName">Patient Name:</label>
+                <input type="text" readonly class="form-control" name="patName" id="patName" placeholder="{{report.patientId.name}}">
               </div>
-              </div>
+            </div>
 
-              <div class="form-row mt-2">
+            <div class="form-row mt-2">
               <div class="form-group col-md-6">
-              <label for="docMail">Doctor Email:</label>
-              <input type="email" class="form-control" id="docMail" name="docEmail"  placeholder="{{report.docId.email}}">
+                <label for="docMail">Doctor Email:</label>
+                <input type="email" class="form-control" id="docMail" name="docEmail"  placeholder="{{report.docId.email}}">
               </div>
               <div class="form-group col-md-6">
-              <label for="docNum">Doctor Phone No:</label>
-              <input type="text" class="form-control" id="docNum" name="docPhone" placeholder="{{report.docId.contact}}">
+                <label for="docNum">Doctor Phone No:</label>
+                <input type="text" class="form-control" id="docNum" name="docPhone" placeholder="{{report.docId.contact}}">
               </div>
-              </div>
+            </div>
 
-              <div class="form-group">
+            <div class="form-group">
               <label for="inputAddress">Doctor Address</label>
               <input type="text" class="form-control" id="inputAddress" name="docAddress" placeholder="{{report.docId.chamber}}">
-              </div>
-                
-                <div class="form-group">
-                  <label for="exampleFormControlTextarea1">Patient's Stmptomps:</label>
-                  <textarea class="form-control" name="symptom" id="exampleFormControlTextarea1" placeholder="{{report.symptom}}" rows="3"></textarea>
-                </div>
-                <div class="form-group">
-                  <label for="exampleFormControlTextarea1">Medication Details:</label>
-                  <textarea class="form-control" name="medication" id="exampleFormControlTextarea1" placeholder="{{report.medication}}"rows="3"></textarea>
-                </div>
-                <div class="form-group">
-                  <label for="exampleFormControlTextarea1">Addition Information</label>:</label>
-                  <textarea class="form-control" name="info" id="exampleFormControlTextarea1" placeholder="{{report.observation}}" rows="3"></textarea>
-                </div>
-
-                <div class="form-group row">
-                <label for="example-date-input" name="date" class="col-2 col-form-label">Date</label>
-                <div class="col-4">
-                <input class="form-control" type="date" value="2011-08-19" id="example-date-input">
-                </div>
-                </div>
-
-                <button type="submit" class="btn btn-primary">Download File</button>
-              </form>
             </div>
-         </div>
+            
+            <div class="form-group">
+              <label for="exampleFormControlTextarea1">Patient's Stmptomps:</label>
+              <textarea class="form-control" name="symptom" id="exampleFormControlTextarea1" placeholder="{{report.symptom}}" rows="3"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="exampleFormControlTextarea1">Medication Details:</label>
+              <textarea class="form-control" name="medication" id="exampleFormControlTextarea1" placeholder="{{report.medication}}"rows="3"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="exampleFormControlTextarea1">Addition Information</label>:</label>
+              <textarea class="form-control" name="info" id="exampleFormControlTextarea1" placeholder="{{report.observation}}" rows="3"></textarea>
+            </div>
+
+            <div class="form-group row">
+              <label for="example-date-input" name="date" class="col-2 col-form-label">Date</label>
+              <div class="col-4">
+                <input class="form-control" type="date" value="2011-08-19" id="example-date-input">
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Download File</button>
+          </form>
+        </div>
       </div>
     </div>
-    </section>
+  </div>
+</section>

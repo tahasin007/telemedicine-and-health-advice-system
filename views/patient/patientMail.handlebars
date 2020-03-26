@@ -1,47 +1,46 @@
+<!-- navbar -->
+{{> _patientNav}}
+<!-- end of navbar -->
 
-    <!-- navbar -->
-    {{> _patientNav}}
-    <!-- end of navbar -->
-
-    <!-- email sending -->
-    <section>
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col-xl-10 col-lg-9 col-md-8 ml-auto mt-4">
-            <div class="pt-md-5 mt-md-3 mb-5 col-xl-12">
-              <form action="/patient/{{sender.userName}}/{{receiver._id}}/sendMail" method="post">
-                <div class="form-row">
-                  <div class="form-group col-md-6">
-                    <label for="sender">From</label>
-                    <input type="email" readonly class="form-control" id="sender" name="sender" value={{sender.email}}>
-                  </div>
-                  <div class="form-group col-md-6">
-                    <label for="receiver">To</label>
-                    <input type="email" readonly class="form-control" id="receiver" name="receiver" value="{{receiver.email}}">
-                  </div>
-                </div>
-                <div class="form-row">
-                  <div class="form-group col-md-6">
-                    <label for="password">Your Email Password</label>
-                    <input type="password" class="form-control" id="password" name="password">
-
-                  </div>
-                  <div class="form-group col-md-6">
-                    <label for="subject">Subject</label>
-                    <input type="text" class="form-control" id="subject" name="subject">
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label for="mail">Compose</label>
-                  <textarea name="mail" class="form-control" id="mail" rows="6"></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary">Send</button>
-              </form>
+<!-- email sending -->
+<section>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-xl-10 col-lg-9 col-md-8 ml-auto mt-4">
+        <div class="pt-md-5 mt-md-3 mb-5 col-xl-12">
+          <form action="/patient/{{sender.userName}}/{{receiver._id}}/sendMail" method="post">
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="sender">From</label>
+                <input type="email" readonly class="form-control" id="sender" name="sender" value={{sender.email}}>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="receiver">To</label>
+                <input type="email" readonly class="form-control" id="receiver" name="receiver" value="{{receiver.email}}">
+              </div>
             </div>
-         </div>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="password">Your Email Password</label>
+                <input type="password" class="form-control" id="password" name="password">
+
+              </div>
+              <div class="form-group col-md-6">
+                <label for="subject">Subject</label>
+                <input type="text" class="form-control" id="subject" name="subject">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="mail">Compose</label>
+              <textarea name="mail" class="form-control" id="mail" rows="6"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Send</button>
+          </form>
+        </div>
       </div>
     </div>
-    </section>
+  </div>
+</section>
 
 
 

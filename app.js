@@ -36,8 +36,7 @@ app.set('view engine', 'handlebars');
 mongoose.Promise = global.Promise;
 // Connect to mongoose
 mongoose.connect('mongodb+srv://padawan:OYhfnJKfwTYksOWC@firstcluster-cyefr.mongodb.net/myapp', {
-	useNewUrlParser: true,
-	useUnifiedTopology: true
+	useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true
 })
   .then(() => console.log('MongoDB Connected'))
   .catch(err => console.log(err));

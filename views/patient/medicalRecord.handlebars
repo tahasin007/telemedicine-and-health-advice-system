@@ -1,59 +1,62 @@
-   <!-- navbar -->
-    {{> _patientNav}}
-    <!-- end of navbar -->
+<!-- navbar -->
+{{> _patientNav}}
+<!-- end of navbar -->
 
-    <!-- patient table -->
-    <section>
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col-xl-10 col-lg-9 col-md-8 ml-auto mt-4">
-            <div class="pt-md-5 mt-md-3 mb-5 col-xl-12">
-              <h3 class="text-muted text-center mb-3">Medical Record</h3>
-              <div class="container align-items-center">
+<!-- patient table -->
+<section>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-xl-10 col-lg-9 col-md-8 ml-auto mt-4">
+        <div class="pt-md-5 mt-md-3 mb-5 col-xl-12">
+          <h3 class="text-muted text-center mb-3">Medical Record</h3>
+          <div class="container align-items-center">
 
-                <div class="table responsive ">
-                    <table class="table table-bordered">
-                  <thead>
-                    <tr class="text-muted">
-                      <th>Doctor Name</th>
-                      <th>Email</th>
-                      <th>Appointment Date</th>
-                      <th>Report</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {{#each apts}}
-                    <tr>
-                      <td>{{docId.name}}</td>
-                      <td>{{docId.email}}</td>
-                      <td>{{formatDate appointmentDate 'YYYY-MM-DD'}}</td>
-                      <td>
-                        <a href="/patient/{{patientId.userName}}/report/{{_id}}">
-                          <span class="align-middle">
+            <div class="table responsive ">
+              <table class="table table-bordered">
+                <thead>
+                  <tr class="text-muted">
+                    <th>Doctor Name</th>
+                    <th>Email</th>
+                    <th>Appointment Date</th>
+                    <th>Report</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {{#each apts}}
+                  <tr>
+                    <td>{{docId.name}}</td>
+                    <td>{{docId.email}}</td>
+                    <td>{{formatDate appointmentDate 'YYYY-MM-DD'}}</td>
+                    <td>
+                      <a href="/patient/{{patientId.userName}}/report/{{_id}}">
+                        <span class="align-middle">
                           <button type="button" class="btn btn-secondary btn-sm">
-                            <i class="fa fa-file text-dark"></i></button>
-                          </span></a>
-                        <a href="/patient/{{patientId.userName}}/{{docId._id}}/sendMail">
-                          <span class="align-middle">
+                            <i class="fa fa-file text-dark"></i>
+                          </button>
+                        </span>
+                      </a>
+                      <a href="/patient/{{patientId.userName}}/{{docId._id}}/sendMail">
+                        <span class="align-middle">
                           <button type="button" class="btn btn-secondary btn-sm">
-                            <i class="fas fa-envelope text-dark"></i></button>
-                          </span></a>
-                      </td>
-                    </tr>
-                    {{/each}}                   
-                  </tbody>
-                </table>
-              </div>
-
-              </div>
-              
+                            <i class="fas fa-envelope text-dark"></i>
+                          </button>
+                        </span>
+                      </a>
+                    </td>
+                  </tr>
+                  {{/each}}                   
+                </tbody>
+              </table>
             </div>
-         </div>
+
+          </div>
+
+        </div>
       </div>
     </div>
-    </section>
-    <!-- end of table -->
+  </div>
+</section>
+<!-- end of table -->
 
 
 
-    

@@ -1,5 +1,8 @@
 
-
+html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
 body {
   font-family: 'Montserrat', sans-serif;
   font-size:12px;
@@ -130,15 +133,186 @@ body {
 
 
 /*Symptomps*/
+#booking-form {
+     font-family: monospace, serif;
+    max-width: 576px;
+  margin: 0px auto;
+}
+#booking-form ul {
+  padding-left: 0;
+}
+#booking-form li {
+  list-style: none;
+}
+#booking-form input, 
+#booking-form textarea,  
+#booking-form select {
+    font-size: 14px;
+    padding: 0 28px;
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid rgb(233,233,233);
+    text-align: left;
+    border-radius: 35px;
+    color: #000000;
+    
+    letter-spacing: normal;
+    height: 50px;
+    line-height: 50px;
+    font-family: monospace, serif;
+    background: #fff;
+  margin-bottom: 20px;
+}
+#booking-form select {
+    -webkit-appearance: none;
+    appearance: none;
+    background-size: 10px;
+    background-position: 97% 50%;
+
+}
+#booking-form textarea {
+    height: 120px;
+    line-height: 1.5;
+    padding: 15px 28px;
+}
+#booking-form input:focus, 
+#booking-form textarea:focus, 
+#booking-form select:focus {
+    outline: 0;
+    border: 1px solid rgb(211,211,211);
+}
+#booking-form label {
+    font-size: 15px;
+    font-weight: 300;
+  /*display: block;*/
+    margin-bottom: 10px;
+}
+
+/* Buttons */
+#booking-form .next-btn,
+#booking-form .submit-btn {
+    background: #82CCC8;
+    padding: 13px 20px;
+    color: #fff;
+    font-family: monospace, sans-serif;
+    text-transform: uppercase;
+    font-size: 18px;
+    line-height: 24px;
+    letter-spacing: 1px;
+    min-width: 150px;
+    display: inline-block;
+    text-align: center;
+    font-weight: 400;
+    border-radius: 0;
+    border: 0;
+    transition-property: background-color;
+    transition-duration: 0.5s;
+    width: 10%;
+    cursor: pointer;
+}
+
+#booking-form .next-btn:hover,
+#booking-form .submit-btn:hover {
+    background-color: #444b5d;
+    color: #fff;
+}
+
+/* Progress Bar */
+.progress-wrap {
+    margin: auto;
+    display: table;
+}
+.line-progress-bar {
+    display: flex;
+    margin: auto;
+    width: 100%;
+}
+.line {
+    height: 1px;
+    width: 250px;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    border-bottom-color: rgb(217, 217, 217);
+    position: absolute;
+    margin-top: 8px;
+}
+.progress-wrap div ul {
+    display: flex;
+    width: 250px;
+    list-style: none;
+    padding: 0px;
+    margin: initial;
+    justify-content: space-between;
+    z-index: 1;
+}
+.progressbar-dots {
+    display: inline-flex;
+    border: #949494 solid 4px;
+    background: #333333;
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    color: #d4d4d4;
+    font-size: 20px;
+    margin-left: 0px;
+    color: #d4d4d4;
+    border: 0px solid rgb(217,217,217);
+    background: rgb(217, 217, 217);
+}
+.progressbar-dots span {
+    font-size: 12px;
+    line-height: 12px;
+    position: absolute;
+    margin-top: 60px;
+    /* width: 75px; */
+    float: left;
+    margin-left: -30px;
+    display: none;
+}
+.progressbar-dots.active {
+    color: #fff;
+    border: 0px solid rgb(38,163,134);
+    background: #82CCC8;
+}
+
+/*  Tab */
+.tab-pane {
+    display: none;
+}
+.tab-pane:first-child {
+  display: block;
+}
+
+/* Error */
+/*span.error {
+  font-size: 12px;
+  font-family: "helvetica neue", arial, sans-serif;
+  color: #D6041D;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 10px;
+}*/
+
+
+
 .containerCB {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
     max-width: 640px;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-size: 13px;
+    font-size: 12px;
 }
 
 ul.ks-cboxtags {
     list-style: none;
-    padding: 20px;
+    padding: 15px;
 }
 ul.ks-cboxtags li{
   display: inline;

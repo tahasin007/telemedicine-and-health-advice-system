@@ -1,150 +1,149 @@
 <!-- navbar -->
-    {{> _adminNav}}
+{{> _adminNav}}
 <!-- end of navbar -->
-
-    <!-- cards -->
-    <section>
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col-xl-10 col-lg-9 col-md-8 ml-auto">
-            <div class="row pt-md-5 mt-md-3 mb-5">
-              <div class="col-xl-4 col-sm-6 p-2">
-                <div class="card card-common">
-                  <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                      <i class="fas fa-user fa-3x text-danger"></i>
-                      <div class="text-right text-secondary">
-                        <h5>Patients</h5>
-                        <h3>{{userCount}}</h3>
-                      </div>
-                    </div>
+<!-- cards -->
+<section>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-xl-10 col-lg-9 col-md-8 ml-auto">
+        <div class="row pt-md-5 mt-md-3 mb-5">
+          <div class="col-xl-4 col-sm-6 p-2">
+            <div class="card card-common">
+              <div class="card-body">
+                <div class="d-flex justify-content-between">
+                  <i class="fas fa-user fa-3x text-danger"></i>
+                  <div class="text-right text-secondary">
+                    <h5>Patients</h5>
+                    <h3>{{userCount}}</h3>
                   </div>
-                  <a href="{{userName}}/patientTable" style="text-decoration: none">
-                  <div class="card-footer text-secondary">
-                    <i class="far fa-eye mr-3"></i>
-                    <span>View Now</span>
-                  </div></a>
                 </div>
               </div>
-              <div class="col-xl-4 col-sm-6 p-2">
-                <div class="card card-common">
-                  <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                      <i class="fas fa-user-md fa-3x text-primary"></i>
-                      <div class="text-right text-secondary">
-                        <h5>Doctors</h5>
-                        <h3>{{docCount}}</h3>
-                      </div>
+              <a href="{{userName}}/patientTable" style="text-decoration: none">
+                <div class="card-footer text-secondary">
+                  <i class="far fa-eye mr-3"></i>
+                  <span>View Now</span>
+                </div></a>
+              </div>
+            </div>
+            <div class="col-xl-4 col-sm-6 p-2">
+              <div class="card card-common">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between">
+                    <i class="fas fa-user-md fa-3x text-primary"></i>
+                    <div class="text-right text-secondary">
+                      <h5>Doctors</h5>
+                      <h3>{{docCount}}</h3>
                     </div>
                   </div>
-                  <a href="{{userName}}/doctorTable" style="text-decoration: none">
+                </div>
+                <a href="{{userName}}/doctorTable" style="text-decoration: none">
                   <div class="card-footer text-secondary">
                     <i class="far fa-eye mr-3"></i>
                     <span>View Now</span>
                   </div>
                 </a>
-                </div>
               </div>
-              <div class="col-xl-4 col-sm-6 p-2">
-                <div class="card card-common">
-                  <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                      <i class="fas fa-users fa-3x text-info"></i>
-                      <div class="text-right text-secondary">
-                        <h5>Contacted</h5>
-                        <h3>5</h3>
-                      </div>
+            </div>
+            <div class="col-xl-4 col-sm-6 p-2">
+              <div class="card card-common">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between">
+                    <i class="fas fa-users fa-3x text-info"></i>
+                    <div class="text-right text-secondary">
+                      <h5>Contacted</h5>
+                      <h3>5</h3>
                     </div>
                   </div>
-                  <div class="card-footer text-secondary">
-                    <i class="far fa-eye mr-3"></i>
-                    <span>View Now</span>
-                  </div>
+                </div>
+                <div class="card-footer text-secondary">
+                  <i class="far fa-eye mr-3"></i>
+                  <span>View Now</span>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </section>
-    <!-- end of cards -->
+    </div>
+  </section>
+  <!-- end of cards -->
 
-    <!-- tables -->
-    <section>
-      <div class="container-fluid">
-        <div class="row mb-5">
-          <div class="col-xl-10 col-lg-9 col-md-8 ml-auto">
-            <div class="row align-items-center">
-              <div class="col-xl-12 col-12 mb-4 mb-xl-0">
-                <h3 class="text-muted text-center mb-3">Users</h3>
-                <table class="table table-striped bg-light text-center">
-                  <thead>
-                    <tr class="text-muted">
-                      
-                      <th>User Name</th>
-                      <th>Name</th>
-                      <th>Email</th>
-                      <th>Role</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {{#each users}}
+  <!-- tables -->
+  <section>
+    <div class="container-fluid">
+      <div class="row mb-5">
+        <div class="col-xl-10 col-lg-9 col-md-8 ml-auto">
+          <div class="row align-items-center">
+            <div class="col-xl-12 col-12 mb-4 mb-xl-0">
+              <h3 class="text-muted text-center mb-3">Users</h3>
+              <table class="table table-striped bg-light text-center">
+                <thead>
+                  <tr class="text-muted">
 
-                      <tr>
-                      
-                      <td>{{userName}}</td>
-                      <td>{{name}}</td>
-                      <td>{{email}}</td>
-                      <td>{{role}}</td>
+                    <th>User Name</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {{#each users}}
+
+                  <tr>
+
+                    <td>{{userName}}</td>
+                    <td>{{name}}</td>
+                    <td>{{email}}</td>
+                    <td>{{role}}</td>
                       {{!-- <td>
                         <a href="viewPatient.html">
                           <button type="button" class="btn btn-primary">View</button></a>
                           <a href="admin.html">
                           <button type="button" class="btn btn-danger">Delete</button></a>
-                      </td> --}}
-                    </tr>
-                    {{else}}<p class="text-muted">NO Users to Show</p>
-                    
-                    {{/each}}
-                    
-                  </tbody>
-                </table>
+                        </td> --}}
+                      </tr>
+                      {{else}}<p class="text-muted">NO Users to Show</p>
 
-                <!-- pagination -->
-                <nav>
-                  <ul class="pagination justify-content-center">
-                    <li class="page-item">
-                      <a href="#" class="page-link py-2 px-3">
-                        <span>&laquo;</span>
-                      </a>
-                    </li>
-                    <li class="page-item active">
-                      <a href="#" class="page-link py-2 px-3">
-                        1
-                      </a>
-                    </li>
-                    <li class="page-item">
-                      <a href="#" class="page-link py-2 px-3">
-                        2
-                      </a>
-                    </li>
-                    <li class="page-item">
-                      <a href="#" class="page-link py-2 px-3">
-                        3
-                      </a>
-                    </li>
-                    <li class="page-item">
-                      <a href="#" class="page-link py-2 px-3">
-                        <span>&raquo;</span>
-                      </a>
-                    </li>
-                  </ul>
-                </nav>
-                <!-- end of pagination -->
+                      {{/each}}
+
+                    </tbody>
+                  </table>
+
+                  <!-- pagination -->
+                  <nav>
+                    <ul class="pagination justify-content-center">
+                      <li class="page-item">
+                        <a href="#" class="page-link py-2 px-3">
+                          <span>&laquo;</span>
+                        </a>
+                      </li>
+                      <li class="page-item active">
+                        <a href="#" class="page-link py-2 px-3">
+                          1
+                        </a>
+                      </li>
+                      <li class="page-item">
+                        <a href="#" class="page-link py-2 px-3">
+                          2
+                        </a>
+                      </li>
+                      <li class="page-item">
+                        <a href="#" class="page-link py-2 px-3">
+                          3
+                        </a>
+                      </li>
+                      <li class="page-item">
+                        <a href="#" class="page-link py-2 px-3">
+                          <span>&raquo;</span>
+                        </a>
+                      </li>
+                    </ul>
+                  </nav>
+                  <!-- end of pagination -->
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
     <!-- end of tables -->
