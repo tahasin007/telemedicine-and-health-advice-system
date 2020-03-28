@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const http = require('http');
 const path = require('path');
 const mongoose = require('mongoose');
 const Handlebars = require('handlebars')
@@ -13,7 +14,7 @@ const passport = require('passport')
 const helpers = require('handlebars-helpers')();
 const helperDateFormat=require('handlebars-dateformat');
 const cookieParser = require('cookie-parser');
-
+const socketIO =require('socket.io')
 
 //Routes
 const users = require('./routes/users');
@@ -101,12 +102,17 @@ app.get('/contact', (req, res) => {
   });
 });
 
+//socketIO
+const server = http.createServer(app);
+const io=socketIO(server);
+require('./socket/chat')(io);
+
 app.use('/users', users);
 app.use('/admin', admin);
 app.use('/patient',patient);
 app.use('/doctor',doctor);
 
 const port = 5000;
-app.listen(port,()=>{
+server.listen(port,()=>{
 	console.log(`Server started on port ${port}`);
 });

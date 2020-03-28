@@ -56,7 +56,6 @@ router.get('/:userName/notification', (req, res) => {
 });
 
 router.get('/:userName/symptompChecker', (req, res) => {
-  console.log(req.query["term"]);
   const navClass = ["sidebar-link","current","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
   res.render('patient/symptompChecker',{

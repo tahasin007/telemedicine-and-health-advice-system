@@ -38,25 +38,34 @@ router.get('/docRegister', (req, res) => {
 //   })(req, res, next);
 // });
 
-router.post('/login', function(req, res, next) {
-  passport.authenticate('local', function(err, user, info) {
-    if (err) { 
-      return next(err); }
-    if (!user) { 
-      req.flash('error_msg', info.message);
-      return res.redirect('/users/login'); }
-    req.logIn(user, function(err) {
-      if (err) {
-       return next(err); }
-      User.findOne({$or:[{email: req.body.email},{userName: req.body.email}]}).then(user => {
+// router.post('/login', function(req, res, next) {
+//   passport.authenticate('local', function(err, user, info) {
+//     if (err) { 
+//       return next(err); }
+//     if (!user) { 
+//       req.flash('error_msg', info.message);
+//       return res.redirect('/users/login'); }
+//     req.logIn(user, function(err) {
+//       if (err) {
+//        return next(err); }
+//       User.findOne({$or:[{email: req.body.email},{userName: req.body.email}]}).then(user => {
+//         if(user.role=='patient')return res.redirect('../patient/'+user.userName);
+//         if(user.role=='admin')return res.redirect('../admin/'+user.userName);
+//         if(user.role=='doctor')return res.redirect('../doctor/'+user.userName);
+//         });
+//      // return res.redirect('../admin');
+//     });
+//   })(req, res, next);
+// });
+
+router.post('/login', function(req, res) {
+  User.findOne({$or:[{email: req.body.email},{userName: req.body.email}]}).then(user => {
         if(user.role=='patient')return res.redirect('../patient/'+user.userName);
         if(user.role=='admin')return res.redirect('../admin/'+user.userName);
         if(user.role=='doctor')return res.redirect('../doctor/'+user.userName);
         });
-     // return res.redirect('../admin');
-    });
-  })(req, res, next);
 });
+
 
 
 router.post('/register', (req, res) => {

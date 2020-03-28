@@ -135,7 +135,7 @@ body {
 /*Symptomps*/
 #booking-form {
      font-family: monospace, serif;
-    max-width: 576px;
+    max-width: 768px;
   margin: 0px auto;
 }
 #booking-form ul {
@@ -149,7 +149,7 @@ body {
 #booking-form select {
     font-size: 14px;
     padding: 0 28px;
-    width: 100%;
+    width: 75%;
     box-sizing: border-box;
     border: 1px solid rgb(233,233,233);
     text-align: left;
@@ -184,7 +184,7 @@ body {
 #booking-form label {
     font-size: 15px;
     font-weight: 300;
-  /*display: block;*/
+    /*display: block;*/
     margin-bottom: 10px;
 }
 
@@ -364,6 +364,7 @@ ul.ks-cboxtags li input[type="checkbox"]:checked + label {
     background-color: #12bbd4;
     color: #fff;
     transition: all .2s;
+
 }
 
 ul.ks-cboxtags li input[type="checkbox"] {
