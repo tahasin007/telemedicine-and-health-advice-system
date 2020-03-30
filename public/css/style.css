@@ -141,15 +141,15 @@ body {
 #booking-form ul {
   padding-left: 0;
 }
-#booking-form li {
+#booking-form li:not(.except) {
   list-style: none;
 }
 #booking-form input, 
 #booking-form textarea,  
 #booking-form select {
-    font-size: 14px;
+    font-size: 12px;
     padding: 0 28px;
-    width: 75%;
+    width: 80%;
     box-sizing: border-box;
     border: 1px solid rgb(233,233,233);
     text-align: left;
@@ -170,19 +170,19 @@ body {
     background-position: 97% 50%;
 
 }
-#booking-form textarea {
+/*#booking-form textarea {
     height: 120px;
     line-height: 1.5;
     padding: 15px 28px;
-}
+}*/
 #booking-form input:focus, 
-#booking-form textarea:focus, 
+/*#booking-form textarea:focus, */
 #booking-form select:focus {
     outline: 0;
     border: 1px solid rgb(211,211,211);
 }
 #booking-form label {
-    font-size: 15px;
+    font-size: 13px;
     font-weight: 300;
     /*display: block;*/
     margin-bottom: 10px;

@@ -9,11 +9,14 @@ const DiseaseSchema = new Schema({
   symptom:[
     {type: String}
   ],
-  probability:{
-  	type:Number
-  },
+  // probability:{
+  // 	type:Number
+  // },
   treatment:{
   	type:String
+  },
+  docType:{
+    type:String
   }
 });
 

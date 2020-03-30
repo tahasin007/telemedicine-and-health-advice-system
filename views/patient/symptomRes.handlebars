@@ -10,22 +10,42 @@
           <div class="container">
             <h3 class="text-info font-weight-bold text-center mb-3">Symptom Checker Result</h3> 
           </div>
-          <div class="col-12 rounded"  style="border:0px solid grey;">
+          <div class="col-12"  style="border:0px solid grey;">
             <!-- Search box -->
             
-            {{#each rpts}}
-            <div class="card mb-3">
+            {{#each diagnosis}}
+            {{!-- <div class="card mb-3">
               <div class="card-header">
-                {{diseaseId.name}}
+                {{diseaseName}}
                 <div class="progress">
-                  <div class="progress-bar bg-info" role="progressbar" style="width: {{floor probability}}%" aria-valuenow={{probability}} aria-valuemin="0" aria-valuemax="100">{{floor probability}}%</div>
+                  <div class="progress-bar bg-info" role="progressbar" style="width: {{floor matchPercent}}%" aria-valuenow={{matchPercent}} aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
               </div>
               <div class="card-body">
                 <h5 class="card-title">Treatment</h5>
-                <p class="card-text">{{diseaseId.treatment}}</p>
+                <p class="card-text">See more information</p>
               </div>
-            </div> 
+            </div>  --}}
+
+            <div class="card border-secondary mb-3">
+              <div class="card-header">{{diseaseName}}</div>
+              <div class="progress">
+                <div class="progress-bar bg-info" role="progressbar" style="width: {{floor matchPercent}}%" aria-valuenow={{matchPercent}} aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+              <div class="card-body text-secondary">
+                {{!-- <h5 class="card-title">Secondary card title</h5> --}}
+
+                {{!-- <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p> --}}
+                <a href="disease/{{{diseaseName}}}">
+                <button type="button" class="btn btn-outline-secondary">About {{diseaseName}}</button>
+                </a>
+
+                <a href="doctrs/{{docType}}">
+                  <button type="button" class="btn btn-outline-dark">See Doctor</button>
+                </a>
+              </div>
+            </div>
+
 
             {{else}}
             <div class="container">

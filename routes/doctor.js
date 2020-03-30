@@ -17,12 +17,12 @@ require('../models/Schedule');
 require('../models/Users');
 require('../models/Appointmet');
 require('../models/Disease');
-require('../models/Diagnosis');
+require('../models/TempDiagnosis');
 require('../models/Report');
 const Users = mongoose.model('users');
 const Schedule = mongoose.model('schedule');
 const Appointmet = mongoose.model('appointment');
-const Diagnosis = mongoose.model('diagnosis');
+const TempDiagnosis = mongoose.model('tempDiagnosis');
 const Disease = mongoose.model('disease');
 const Report = mongoose.model('report')
 
