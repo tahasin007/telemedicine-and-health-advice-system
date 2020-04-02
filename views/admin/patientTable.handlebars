@@ -1,64 +1,95 @@
-  
-    <!-- navbar -->
-    {{> _adminNav}}
-    <!-- end of navbar -->
+<!-- navbar -->
+{{> _adminNav}}
+<!-- end of navbar -->
 
-    <!-- patient table -->
-    <section>
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col-xl-10 col-lg-9 col-md-8 ml-auto mt-4">
-            <div class="pt-md-5 mt-md-3 mb-5 col-xl-12">
-              <h3 class="text-muted text-center mb-3">Patients</h3>
-              <div class="row d-flex justify-content-center m-2">
-                <div class="input-group md-form form-sm form-1 pl-0 col-6  text-center">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text cyan lighten-2" id="basic-text1"><i class="fas fa-search text-dark" aria-hidden="true"></i></span>
-                  </div>
-                    <input class="form-control my-0 py-1" type="text" placeholder="Search Patients" aria-label="Search">
-                </div>
+<!-- patient table -->
+<section>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-xl-10 col-lg-9 col-md-8 ml-auto mt-4">
+        <div class="pt-md-5 mt-md-3 mb-5 col-xl-12">
+          <h3 class="text-muted text-center mb-3">Patients</h3>
+          <div class="row d-flex justify-content-center m-2">
+            <div class="input-group md-form form-sm form-1 pl-0 col-6  text-center">
+              <div class="input-group-prepend">
+                <span class="input-group-text cyan lighten-2" id="basic-text1"><i class="fas fa-search text-dark" aria-hidden="true"></i></span>
               </div>
-              
-              <div class="table responsive">
-                    <table class="table table-striped bg-light text-center">
-                  <thead>
-                    <tr class="text-muted">
-                      <th>#</th>
-                      <th>User Name</th>
-                      <th>Email</th>
-
-                      <th>Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {{#each users}}
-                    <tr>
-                      <th>{{@index}}</th>
-
-                      <td>{{userName}}</td>
-                      <td>{{email}}</td>
-                      <td>
-                         <a href="patientTable/{{id}}">
-                          <button type="button" class="btn btn-primary btn-sm" class="">View</button></a>
-                          <form method="post" action="patientTable/{{id}}?_method=DELETE" class="float-right">
-                            <input type="hidden" name="_method" value="DELETE" />
-                            <input type="submit" class="btn btn-danger btn-sm" value="Delete">
-                          </form>
-                      </td>
-                    </tr>
-
-                    {{else}}<p class="text-muted">NO Patients to Show</p>
-
-                    {{/each}}                
-                  </tbody>
-                </table>
-              </div>
+              <input class="form-control my-0 py-1" type="text" id="search" name="search" placeholder="Search Patients">
             </div>
-         </div>
+          </div>
+
+          <div class="table responsive">
+            <table class="table table-striped bg-light text-center">
+              <thead>
+                <tr class="text-muted">
+                  <th>#</th>
+                  <th>User Name</th>
+                  <th>Full Name</th>  
+                  <th>Email</th>
+
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {{#each users}}
+                <tr>
+                  <th>{{add @index 1}}</th>
+                  <td>{{name}}</td>
+                  <td>{{userName}}</td>
+                  <td>{{email}}</td>
+                  <td>
+                   <a href="patientTable/{{id}}">
+                    <button type="button" class="btn btn-primary btn-sm">View</button></a>
+                    <a href="patientTable/delete/{{id}}">
+                      <button type="button" class="btn btn-danger btn-sm">Delete</button>
+                    </a>
+                  </td>
+                </tr>
+
+                {{else}}<p class="text-muted">NO Patients to Show</p>
+
+                {{/each}}                
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
-    </section>
-    <!-- end of table -->
+  </div>
+</section>
+<!-- end of table -->
+
+<script>
+$(function(){
+  $('#search').autocomplete({
+    source: function(req,res){
+      console.log(req,res)
+      $.ajax({
+        url:"autocomplete/patient/",
+        dataType:"jsonp",
+        type:"GET",
+        data:req,
+        success: function(data){
+          console.log(data);
+          res(data)
+
+        },
+        error: function(err){
+          console.log(err.status);
+        }
+      });
+    },
+
+    minLength:1,
+    select: function(event,ui){
+      if(ui.item){
+        $('#search').val(ui.item.label);
+      }
+    }
+  });
+
+});
+</script> 
 
 
 

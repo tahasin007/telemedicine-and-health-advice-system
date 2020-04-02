@@ -15,7 +15,7 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text cyan lighten-2" id="basic-text1"><i class="fas fa-search text-dark" aria-hidden="true"></i></span>
                   </div>
-                    <input class="form-control my-0 py-1" type="text" placeholder="Search Doctors" aria-label="Search">
+                    <input class="form-control my-0 py-1" type="text" id="search" name="search" placeholder="Search By Name">
                 </div>
               </div>
               <div class="table responsive">
@@ -26,27 +26,28 @@
                       <th>User Name</th>
                       <th>Name</th>
                       <th>Email</th>
-                      <th>Speciality</th>
+                      <th>Status</th>
                       <th>Action</th>
                     </tr>
                   </thead>
                   <tbody>
                     {{#each users}}
                     <tr>
-                      <th>{{@index}}</th>
+                      <th>{{add @index 1}}</th>
                       <td>{{userName}}</td>
                       <td>{{name}}</td>
                       <td>{{email}}</td>
-                      <td>{{speciality}}</td>
+                      <td>{{status}}</td>
                       <td>
                          <a href="doctorTable/{{id}}">
                           <button type="button" class="btn btn-primary btn-sm">View</button></a>
                         <a href="doctorTable">
                           <button type="button" class="btn btn-success btn-sm">Edit</button></a>
-                          <form method="post" action="doctorTable/{{id}}?_method=DELETE" class="float-right">
-                            <input type="hidden" name="_method" value="DELETE">
-                            <input type="submit" class="btn btn-danger btn-sm" value="Delete">
-                          </form>
+
+                        <a href="doctorTable/delete/{{id}}">
+                            <button type="button" class="btn btn-danger btn-sm">Delete</button>
+                        </a>
+                          
                       </td>
                     </tr> 
                     {{else}}<p class="text-muted">NO Patients to Show</p>
@@ -61,6 +62,38 @@
     </div>
     </section>
     <!-- end of table -->
+
+<script>
+$(function(){
+  $('#search').autocomplete({
+    source: function(req,res){
+      console.log(req,res)
+      $.ajax({
+        url:"autocomplete/doc/",
+        dataType:"jsonp",
+        type:"GET",
+        data:req,
+        success: function(data){
+          console.log(data);
+          res(data)
+
+        },
+        error: function(err){
+          console.log(err.status);
+        }
+      });
+    },
+
+    minLength:1,
+    select: function(event,ui){
+      if(ui.item){
+        $('#search').val(ui.item.label);
+      }
+    }
+  });
+
+});
+</script> 
     
 
 

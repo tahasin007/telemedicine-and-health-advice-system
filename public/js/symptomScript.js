@@ -96,7 +96,7 @@ $(document).on("click",'#checker',function(e){
     },
     success: function(response) {
      resArr=response;
-     console.log(resArr); 
+     // console.log(resArr); 
      finalStep(resArr);
    },
    error: function(err){

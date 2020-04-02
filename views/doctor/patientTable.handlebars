@@ -28,15 +28,23 @@
                       <td>{{formatDate appointmentDate 'YYYY-MM-DD'}}</td>
                       <td>
                         <a href="patientForm/{{patientId._id}}/{{_id}}">
-                          <span class="align-middle">
+                          
                           <button type="button" class="btn btn-secondary">
                             <i class="fa fa-file text-dark"></i></button>
-                          </span></a>
+                        </a>
                         <a href="doctorMail">
-                          <span class="align-middle">
+                          
                           <button type="button" class="btn btn-secondary">
                             <i class="fas fa-envelope text-dark"></i></button>
-                          </span></a>
+                          </a>
+
+                          <a href="chat/{{patientId.userName}}">
+
+                            <button type="button" class="btn btn-secondary">
+                              <i class="fas fa-comment-alt text-dark"></i>
+                            </button>
+                          
+                        </a>
                       </td>
                     </tr>
                     {{/each}}                   

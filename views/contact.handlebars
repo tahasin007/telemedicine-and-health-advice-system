@@ -9,7 +9,7 @@
               <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav ml-auto">
                   <li class="nav-item">
-                    <a class="nav-link" href="index.html">HOME</a>
+                    <a class="nav-link" href="/">HOME</a>
                   </li>
                   <li class="nav-item">
                     <a class="nav-link" href="home">ABOUT</a>
@@ -34,24 +34,21 @@
            <h1>Get In Touch</h1>
             <div class="row">
                 <div class="col-md-6">
-                    <form class="contact-form">
+                    <form class="contact-form" action="/contact" method="POST">
                         <div class="form-group">
-                            <input type="text" class="form-control" placeholder="Your Name">
+                            <input type="text" required class="form-control" name="name" placeholder="Your Name">
                         </div>
                         <div class="form-group">
-                            <input type="email" class="form-control" placeholder="Email id">
+                            <input type="email" required class="form-control" name="email" placeholder="Email id">
                         </div>
                         <div class="form-group">
-                            <input type="text" class="form-control" placeholder="Your Country">
+                            <input type="text" class="form-control" name="country" placeholder="Your Country">
                         </div>
                         <div class="form-group">
-                            <input type="number" class="form-control" placeholder="Phone no.">
+                            <input type="text" class="form-control" name="phone" placeholder="Phone no.">
                         </div>
                         <div class="form-group">
-                            <input type="text" class="form-control" placeholder="Select service">
-                        </div> 
-                        <div class="form-group">
-                            <textarea class="form-control" rows="4" placeholder="Your Message"></textarea>
+                            <textarea required class="form-control" rows="4" name="message" placeholder="Your Message"></textarea>
                         </div>
                         <button type="submit" class="btn btn-primary">SEND MESSAGE</button>
                     </form>
@@ -70,7 +67,7 @@
                      <div class="follow">
                         <b>Email:</b> 
                         <i class="fa fa-envelope-o" ></i>
-                        ishak@gmail.com 
+                        ishakahmed668@gmail.com
                     </div>
                     <div class="follow">
                        <label>

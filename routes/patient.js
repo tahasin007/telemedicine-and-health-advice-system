@@ -18,12 +18,14 @@ require('../models/Appointmet');
 require('../models/Disease');
 require('../models/TempDiagnosis');
 require('../models/Report');
+require('../models/Message');
 const Users = mongoose.model('users');
 const Schedule = mongoose.model('schedule');
 const Appointmet = mongoose.model('appointment');
 const TempDiagnosis = mongoose.model('tempDiagnosis');
 const Disease = mongoose.model('disease');
 const Report = mongoose.model('report');
+const Message = mongoose.model('message');
 
 const dayArr=['Saturday','Sunday','Monday','Tuesday','Wednesday','Thursday','Friday'];
 const {
@@ -33,7 +35,7 @@ const {
 
 //Patient Home Route
 router.get('/:userName',(req, res) => {
-  const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
+  const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
   Users.findOne({userName:userName}).then((users) =>{
     res.render('patient/patientHome',{
@@ -46,8 +48,9 @@ router.get('/:userName',(req, res) => {
   });
 });
 
+
 router.get('/:userName/notification', (req, res) => {
-  const navClass = ["current","sidebar-link","sidebar-link","sidebar-link"];
+  const navClass = ["current","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
   res.render('patient/notification',{
   	layout:'mainPatient',
@@ -58,7 +61,7 @@ router.get('/:userName/notification', (req, res) => {
 });
 
 router.get('/:userName/symptompChecker', (req, res) => {
-  const navClass = ["sidebar-link","current","sidebar-link","sidebar-link"];
+  const navClass = ["sidebar-link","current","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
   res.render('patient/symptompChecker',{
     layout:'mainPatient',
@@ -70,9 +73,11 @@ router.get('/:userName/symptompChecker', (req, res) => {
 
 router.post('/:userName/symptompChecker', (req, res) => {
   let obj = JSON.parse(JSON.stringify(req.body))
-  const arr=obj["arr[]"]
+  const arr=req.body.arr;
+  // console.log(req.body)
   const userName=req.params.userName;
   let topMatch =[];
+  // console.log(arr)
   // const gender=req.body.gender;
   // const age=req.body.age;
   // if(typeof req.body.searchSymptom =="undefined")console.log('yes')
@@ -124,10 +129,43 @@ router.post('/:userName/symptompChecker', (req, res) => {
     });
   });
 });
+router.get('/:userName/chat',(req, res)=>{
+const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","current"];
+  const userName=req.params.userName;
+  const search=req.query.search;
+    Users.find({role:'doctor'}).then((users) => {
+      res.render('patient/chat',{
+        layout:'mainPatient',
+        userName:userName,
+        doctors:users,
+        navClass:navClass,
+        title:'Message'
+      });
+    });
+});
+
+router.get('/:userName/chat/:receiver',(req, res)=>{
+const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
+  const userName=req.params.userName;
+  Message.find({$or:[{$and:[{senderName:req.params.userName},{receiverName:req.params.receiver}]},
+    {$and:[{senderName:req.params.receiver},{receiverName:req.params.userName}]}]}).then((result)=>{
+      Users.find({role:'doctor'}).then((users) => {
+      res.render('patient/chatUI',{
+        layout:'mainPatient',
+        userName:userName,
+        navClass:navClass,
+        receiver:req.params.receiver,
+        title:'Message',
+        messages:result
+      });
+    });
+    });
+});
+
 
 //show all doctors
 router.get('/:userName/doctors', (req, res) => {
-  const navClass = ["sidebar-link","sidebar-link","current","sidebar-link"];
+  const navClass = ["sidebar-link","sidebar-link","current","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
   const search=req.query.search;
   if(search == undefined){
@@ -172,7 +210,7 @@ router.get('/:userName/autocomplete', (req,res,next) => {
 
 //Routing for Show medical history of patient
 router.get('/:userName/report',(req, res) =>{
-  const navClass = ["sidebar-link","sidebar-link","sidebar-link","current"];
+  const navClass = ["sidebar-link","sidebar-link","sidebar-link","current","sidebar-link"];
   const userName=req.params.userName;
   Users.findOne({userName:userName}).then((user) => {
     Appointmet.find({$and:[{patientId:user._id},{status:'done'}]}).populate('docId').populate('patientId').exec().then(result => {
@@ -191,7 +229,7 @@ router.get('/:userName/report',(req, res) =>{
 
 //Routing for Showing report from a  doctor
 router.get('/:userName/report/:aptId',(req, res) =>{
-  const navClass = ["sidebar-link","sidebar-link","sidebar-link","current"];
+  const navClass = ["sidebar-link","sidebar-link","sidebar-link","current","sidebar-link"];
   const userName=req.params.userName;
   Users.findOne({userName:userName}).then((user) => {
     Report.findOne({aptId:req.params.aptId}).populate('docId').populate('patientId').exec().then(result => {
@@ -215,7 +253,7 @@ router.post('/:userName/patientFormDownload/:reportId',(req, res) =>{
 
 
 router.get('/:userName/diagnosisRes', (req, res) =>{
-  const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
+  const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
   Users.findOne({userName:userName }).then((user) => {
     TempDiagnosis.findOne({patientId:user._id }).sort({'matching.matchPercent':'asc'}).then((rpt)=>{
@@ -237,7 +275,7 @@ router.get('/:userName/diagnosisRes', (req, res) =>{
 
 
 router.get('/:userName/patientProfile', (req, res) => {
-  const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
+  const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   Users.findOne({userName:userName}).then((users) =>{
     const dob=dateFormat(users.dob, "isoDate");
     res.render('patient/patientProfile',{
@@ -254,7 +292,7 @@ router.get('/:userName/patientProfile', (req, res) => {
 
 
 router.get('/:userName/viewDocProfile/:id', (req, res) => {
-  const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
+  const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
   const id=req.params.id;
   Users.findOne({_id:req.params.id}).then((user) => {
@@ -273,7 +311,7 @@ router.get('/:userName/viewDocProfile/:id', (req, res) => {
 
 //Get Route for Sending email
 router.get('/:userName/:docId/sendMail', (req, res) => {
-  const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
+  const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
   Users.findOne({userName:userName}).then((patient) => {
     Users.findOne({_id:req.params.docId}).then((doctor) => {
@@ -312,7 +350,7 @@ router.post('/:userName/:docId/sendMail',(req, res) =>{
 });
 
 router.get('/:userName/editPatientProfile', (req, res) => {
-  const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
+  const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
   Users.findOne({userName:userName}).then((user) => {
     const dob=dateFormat(user.dob, "isoDate");
@@ -343,7 +381,7 @@ router.put('/:userName/editPatientProfile',(req, res) =>{
 
 
 router.get('/:userName/changePassword', (req, res) =>{
-  const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
+  const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
   Users.findOne({userName:userName}).then((user=>{
     res.render('patient/changePassword',{
@@ -490,7 +528,7 @@ router.get('/:userName/viewDocProfile/:doc/:dayNo', (req, res) => {
 
 //routing for appointments by slot
 router.get('/:userName/makeAppointment/:doc/:dayNo', (req, res) =>{
-  const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
+  const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
   const timeObj = [];
   const docId=req.params.doc;

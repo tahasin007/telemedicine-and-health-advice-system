@@ -1,0 +1,45 @@
+<div class="col-12 text-center">
+  <input type="hidden" id="name-user" value="{{userName}}">
+  <input type="hidden" id="name-receiver" value="{{receiver}}">
+
+  <section class="msger">
+    <header class="msger-header">
+      <div class="msger-header-title">
+        <i class="fas fa-comment-alt"></i>{{receiver}}
+      </div>
+    </header>
+
+    <main class="msger-chat" id="chat">
+      {{!-- <div class="msg left-msg">
+
+        <div class="msg-bubble">
+          <div class="msg-info">
+            <div class="msg-info-name">{{userName}}</div>
+          </div>
+
+          <div class="msg-text">
+
+          </div>
+        </div>
+      </div>
+
+      <div class="msg right-msg">
+        <div class="msg-bubble">
+          <div class="msg-info">
+            <div class="msg-info-name">{{receiver}}</div>
+          </div>
+          <div class="msg-text">
+
+          </div>
+        </div>
+      </div> --}}
+    </main>
+
+    <form class="msger-inputarea" id="message_form" method="post">
+      <input type="text" id="msg" class="msger-input" placeholder="Enter your message...">
+      <input type="submit" id="send-message" class="msger-send-btn" value="Send Message">
+    </form>
+  </section>
+
+  
+</div>

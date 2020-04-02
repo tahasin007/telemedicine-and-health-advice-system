@@ -1,0 +1,104 @@
+
+<!-- navbar -->
+{{> _patientNav}}
+<!-- end of navbar -->
+
+<!-- patient table -->
+<section>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-xl-10 col-lg-9 col-md-8 ml-auto mt-4">
+        <div class="pt-md-5 mt-md-3 mb-5 col-xl-12">
+          <h3 class="text-muted text-center mb-3">Find Doctors</h3>
+          <div class="container">
+            <!-- Start of SearchBox -->
+            <div class="row justify-content-center">    
+              <div class="col-10 col-xs-12">
+                <form action="/patient/{{userName}}/doctors" method="GET">
+                  <div class="input-group">         
+                    <input type="text" class="form-control" id="search" name="search" placeholder="Search By Name">
+                    <span class="input-group-btn">
+                      <button class="btn btn-default" type="submit"><i class="fas fa-search"></i></button>
+                    </span>
+                  </div>
+
+                </div>
+              </form>
+            </div>
+          </div>
+          <!-- End of SearchBox -->
+          <div class="row">
+            <div class="col-12">
+              <table class="table table-bordered mt-3">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Speciality</th>
+                    <th scope="col">Experience</th>
+                    <th scope="col">Message</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {{#each doctors}}
+                  <tr>
+                    <th scope="row">{{@index}}</th>
+                    <td>{{name}}</td>
+                    <td>{{email}}</td>
+                    <td>{{speciality}}</td>
+                    <td>{{experience}}</td>
+                    <td>
+                      <div class="row justify-content-center">
+                        <a href="chat/{{userName}}"><i class="fas fa-comment-alt text-primary ml-2"></i>
+                        </a>
+                      </div>
+                    </td>
+                  </tr>
+                  {{else}}
+
+                  {{/each}}
+                  
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+<!-- end of table -->
+
+<script>
+$(function(){
+  $('#search').autocomplete({
+    source: function(req,res){
+      console.log(req,res)
+      $.ajax({
+        url:"autocomplete/",
+        dataType:"jsonp",
+        type:"GET",
+        data:req,
+        success: function(data){
+          console.log(data);
+          res(data)
+
+        },
+        error: function(err){
+          console.log(err.status);
+        }
+      });
+    },
+
+    minLength:1,
+    select: function(event,ui){
+      if(ui.item){
+        $('#search').val(ui.item.label);
+      }
+    }
+  });
+
+});
+</script> 

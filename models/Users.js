@@ -3,61 +3,30 @@ const Schema = mongoose.Schema;
 
 // Create Schema
 const UserSchema = new Schema({
-  userName:{
-    type: String
-  },
-  name:{
-    type: String
-  },
-  gender:{
-    type: String
-  },
-  email:{
-    type: String
-  },
-  contact:{
-    type: String
-  },
-  password:{
-    type:String
-  },
-  role:{
-    type: String
-  },
-  education:{
-    type: String
-  },
-  experience:{
-    type: String
-  },
-  degree:{
-    type: String
-  },
-  chamber:{
-    type: String,
-  },
-  date: {
-    type: Date,
-    default: Date.now
-  },
-  dob:{
-    type: Date,
-  },
-  nationality:{
-    type: String
-  },
-  speciality:{
-    type: String
-  },
-  address:{
-    type: String
-  },
-  _id:{
-    type: Schema.Types.ObjectId
-  },
-  gender:{
-    type: String
-  }
+  userName:{type: String},
+  name:{type: String},
+  gender:{type: String},
+  email:{type: String},
+  contact:{type: String},
+  password:{type:String},
+  role:{type: String},
+  education:{type: String},
+  experience:{type: String},
+  degree:{type: String},
+  chamber:{type: String,},
+  date: {type: Date,default: Date.now},
+  dob:{type: Date},
+  nationality:{type: String},
+  speciality:{type: String},
+  address:{type: String},
+  status:{type: String},
+  // _id:{
+  //   type: Schema.Types.ObjectId
+  // },
+  gender:{type: String},
+  // userImage:{type: String,default:'default.png'},
+  // google:{type: String,default:''},
+  // googleTokens:{type:String,default:''}
 });
 
 

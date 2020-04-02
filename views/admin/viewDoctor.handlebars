@@ -1,20 +1,20 @@
 
-    <!-- navbar -->
-    {{> _adminNav}}
-    <!-- end of navbar -->
-    <section>
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col-xl-10 col-lg-9 col-md-8 ml-auto mt-4">
-            <div class="pt-md-5 mt-md-3 mb-5 col-xl-12">
-              <div class="container">
-                <h3 class="text-info font-weight-bold text-center mb-3">Doctor Profile</h3>
-              </div>
-              <!-- <div class="col-12 rounded"  style="border:1px solid grey;"> -->
-                <!-- Doc Card start -->
+<!-- navbar -->
+{{> _adminNav}}
+<!-- end of navbar -->
+<section>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-xl-10 col-lg-9 col-md-8 ml-auto mt-4">
+        <div class="pt-md-5 mt-md-3 mb-5 col-xl-12">
+          <div class="container">
+            <h3 class="text-info font-weight-bold text-center mb-3">Doctor Profile</h3>
+          </div>
+          <!-- <div class="col-12 rounded"  style="border:1px solid grey;"> -->
+            <!-- Doc Card start -->
 
-                <div class="row d-flex">
-                  <div class="col-xl-4 col-lg-4 col-md-12 text-center pl-0">
+            <div class="row d-flex">
+              <div class="col-xl-4 col-lg-4 col-md-12 text-center pl-0">
                 <div class="card_profile">
                   <img src="/images/doc1.png" alt="John" width="100">
                   <h2>{{doctor.name}}</h2>
@@ -33,73 +33,82 @@
                 <div class="row profile_info m-2">
                   <div class="col-6 plabel">Name:</div>
                   <div class="col-6 bg-light">{{doctor.name}}</div>
-              </div>
-              <div class="row profile_info m-2">
+                </div>
+                <div class="row profile_info m-2">
                   <div class="col-6 plabel">Education:</div>
                   <div class="col-6 bg-light">{{doctor.education}}</div>
-              </div>
-              <div class="row profile_info m-2">
+                </div>
+                <div class="row profile_info m-2">
                   <div class="col-6 plabel">Speciality:</div>
                   <div class="col-6 bg-light">{{doctor.speciality}}</div>
-              </div>
-              <div class="row profile_info m-2">
+                </div>
+                <div class="row profile_info m-2">
                   <div class="col-6 plabel">Work Experience:</div>
                   <div class="col-6 bg-light">{{doctor.experience}}</div>
-              </div>
-              <div class="row profile_info m-2">
+                </div>
+                <div class="row profile_info m-2">
                   <div class="col-6 plabel">Email:</div>
                   <div class="col-6 bg-light">{{doctor.email}}</div>
-              </div>
-              <div class="row profile_info m-2">
+                </div>
+                <div class="row profile_info m-2">
                   <div class="col-6 plabel">Degree:</div>
                   <div class="col-6 bg-light">{{doctor.degree}}</div>
-              </div>
-              </div>
-            </div>
-                
-
-                <!-- End doc card-->
-                <div class="row justify-content-center">
-                  <div class="container">
-                    <h3 class="text-info font-weight-bold text-center m-3">Work Schedule</h3>
-                  </div>
-                  <div class="col-12">
-                    <table class="table table-bordered">
-                      <thead>
-                        <tr>
-                          <th scope="col">Days</th>
-                          <th scope="col">Sat</th>
-                          <th scope="col">Sun</th>
-                          <th scope="col">Mon</th>
-                          <th scope="col">Tue</th>
-                          <th scope="col">Thu</th>
-                          <th scope="col">Fri</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <th scope="row">Availibility</th>
-                          <td>--</td>
-                          <td>--</td>
-                          <td>03:00pm-04:00pm</td>
-                          <td>--</td>
-                          <td>--</td>
-                          <td>05:00pm-07:00pm</td>
-                        </tr>
-                      </tbody>
-                    </table>
-
-                  </div>
                 </div>
-              
-
-              <!-- </div> -->
+              </div>
             </div>
-         </div>
+            
+
+            <!-- End doc card-->
+            <div class="row justify-content-center">
+              {{#eq doctor.status 'Pending'}}
+              <div class="justify-content-center">
+                <a href="../grantAccess/{{doctor._id}}">
+                  <button type="button" class="btn btn-outline-dark">Allow Access</button>
+                </a>
+              </div>
+
+              {{else}}
+              <div class="container">
+                <h3 class="text-info font-weight-bold text-center m-3">Work Schedule</h3>
+              </div>
+              <div class="col-12">
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th scope="col">Days</th>
+                      <th scope="col">Sat</th>
+                      <th scope="col">Sun</th>
+                      <th scope="col">Mon</th>
+                      <th scope="col">Tue</th>
+                      <th scope="col">Thu</th>
+                      <th scope="col">Fri</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th scope="row">Availibility</th>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>03:00pm-04:00pm</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>05:00pm-07:00pm</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+              </div>
+              {{/eq}}
+            </div>
+            
+
+            <!-- </div> -->
+          </div>
+        </div>
       </div>
     </div>
-    </section>
-    <!-- end of tables -->
+  </section>
+  <!-- end of tables -->
 
 
 

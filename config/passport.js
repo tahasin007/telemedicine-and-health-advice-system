@@ -7,7 +7,8 @@ require('../models/Users');
 const User = mongoose.model('users');
 
 module.exports = function(passport){
-  passport.use(new LocalStrategy({usernameField: 'email'}, (email, password, done) => {
+  passport.use('local.signup',new LocalStrategy({usernameField: 'email',passwordField: 'password',passReqToCallback:true}, 
+    (req, email, password, done) => {
     // Match user
     User.findOne({$or:[{email:email},{userName:email}]}).then(user => {
       if(!user){

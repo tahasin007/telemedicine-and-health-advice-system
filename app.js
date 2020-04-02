@@ -14,7 +14,9 @@ const passport = require('passport')
 const helpers = require('handlebars-helpers')();
 const helperDateFormat=require('handlebars-dateformat');
 const cookieParser = require('cookie-parser');
-const socketIO =require('socket.io')
+const validator = require('express-validator')
+const socketIO =require('socket.io');
+const async = require("async");
 
 //Routes
 const users = require('./routes/users');
@@ -25,9 +27,9 @@ const doctor = require('./routes/doctor');
 // Handlebars Middleware
 
 app.engine('handlebars', expressHandlebars({
-    handlebars: allowInsecurePrototypeAccess(Handlebars),
-    helpers: helpers
-    
+  handlebars: allowInsecurePrototypeAccess(Handlebars),
+  helpers: helpers
+
 }));
 
 
@@ -39,13 +41,17 @@ mongoose.Promise = global.Promise;
 mongoose.connect('mongodb+srv://padawan:dCBgBJenezS0kvnR@firstcluster-cyefr.mongodb.net/myapp', {
 	useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true
 })
-  .then(() => console.log('MongoDB Connected'))
-  .catch(err => console.log(err));
+.then(() => console.log('MongoDB Connected'))
+.catch(err => console.log(err));
 
 
 //Load Users Model
 require('./models/Users');
 const Users = mongoose.model('users');
+require('./models/Contact');
+const Contact = mongoose.model('contact');
+require('./models/Message');
+const Message = mongoose.model('message');
 
 // Passport Config
 require('./config/passport')(passport);
@@ -54,11 +60,12 @@ require('./config/passport')(passport);
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Body parser middleware
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 //Cookie Parser middleware
-app.use(cookieParser('secret'));
+app.use(cookieParser());
+
 
 // Express session midleware
 app.use(session({
@@ -101,6 +108,67 @@ app.get('/contact', (req, res) => {
     layout: 'landingPage'
   });
 });
+
+app.post('/contact',(req, res) => {
+  const contact =new Contact({
+    name:req.body.name,
+    email:req.body.email,
+    country:req.body.country,
+    phone:req.body.phone,
+    message:req.body.message
+  });
+  contact.save().then((result) =>{
+    req.session.message ={
+      type:'success',
+      msg:'Message sent to admin successfully'
+    }
+    res.redirect('/');
+  });
+});
+
+app.post('/chat/:name',(req,res,next) => {
+  const params = req.params.name.split('.');
+  const sender=params[0];
+  const receiver=params[1];
+  if(req.body.message){
+    Users.findOne({userName:sender}).then((sender)=>{
+      Users.findOne({userName:receiver}).then((receiver)=>{
+        const newMessage = new Message();
+        newMessage.sender = sender._id;
+        newMessage.receiver = receiver._id;
+        newMessage.senderName = sender.userName;
+        newMessage.receiverName = receiver.userName;
+        newMessage.message = req.body.message;
+        newMessage.createdAt = new Date();
+        newMessage.save().then(result => {
+          if(sender.role =='patient'){
+            res.redirect('/patient/'+sender+'/chat/'+receiver);
+          }
+          else if(sender.role =='doctor'){
+            res.redirect('/doctor/'+sender+'/chat/'+receiver);
+          } 
+        })
+
+      });
+    });
+  }
+});
+// app.get('/doctor/:sender/chat/:receiver',(req,res)=>{
+//   Message.find({$or:[{$and:[{senderName:req.params.sender},{receiverName:req.params.receiver}]},
+//     {$and:[{senderName:req.params.receiver},{receiverName:req.params.sender}]}]})
+//   .populate('sender').populate('receiver').exec((result)=>{
+//     console.log(result)
+//   });
+// });
+
+
+// app.get('/patient/:sender/chat/:receiver',(req,res)=>{
+//   Message.find({$or:[{$and:[{senderName:req.params.sender},{receiverName:req.params.receiver}]},
+//     {$and:[{senderName:req.params.receiver},{receiverName:req.params.sender}]}]})
+//   .populate('receiver').exec((result)=>{
+//     console.log(result)
+//   });
+// });
 
 //socketIO
 const server = http.createServer(app);

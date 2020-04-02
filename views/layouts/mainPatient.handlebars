@@ -27,7 +27,7 @@
   <title>{{title}}</title>
 </head>
 <body>   
- 
+
   
   {{{body}}}
 
@@ -56,11 +56,25 @@
 
   <script src="/socket.io/socket.io.js"></script>
   <script src="/js/chat/chat.js"></script>
+  
 
   <script src='https://yaireo.github.io/tagify/dist/tagify.js'></script>
+<script src='https://use.fontawesome.com/releases/v5.0.13/js/all.js'></script>
 
-  
-  
+   <script type="text/javascript">
+    (function($){
+    $.deparam = $.deparam || function(uri){
+        if(uri === undefined){
+            uri = window.location.pathname;
+        }
+        
+        var value1 = window.location.pathname;
+        var splitUrl = value1.split('/');
+        var finalUrl = splitUrl[2]+'.'+splitUrl[4];
+        return finalUrl;
+    }    
+})(jQuery);
+</script>
  
   
 

@@ -1,0 +1,54 @@
+<!-- navbar -->
+{{> _adminNav}}
+<!-- end of navbar -->
+
+<!-- patient table -->
+<section>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-xl-10 col-lg-9 col-md-8 ml-auto mt-4">
+        <div class="pt-md-5 mt-md-3 mb-5 col-xl-12">
+          <h3 class="text-muted text-center mb-3">Contacted Users</h3>
+  
+          <div class="table responsive">
+            <table class="table table-striped bg-light text-center">
+              <thead>
+                <tr class="text-muted">
+                  <th>User Name</th>
+                  <th>Email</th>
+                  <th>Country</th>
+                  <th>Phone No</th>
+                  <th>Message</th>
+                  
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {{#each contact}}
+                <tr>
+                  <td>{{name}}</td>
+                  <td>{{email}}</td>
+                  <td>{{country}}</td>
+                  <td>{{phone}}</td>
+                  <td>{{message}}</td>
+                  <td>
+                   <a href="patientTable/{{id}}">
+                    <button type="button" class="btn btn-primary btn-sm">View</button></a>
+                    <a href="patientTable/delete/{{id}}">
+                      <button type="button" class="btn btn-danger btn-sm">Delete</button>
+                    </a>
+                  </td>
+                </tr>
+
+                {{else}}<p class="text-muted">NO Patients to Show</p>
+
+                {{/each}}                
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- end of table -->
