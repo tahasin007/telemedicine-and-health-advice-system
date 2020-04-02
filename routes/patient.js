@@ -60,7 +60,7 @@ router.get('/:userName/notification', (req, res) => {
   });
 });
 
-router.get('/:userName/symptompChecker', (req, res) => {
+router.get('/:userName/symptompChecker',(req, res) => {
   const navClass = ["sidebar-link","current","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
   res.render('patient/symptompChecker',{
@@ -130,37 +130,37 @@ router.post('/:userName/symptompChecker', (req, res) => {
   });
 });
 router.get('/:userName/chat',(req, res)=>{
-const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","current"];
+  const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","current"];
   const userName=req.params.userName;
   const search=req.query.search;
-    Users.find({role:'doctor'}).then((users) => {
-      res.render('patient/chat',{
-        layout:'mainPatient',
-        userName:userName,
-        doctors:users,
-        navClass:navClass,
-        title:'Message'
-      });
+  Users.find({role:'doctor'}).then((users) => {
+    res.render('patient/chat',{
+      layout:'mainPatient',
+      userName:userName,
+      doctors:users,
+      navClass:navClass,
+      title:'Message'
     });
+  });
 });
 
 router.get('/:userName/chat/:receiver',(req, res)=>{
-const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
+  const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
   Message.find({$or:[{$and:[{senderName:req.params.userName},{receiverName:req.params.receiver}]},
     {$and:[{senderName:req.params.receiver},{receiverName:req.params.userName}]}]}).then((result)=>{
       Users.find({role:'doctor'}).then((users) => {
-      res.render('patient/chatUI',{
-        layout:'mainPatient',
-        userName:userName,
-        navClass:navClass,
-        receiver:req.params.receiver,
-        title:'Message',
-        messages:result
+        res.render('patient/chatUI',{
+          layout:'mainPatient',
+          userName:userName,
+          navClass:navClass,
+          receiver:req.params.receiver,
+          title:'Message',
+          messages:result
+        });
       });
     });
-    });
-});
+  });
 
 
 //show all doctors
@@ -274,7 +274,7 @@ router.get('/:userName/diagnosisRes', (req, res) =>{
 
 
 
-router.get('/:userName/patientProfile', (req, res) => {
+router.get('/:userName/patientProfile',(req, res) => {
   const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   Users.findOne({userName:userName}).then((users) =>{
     const dob=dateFormat(users.dob, "isoDate");
@@ -418,113 +418,7 @@ router.put('/:userName/changePassword', (req, res) =>{
 });
 
 
-//routing for  automatic appointment
-router.get('/:userName/viewDocProfile/:doc/:dayNo', (req, res) => {
-  const patient=req.params.userName;
-  const docID = req.params.doc;
-  const dayNo=req.params.dayNo;
-  Users.findOne({userName:patient}).then((user) => {
-    Schedule.findOne({doctorId:docID}).then((schedule) => {
-      Appointmet.countDocuments({$and:[{scheduleId:schedule._id},{docId:docID}]}).then((appointment) => {
 
-        let nextDay = (Number(dayNo)+6-1)%6;
-        if(dayNo == 0)nextDay = 6; 
-
-      if (appointment == 0 ){//if no appointment
-        for(let i=0;i<schedule.slot[dayNo].length;i++){
-          if(schedule.slot[dayNo][i]==0){
-            schedule.slot.set(dayNo,changeSlotToOne(schedule.slot[dayNo],i));
-            schedule.save();
-            createAppointment(nextDay,schedule.start[dayNo],docID,user._id,schedule._id,'regular',i,'pending');
-            req.session.message ={
-              type:'success',
-              msg:'Appointmet has been scheduled'
-            }
-            res.redirect('/patient/'+user.userName+'/viewDocProfile/'+docID);
-            break;
-          }//end  inner if
-        }//end for
-      }//end if
-      else{
-        Appointmet.find({$and:[{scheduleId:schedule._id},{docId:docID}]}).then((appointments) => {
-          let count = 0 ;
-          var slot = [];
-          appointments.forEach((apt) => {
-            const d = setDate(nextDay,schedule.start[dayNo]);
-            if(dateFormat(d,"shortDate")==dateFormat(apt.appointmentDate,"shortDate")){
-              count++;
-              slot.push(apt.slotNo);
-            }
-          });
-          if(count==0){
-            for(let i=0;i<schedule.slot[dayNo].length; i++){
-              if(schedule.slot[dayNo][i] == 0){
-                schedule.slot.set(dayNo,changeSlotToOne(schedule.slot[dayNo],i));
-                schedule.save();
-                createAppointment(nextDay,schedule.start[dayNo],docID,user._id,schedule._id,'regular',i,'pending');
-                req.session.message ={
-                  type:'success',
-                  msg:'Appointmet Schedule has been scheduled'
-                }
-                res.redirect('/patient/'+user.userName+'/viewDocProfile/'+docID);
-                break;
-              }
-            }
-          }
-          else if(slot.length>0){
-            let arr=[];
-            for(var i = 0; i < schedule.slot[dayNo].length; i++){
-              if(schedule.slot[dayNo][i]==0)arr.push(i);
-            }
-            arr = arr.filter(item => !slot.includes(item));
-            if(arr.length > 0){
-
-              const slotNo=arr.shift();
-              const start=schedule.start[dayNo];
-              const time=start.split(':');
-              var i1=Number(time[0]*60)+Number(time[1]);
-              for(var j=0; j<slotNo; j++)i1=i1+30;
-                const div=Math.floor(i1/60);
-              const rem=i1%60;
-              let s1,s2,startTime;
-              if(div<10)s1='0'+String(div);
-              if(div>=10)s1=String(div);
-              if(rem==0)s2=String("00")
-                if(rem>0)s2=String(rem);
-              startTime=s1+":"+s2;
-              schedule.slot.set(dayNo,changeSlotToOne(schedule.slot[dayNo],slotNo));
-              schedule.save();
-              createAppointment(nextDay,startTime,docID,user._id,schedule._id,'regular',slotNo,'pending');
-              req.session.message ={
-                type:'success',
-                msg:'Appointmet Schedule has been scheduled'
-              }
-              res.redirect('/patient/'+user.userName+'/viewDocProfile/'+docID);
-            }
-            else{
-              //message no empty slot
-              req.session.message ={
-                type:'danger',
-                msg:'Schedule Busy'
-              }
-              res.redirect('/patient/'+user.userName+'/viewDocProfile/'+docID);
-            }//end else no slot found
-          }
-          else{
-            // total fail
-            req.session.message ={
-              type:'danger',
-              msg:'Schedule Busy'
-            }
-            res.redirect('/patient/'+user.userName+'/viewDocProfile/'+docID);
-          }
-        });
-    }//end else
-  }) 
-    });
-  })
-   // res.redirect('/patient/'+req.params.userName+'/patientProfile');
- });
 
 //routing for appointments by slot
 router.get('/:userName/makeAppointment/:doc/:dayNo', (req, res) =>{
@@ -566,36 +460,47 @@ router.get('/:userName/makeAppointment/:doc/:dayNo/:slot',(req, res) => {
   const docID = req.params.doc;
   const dayNo=req.params.dayNo;
   const slot=req.params.slot;
+  var type,message;
   let nextDay = (Number(dayNo)+6-1)%6;
   if(dayNo == 0)nextDay = 6;
   Users.findOne({userName:patient}).then((user) => {
     Schedule.findOne({doctorId:docID}).then((schedule) => {
-      Appointmet.countDocuments({$and:[{scheduleId:schedule._id},{docId:docID}]}).then((appointment) => {
+      const slotNo=slot;
+      const start=schedule.start[dayNo];
+      const time=start.split(':');
+      var i1=Number(time[0]*60)+Number(time[1]);
+      for(var j=0; j<slotNo; j++)i1=i1+30;
+        const div=Math.floor(i1/60);
+      const rem=i1%60;
+      let s1,s2,startTime;
+      if(div<10)s1='0'+String(div);
+      if(div>=10 && div<24)s1=String(div);
+      if(div>=24)s1=String("00");
+      if(rem==0)s2=String("00")
+        if(rem>0)s2=String(rem);
+      startTime=s1+":"+s2;
+      var thisDate=returnDate(nextDay,startTime);
 
-        const slotNo=slot;
-        const start=schedule.start[dayNo];
-        const time=start.split(':');
-        var i1=Number(time[0]*60)+Number(time[1]);
-        for(var j=0; j<slotNo; j++)i1=i1+30;
-          const div=Math.floor(i1/60);
-        const rem=i1%60;
-        let s1,s2,startTime;
-        if(div<10)s1='0'+String(div);
-        if(div>=10 && div<24)s1=String(div);
-        if(div>=24)s1=String("00");
-        if(rem==0)s2=String("00")
-          if(rem>0)s2=String(rem);
-        startTime=s1+":"+s2;
-        schedule.slot.set(dayNo,changeSlotToOne(schedule.slot[dayNo],slotNo));
-        schedule.save();
-        createAppointment(nextDay,startTime,docID,user._id,schedule._id,'regular',slotNo,'pending');
-        req.session.message ={
-          type:'success',
-          msg:'Appointmet Schedule has been scheduled'
-        }
-        res.redirect('/patient/'+user.userName+'/viewDocProfile/'+docID);
+      Appointmet.findOne({$and:[{patientId:user._id},{appointmentDate
+        :thisDate}]}).then(apt=>{
+          if(apt){
+            type='danger';
+            message='You have another appointment at this time';
+          }
+          else{
+            schedule.slot.set(dayNo,changeSlotToOne(schedule.slot[dayNo],slotNo));
+            schedule.save();
+            createAppointment(nextDay,startTime,docID,user._id,schedule._id,'regular',slotNo,'pending');
+            type='success';
+            message='appointment scheduled';
+          }
+          req.session.message ={
+            type:type,
+            msg:message
+          }
+          res.redirect('/patient/'+patient+'/viewDocProfile/'+docID);
+        })
       });
-    });
   }); 
 });
 
@@ -669,66 +574,69 @@ router.post('/:userName/symptompChecklast', (req, res)=>{
   else if((DengueQ1 =='yes' && DengueQ2 =='no')||(DengueQ1 =='no' && DengueQ2 =='yes'))Dengue=.5;
   Users.findOne({userName:req.params.userName}).then(user =>{
     TempDiagnosis.findOne({patientId:user._id}).then((report)=>{
-        report.matching.forEach(match=>{
-          if(match.diseaseName=='Asthma'){
-            const temp1=match.matchPercent*.80+Asthma*.20;
-            match.matchPercent=temp1;
-          }
-          if(match.diseaseName=='Acute Bronchitis'){
-            const temp2=match.matchPercent*.80+Bronchitis*.20;
-            match.matchPercent=temp2;
-          }
-          if(match.diseaseName=='Allergy(Hay Fever)'){
-            const temp3=match.matchPercent*.80+Allergy*.20;
-            match.matchPercent=temp3;
-          }
-          if(match.diseaseName=='Anthrax'){
-            const temp4=match.matchPercent*.80+Anthrax*.20;
-            match.matchPercent=temp4;
-          }
-          if(match.diseaseName=='Acute liver failure'){
-            const temp5=match.matchPercent*.75+LiverFailure*.25;
-            match.matchPercent=temp5;
-          }
-          if(match.diseaseName=='Chronic cough'){
-            const temp6=match.matchPercent*.80+ChronicCough*.20;
-            match.matchPercent=temp6;
-          }
-          if(match.diseaseName=='Concussion'){
-            const temp7=match.matchPercent*.80+Concussion*.20;
-            match.matchPercent=temp7;
-          }
-          if(match.diseaseName=='Malaria'){
-            const temp8=match.matchPercent*.80+Malaria*.20;
-            match.matchPercent=temp8;
-          }
-          if(match.diseaseName=='Lung Abscess'){
-            const temp9=match.matchPercent*.80+LungAbscess*.20;
-            match.matchPercent=temp9;
-          }
-          if(match.diseaseName=='Pneumonia'){
-            const temp10=match.matchPercent*.80+Pneumonia*.20;
-            match.matchPercent=temp10;
-          }
-          if(match.diseaseName=='Leukemia'){
-            const temp11=match.matchPercent*.75+Leukemia*.25;
-            match.matchPercent=temp11;
-          }
-          if(match.diseaseName=='Gastritis'){
-            const temp12=match.matchPercent*.70+Gastritis*.30;
-            match.matchPercent=temp12;
-          }
-          if(match.diseaseName=='Dengue'){
-            const temp13=match.matchPercent*.80+Dengue*.20;
-            match.matchPercent=temp13;
-          }
-        })
-        report.save().then((result)=>{
-          res.redirect('/patient/'+req.params.userName+'/diagnosisRes');
-        });
+      report.matching.forEach(match=>{
+        if(match.diseaseName=='Asthma'){
+          const temp1=match.matchPercent*.80+Asthma*.20;
+          match.matchPercent=temp1;
+        }
+        if(match.diseaseName=='Acute Bronchitis'){
+          const temp2=match.matchPercent*.80+Bronchitis*.20;
+          match.matchPercent=temp2;
+        }
+        if(match.diseaseName=='Allergy(Hay Fever)'){
+          const temp3=match.matchPercent*.80+Allergy*.20;
+          match.matchPercent=temp3;
+        }
+        if(match.diseaseName=='Anthrax'){
+          const temp4=match.matchPercent*.80+Anthrax*.20;
+          match.matchPercent=temp4;
+        }
+        if(match.diseaseName=='Acute liver failure'){
+          const temp5=match.matchPercent*.75+LiverFailure*.25;
+          match.matchPercent=temp5;
+        }
+        if(match.diseaseName=='Chronic cough'){
+          const temp6=match.matchPercent*.80+ChronicCough*.20;
+          match.matchPercent=temp6;
+        }
+        if(match.diseaseName=='Concussion'){
+          const temp7=match.matchPercent*.80+Concussion*.20;
+          match.matchPercent=temp7;
+        }
+        if(match.diseaseName=='Malaria'){
+          const temp8=match.matchPercent*.80+Malaria*.20;
+          match.matchPercent=temp8;
+        }
+        if(match.diseaseName=='Lung Abscess'){
+          const temp9=match.matchPercent*.80+LungAbscess*.20;
+          match.matchPercent=temp9;
+        }
+        if(match.diseaseName=='Pneumonia'){
+          const temp10=match.matchPercent*.80+Pneumonia*.20;
+          match.matchPercent=temp10;
+        }
+        if(match.diseaseName=='Leukemia'){
+          const temp11=match.matchPercent*.75+Leukemia*.25;
+          match.matchPercent=temp11;
+        }
+        if(match.diseaseName=='Gastritis'){
+          const temp12=match.matchPercent*.70+Gastritis*.30;
+          match.matchPercent=temp12;
+        }
+        if(match.diseaseName=='Dengue'){
+          const temp13=match.matchPercent*.80+Dengue*.20;
+          match.matchPercent=temp13;
+        }
+      })
+      report.save().then((result)=>{
+        res.redirect('/patient/'+req.params.userName+'/diagnosisRes');
+      });
     });
   });
 });
+
+
+
 
 //create Appointment and save to MongoDB
 function createAppointment(datNo,stime,docId,patientId,scheduleId,type,slotNo,status){
@@ -846,5 +754,16 @@ function findExpectedMatch(matchObj){
   return arr;
 }
 
+function returnDate(datNo,stime){
+  const d = new Date();
+  d.setDate(d.getDate() + (datNo - 1 - d.getDay() + 7) % 7 + 1);
+  const year=d.getFullYear();
+  const month=d.getMonth();
+  const day=d.getDate();
+  const str=stime;
+  const time=str.split(":");
+  const date = new Date(year, month, day, time[0], time[1]);
+  return date;
+}
 
 module.exports = router;

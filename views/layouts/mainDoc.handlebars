@@ -9,10 +9,15 @@
   <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css">
 
+  <link rel="stylesheet" href="/css/wickedpicker.css">
+
+  
+
   <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
   <script src="//code.jquery.com/jquery-1.12.4.js"></script>
   <script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
   <title>{{title}}</title>
+
 </head>
 <body>   
 
@@ -28,26 +33,30 @@
   <script src="/socket.io/socket.io.js"></script>
   <script src="/js/chat/chat.js"></script>
 
-<script src='https://use.fontawesome.com/releases/v5.0.13/js/all.js'></script>
+  <script src='https://use.fontawesome.com/releases/v5.0.13/js/all.js'></script>
 
   <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
   <script src="//code.jquery.com/jquery-1.12.4.js"></script>
   <script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
+
+  <script src="https://code.jquery.com/jquery-3.4.0.min.js"></script>
+  <script src="/js/wickedpicker.js"></script>
+
   <script type="text/javascript">
-    (function($){
+  (function($){
     $.deparam = $.deparam || function(uri){
-        if(uri === undefined){
-            uri = window.location.pathname;
-        }
-        
-        var value1 = window.location.pathname;
-        var splitUrl = value1.split('/');
-        var finalUrl = splitUrl[2]+'.'+splitUrl[4];
-        return finalUrl;
+      if(uri === undefined){
+        uri = window.location.pathname;
+      }
+
+      var value1 = window.location.pathname;
+      var splitUrl = value1.split('/');
+      var finalUrl = splitUrl[2]+'.'+splitUrl[4];
+      return finalUrl;
     }    
-})(jQuery);
-</script>
+  })(jQuery);
+  </script>
 
 
 </body>

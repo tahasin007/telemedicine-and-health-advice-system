@@ -70,7 +70,7 @@ app.use(cookieParser());
 // Express session midleware
 app.use(session({
   secret: 'secret',
-  resave: true,
+  resave: false,
   saveUninitialized: true
 }));
 

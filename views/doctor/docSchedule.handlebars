@@ -1,111 +1,138 @@
 
-    <!-- navbar -->
-    {{> _docNav}}
-    <!-- end of navbar -->
+<!-- navbar -->
+{{> _docNav}}
+<!-- end of navbar -->
 
 
-   <!--  Admin Profile -->
+<!--  Admin Profile -->
 
-   <section>
-      <div class="container-fluid">
-        <div class="row ">
-          <div class="col-xl-10 col-lg-9 col-md-8 ml-auto mt-4">
-            <div class="pt-md-5 mt-md-3 mb-5 col-xl-12">
-               <!-- Form starts for Profile edit -->
-              <div class="container">
-                <h3 class="text-center mb-3">Schedule</h3>
-                <div class="col-12 align-items-center">
-                    <table class="table table-borderless table-hover">
-                      <thead class="thead-dark">
-                        <tr>
-                          <th scope="col" class="text-center">Day</th>
-                          <th scope="col" class="text-center">Start time</th>
-                          <th scope="col" class="text-center">End Time</th>
-                          <th scope="col" class="text-center">Slot</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <th scope="row" class="text-center bg-secondary text-light">Saturday</th>
-                          <td class="text-center">{{schedule.start.[0]}}</td>
-                          <td class="text-center">{{schedule.end.[0]}}</td>
-                          <td class="text-center">
-                            <a href="showSlot/{{schedule.day.[0]}}">
-                            <button type="button" class="btn btn-outline-dark btn-sm"><i class="fa fa-list-alt" aria-hidden="true"></i></button>
-                          </td>
-                        </tr>
-                        <tr>
-                          <th scope="row "class="text-center bg-secondary text-light">Sunday</th>
-                          <td class="text-center">{{schedule.start.[1]}}</td>
-                          <td class="text-center">{{schedule.end.[1]}}</td>
-                          <td class="text-center">
-                            <a href="showSlot/{{schedule.day.[1]}}">
-                            <button type="button" class="btn btn-outline-dark btn-sm"><i class="fa fa-list-alt" aria-hidden="true"></i></button>
-                          </td>
-                        </tr>
+<section>
+  <div class="container-fluid">
+    <div class="row ">
+      <div class="col-xl-10 col-lg-9 col-md-8 ml-auto mt-4">
+        <div class="pt-md-5 mt-md-3 mb-5 col-xl-12">
+         <!-- Form starts for Profile edit -->
+         <div class="container">
+          <h3 class="text-center mb-3">Schedule</h3>
+          <div class="col-12 align-items-center">
+            <table class="table table-borderless table-hover">
+              <thead class="thead-dark">
+                <tr>
+                  <th scope="col" class="text-center">Day</th>
+                  <th scope="col" class="text-center">Start time</th>
+                  <th scope="col" class="text-center">End Time</th>
+                  <th scope="col" class="text-center">Slot</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row" class="text-center bg-light text-dark">Saturday</th>
+                  <td class="text-center">{{schedule.start.[0]}}</td>
+                  <td class="text-center">{{schedule.end.[0]}}</td>
+                  <td class="text-center">
+                    {{#if schedule.start.[0]}}
+                    <a href="showSlot/{{schedule.day.[0]}}">
+                      <button type="button" class="btn btn-outline-dark btn-sm">
+                        <i class="fa fa-list-alt" aria-hidden="true"></i>
+                      </button>
+                    </a>
+                    {{/if}}
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row "class="text-center bg-light text-dark">Sunday</th>
+                  <td class="text-center">{{schedule.start.[1]}}</td>
+                  <td class="text-center">{{schedule.end.[1]}}</td>
+                  <td class="text-center">
+                    {{#if schedule.start.[1]}}
+                    <a href="showSlot/{{schedule.day.[1]}}">
+                      <button type="button" class="btn btn-outline-dark btn-sm">
+                        <i class="fa fa-list-alt" aria-hidden="true"></i>
+                      </button>
+                    </a>
+                    {{/if}}
+                  </td>
+                </tr>
 
-                        <tr>
-                          <th scope="row" class="text-center bg-secondary text-light">Monday</th>
-                          <td class="text-center">{{schedule.start.[2]}}</td>
-                          <td class="text-center">{{schedule.end.[2]}}</td>
-                          <td class="text-center">
-                            <a href="showSlot/{{schedule.day.[2]}}">
-                            <button type="button" class="btn btn-outline-dark btn-sm"><i class="fa fa-list-alt" aria-hidden="true"></i></button>
-                          </td>
-                        </tr>
-                        <tr>
-                          <th scope="row" class="text-center bg-secondary text-light">Tuesday</th>
-                          <td class="text-center">{{schedule.start.[3]}}</td>
-                          <td class="text-center">{{schedule.end.[3]}}</td>
-                          <td class="text-center">
-                            <a href="showSlot/{{schedule.day.[3]}}">
-                            <button type="button" class="btn btn-outline-dark btn-sm"><i class="fa fa-list-alt" aria-hidden="true"></i></button>
-                          </td>
-                        </tr>
-                        <tr>
-                          <th scope="row" class="text-center bg-secondary text-light">Wednesday</th>
-                          <td class="text-center">{{schedule.start.[4]}}</td>
-                          <td class="text-center">{{schedule.end.[4]}}</td>
-                          <td class="text-center">
-                            <a href="showSlot/{{schedule.day.[4]}}">
-                            <button type="button" class="btn btn-outline-dark btn-sm"><i class="fa fa-list-alt" aria-hidden="true"></i></button>
-                          </td>
-                        </tr>
-                        <tr>
-                          <th scope="row" class="text-center bg-secondary text-light">Thrusday</th>
-                          <td class="text-center">{{schedule.start.[5]}}</td>
-                          <td class="text-center">{{schedule.end.[5]}}</td> 
-                          <td class="text-center">
-                            <a href="showSlot/{{schedule.day.[5]}}">
-                            <button type="button" class="btn btn-outline-dark btn-sm"><i class="fa fa-list-alt" aria-hidden="true"></i></button>
-                          </td>
-                        </tr>
-                        <tr>
-                          <th scope="row"class="text-center bg-secondary text-light">Friday</th>
-                          <td class="text-center">{{schedule.start.[6]}}</td>
-                          <td class="text-center">{{schedule.end.[6]}}</td>
-                          <td class="text-center">
-                            <a href="showSlot/{{schedule.day.[6]}}">
-                            <button type="button" class="btn btn-outline-dark btn-sm"><i class="fa fa-list-alt" aria-hidden="true"></i></button>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                    <td>
-                    <a href="editSchedule" style="text-decoration: none">
-                    <div class="row justify-content-center align-items-center">
-                    <button type="button" class="btn btn-outline-secondary">Edit Schedule</button>
-                    </div>
-                     </a>
-                    </td> 
+                <tr>
+                  <th scope="row" class="text-center bg-light text-dark">Monday</th>
+                  <td class="text-center">{{schedule.start.[2]}}</td>
+                  <td class="text-center">{{schedule.end.[2]}}</td>
+                  <td class="text-center">
+                    {{#if schedule.start.[2]}}
+                    <a href="showSlot/{{schedule.day.[2]}}">
+                      <button type="button" class="btn btn-outline-dark btn-sm">
+                        <i class="fa fa-list-alt" aria-hidden="true"></i>
+                      </button>
+                    </a>
+                    {{/if}}
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row" class="text-center bg-light text-dark">Tuesday</th>
+                  <td class="text-center">{{schedule.start.[3]}}</td>
+                  <td class="text-center">{{schedule.end.[3]}}</td>
+                  <td class="text-center">
+                    {{#if schedule.start.[3]}}
+                    <a href="showSlot/{{schedule.day.[3]}}">
+                      <button type="button" class="btn btn-outline-dark btn-sm"><i class="fa fa-list-alt" aria-hidden="true"></i></button>
+                    </a>
+                    {{/if}}
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row" class="text-center bg-light text-dark">Wednesday</th>
+                  <td class="text-center">{{schedule.start.[4]}}</td>
+                  <td class="text-center">{{schedule.end.[4]}}</td>
+                  <td class="text-center">
+                    {{#if schedule.start.[4]}}
+                    <a href="showSlot/{{schedule.day.[4]}}">
+                      <button type="button" class="btn btn-outline-dark btn-sm"><i class="fa fa-list-alt" aria-hidden="true"></i></button>
+                    </a>
+                    {{/if}}
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row" class="text-center bg-light text-dark">Thrusday</th>
+                  <td class="text-center">{{schedule.start.[5]}}</td>
+                  <td class="text-center">{{schedule.end.[5]}}</td> 
+                  <td class="text-center">
+                    {{#if schedule.start.[5]}}
+                    <a href="showSlot/{{schedule.day.[5]}}">
+                      <button type="button" class="btn btn-outline-dark btn-sm"><i class="fa fa-list-alt" aria-hidden="true"></i></button>
+                    </a>
+                    {{/if}}
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row"class="text-center bg-light text-dark">Friday</th>
+                  <td class="text-center">{{schedule.start.[6]}}</td>
+                  <td class="text-center">{{schedule.end.[6]}}</td>
+                  <td class="text-center">
+                    {{#if schedule.start.[6]}}
+                    <a href="showSlot/{{schedule.day.[6]}}">
+                      <button type="button" class="btn btn-outline-dark btn-sm"><i class="fa fa-list-alt" aria-hidden="true"></i></button>
+                    </a>
+                    {{/if}}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
 
-                  </div>
-              </div>              
-           </div>
-         </div>
+            <a href="editSchedule" style="text-decoration: none">
+              <div class="row justify-content-center align-items-center">
+                <button type="button" class="btn btn-outline-dark">Edit Schedule</button>
+              </div>
+            </a>
+
+
+          </div>
+        </div>              
       </div>
     </div>
-    </section>
+  </div>
+</div>
+</section>
 
 
 
