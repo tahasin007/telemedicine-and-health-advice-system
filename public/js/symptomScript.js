@@ -17,7 +17,7 @@ tagify = new Tagify(input, {
             enabled   : 0,         // show the dropdown immediately on focus
             maxItems  : 15,
             position  : "text",    // place the dropdown near the typed text
-            closeOnSelect : false, // keep the dropdown open after selecting a suggestion
+            closeOnSelect : true, // keep the dropdown open after selecting a suggestion
           }
         });   
 
@@ -88,14 +88,23 @@ $(document).on("click",'#checker',function(e){
   for(var i=0;i<len;i++){
     symptomArr.push(tagify.value[i].value);
   }
-  $.ajax({
-    url: 'symptompChecker/',
-    type: 'POST',
-    data: {
-      arr:symptomArr
-    },
-    success: function(response) {
-     resArr=response;
+  if(symptomArr.length==0){
+    $("#step2").prepend('<div style="text-align: center" class="alert alert-danger" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Nothing is inserted</div>');
+  }
+  else{
+    $(".tab-pane").hide();
+    $("#step3").fadeIn(1000);
+    $('.progressbar-dots').removeClass('active');
+    $('.progressbar-dots:nth-child(3)').addClass('active');
+
+    $.ajax({
+      url: 'symptompChecker/',
+      type: 'POST',
+      data: {
+        arr:symptomArr
+      },
+      success: function(response) {
+       resArr=response;
      // console.log(resArr); 
      finalStep(resArr);
    },
@@ -103,24 +112,65 @@ $(document).on("click",'#checker',function(e){
     console.log(err.status);
   }
 })
+  }
+  
 });
 
 
+$('input[name="fever"][type="checkbox"]').on('change', function(e){
+   if(e.target.checked){
+     $('#feverCondition').modal();
+   }
+});
+
+$('input[name="vomiting"][type="checkbox"]').on('change', function(e){
+   if(e.target.checked){
+     $('#vomitCondition').modal();
+   }
+});
+// $("#Asthma").hide("fast");
+// $("#Acute_bronchitis").hide("fast");
+// $("#Allergy").hide("fast");
+// $("#Anthrax").hide("fast");
+// $("#Acute_liver_failure").hide("fast");
+// $("#Chronic_cough").hide("fast");
+// $("#Concussion").hide("fast");
+// $("#Malaria").hide("fast");
+// $("#Lung_Abscess").hide("fast");
+// $("#Pneumonia").hide("fast");
+// $("#Leukemia").hide("fast");
+// $("#Dengue").hide("fast");
+// $("#Gastritis").hide("fast");
+
 function finalStep  (){ 
-if(!resArr.includes('Asthma'))$("#Asthma").hide("fast");
-if(!resArr.includes('Acute Bronchitis'))$("#Acute_bronchitis").hide("fast");
-if(!resArr.includes('Allergy(Hay Fever)'))$("#Allergy").hide("fast");
-if(!resArr.includes('Anthrax'))$("#Anthrax").hide("fast");
-if(!resArr.includes('Acute liver failure'))$("#Acute_liver_failure").hide("fast");
-if(!resArr.includes('Chronic cough'))$("#Chronic_cough").hide("fast");
-if(!resArr.includes('Concussion'))$("#Concussion").hide("fast");
-if(!resArr.includes('Malaria'))$("#Malaria").hide("fast");
-if(!resArr.includes('Lung Abscess'))$("#Lung_Abscess").hide("fast");
-if(!resArr.includes('Pneumonia'))$("#Pneumonia").hide("fast");
-if(!resArr.includes('Leukemia'))$("#Leukemia").hide("fast");
-if(!resArr.includes('Dengue'))$("#Dengue").hide("fast");
-if(!resArr.includes('Gastritis'))$("#Gastritis").hide("fast");  
+  if(!resArr.includes('Asthma'))$("#Asthma").hide("fast");
+  if(!resArr.includes('Acute Bronchitis'))$("#Acute_bronchitis").hide("fast");
+  if(!resArr.includes('Allergy(Hay Fever)'))$("#Allergy").hide("fast");
+  if(!resArr.includes('Anthrax'))$("#Anthrax").hide("fast");
+  if(!resArr.includes('Acute liver failure'))$("#Acute_liver_failure").hide("fast");
+  if(!resArr.includes('Chronic cough'))$("#Chronic_cough").hide("fast");
+  if(!resArr.includes('Concussion'))$("#Concussion").hide("fast");
+  if(!resArr.includes('Malaria'))$("#Malaria").hide("fast");
+  if(!resArr.includes('Lung Abscess'))$("#Lung_Abscess").hide("fast");
+  if(!resArr.includes('Pneumonia'))$("#Pneumonia").hide("fast");
+  if(!resArr.includes('Leukemia'))$("#Leukemia").hide("fast");
+  if(!resArr.includes('Dengue'))$("#Dengue").hide("fast");
+  if(!resArr.includes('Gastritis'))$("#Gastritis").hide("fast");  
 }
 
 
+$(".next-btn1").click(function() {
+  $(".tab-pane").hide();
+  $("#step2").fadeIn(1000);
+  $('.progressbar-dots').removeClass('active');
+  $('.progressbar-dots:nth-child(2)').addClass('active');
 
+
+});
+// $(".next-btn2").click(function() {
+
+//   $(".tab-pane").hide();
+//   $("#step3").fadeIn(1000);
+//   $('.progressbar-dots').removeClass('active');
+//   $('.progressbar-dots:nth-child(3)').addClass('active');
+// });

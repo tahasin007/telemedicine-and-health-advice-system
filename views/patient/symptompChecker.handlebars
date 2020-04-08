@@ -27,7 +27,7 @@
 
                     <li>
                       <label>Age</label><br>
-                      <input name="age" id="age" type="number" min="10" max="100" id="age">
+                      <input name="age" id="age" type="number" min="10" max="100" id="age" value="20">
                     </li>
                     <li style="list-style: none; display: inline">
                       <button class="next-btn next-btn1" id="btn_first" type="button">Next</button>
@@ -39,36 +39,129 @@
                   <div class="container">
                     <h3 class="text-info font-weight-bold text-center mb-3">Enter Your Conditions</h3>
                   </div>
-                  <div class="row d-flex justify-content-center">
-                    <div class="input-group md-form form-sm form-1 pl-0 col-6  text-center">
-                      <input class="form-control my-0 py-1" type="text" name="searchSymptom" placeholder="Search" aria-label="Search">
-                    </div>
-                  </div>
 
                   <div class="container" >
                     <div class="row justify-content-left">
                       <div class="containerCB col-8 align-items-left" style="border:0px solid grey;">
                         <ul class="ks-cboxtags">
-                          <li><input type="checkbox" id="fever" name="fever" value="fever"><label for="fever">Fever</label></li>
-                          <li><input type="checkbox" id="vomiting" name="vomiting" value="vomiting"><label for="vomiting">Vomiting</label></li>
+                          <li><input   data-target="#feverCondition" type="checkbox" id="fever" name="fever" value="fever"><label for="fever">Fever</label>
+                          </li>
+                          <li><input  data-target="#vomitCondition" type="checkbox" id="vomiting" name="vomiting" value="vomiting"><label for="vomiting">Vomiting</label>
+                          </li>
                           <li><input type="checkbox" id="nausea" name="nausea" value="nausea"><label for="nausea">Nausea</label></li>
-                          <li><input type="checkbox" id="loss_of_appetite" name="loss_of_appetite" value="loss of appetite"><label for="loss_of_appetite">Loss of Appetite</label></li>
-                          <li><input type="checkbox" id="weight_loss" name="weight_loss" value="weight loss"><label for="weight_loss">Weight Loss</label></li>
-                          <li><input type="checkbox" id="abdominal_pain" name="abdominal_pain" value="abdominal pain"><label for="abdominal_pain">Abdominal Pain</label></li>
+                          <li><input type="checkbox" id="loss_of_appetite" name="loss_of_appetite" value="loss of appetite"><label for="loss_of_appetite">Loss of Appetite</label>
+                          </li>
+                          <li><input type="checkbox" id="weight_loss" name="weight_loss" value="weight loss"><label for="weight_loss">Weight Loss</label>
+                          </li>
+                          <li><input type="checkbox" id="abdominal_pain" name="abdominal_pain" value="abdominal pain"><label for="abdominal_pain">Abdominal Pain</label>
+                          </li>
                           <li><input type="checkbox" id="fatigue" name="fatigue" value="fatigue"><label for="fatigue">Fatigue</label></li>
-                          <li><input type="checkbox" id="shortness_of_breath" name="shortness_of_breath" value="shortness of breath"><label for="shortness_of_breath">Shortness of Breath</label></li>
-                          <li><input type="checkbox" id="sweating" name="sweating" value="sweating"><label for="sweating">Sweating</label></li>
+                          <li><input type="checkbox" id="shortness_of_breath" name="shortness_of_breath" value="shortness of breath"><label for="shortness_of_breath">Shortness of Breath</label>
+                          </li>
+                          <li><input type="checkbox" id="sweating" name="sweating" value="sweating"><label for="sweating">Sweating</label>
+                          </li>
                           <li><input type="checkbox" id="cough" name="cough" value="cough"><label for="cough">Cough</label></li>
-                          <li class="ks-selected"><input type="checkbox" id="wheezing" name="wheezing" value="wheezing"><label for="wheezing">Wheezing</label></li>
-                          <li><input type="checkbox" id="headache" name="headache" value="headache"><label for="headache">Headache</label></li>
+                          <li class="ks-selected"><input type="checkbox" id="wheezing" name="wheezing" value="wheezing"><label for="wheezing">Wheezing</label>
+                          </li>
+                          <li><input type="checkbox" id="headache" name="headache" value="headache"><label for="headache">Headache</label>
+                          </li>
                           <li><input type="checkbox" id="chest_pain" name="chest_pain" value="chest pain"><label for="chest_pain">Chest Pain</label></li>
                           <li><input type="checkbox" id="chills" name="chills" value="chills"><label for="chills">Chills</label></li>
                           <li><input type="checkbox" id="breathing_difficulties" name="breathing_difficulties" value="breathing difficulties"><label for="breathing_difficulties">Breathing Difficulties</label></li>
                         </ul>
+                        <div class="modal fade" id="feverCondition" tabindex="-1" role="dialog" aria-labelledby="feverConditionLabel" aria-hidden="true">
+                          <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title">What kind of fever?</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <div class="modal-body">
+                                <form>
+                                  <ul class="ks-cboxtags">
+                                    <li><input type="radio" id="lowfever" name="feverCond" value="Bike">
+                                      <label for="lowfever"> Low Fever</label>
+                                    </li>(below 38 degree celcius)<br>
+                                    <li><input type="radio" id="mildfever" name="feverCond" value="Car">
+                                      <label for="mildfever"> Moderate Fever</label>
+                                    </li>(38-38.5 degree celcius)<br>
+                                    <li><input type="radio" id="highfever" name="feverCond" value="Boat">
+                                      <label for="highfever">High Fever</label>
+                                    </li>(above 38.5 degree celcius)<br>
+                                  </ul>
+                                </form>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-info" data-dismiss="modal">Continue</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+
+                        <div class="modal fade" id="vomitCondition" tabindex="-1" role="dialog" aria-labelledby="feverConditionLabel" aria-hidden="true">
+                          <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title">What kind of vomiting?</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <div class="modal-body">
+                                <form>
+                                  <ul class="ks-cboxtags">
+                                    <li><input type="radio" id="frequentVomit" name="frequentVomit" value="Bike">
+                                      <label for="frequentVomit"> Frequent</label>
+                                    </li><br>
+                                    <li><input type="radio" id="bloodVomit" name="bloodVomit" value="Car">
+                                      <label for="bloodVomit"> Vomiting with Blood</label>
+                                    </li><br>
+                                  </ul>
+                                </form>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-info" data-dismiss="modal">Continue</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="modal fade" id="vomitCondition" tabindex="-1" role="dialog" aria-labelledby="feverConditionLabel" aria-hidden="true">
+                          <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title">What kind of Cough?</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <div class="modal-body">
+                                <form>
+                                  <ul class="ks-cboxtags">
+                                    <li><input type="radio" id="frequentCough" name="vomitCond" value="Bike">
+                                      <label for="frequentVomit"> Frequent</label>
+                                    </li><br>
+                                    <li><input type="radio" id="bloodVomit" name="vomitCond" value="Car">
+                                      <label for="bloodVomit"> Vomiting with Blood</label>
+                                    </li><br>
+                                  </ul>
+                                </form>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-info" data-dismiss="modal">Continue</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+
                       </div>
                       <div class="col-4 justify-content-left">
 
-                        <div class="tagInput">
+                        <div class="tagInput" id="tagsInput">
                           <h4>Your Symptom</h4>
                           <textarea name='tags' placeholder='Type Here'></textarea>
                         </div>
@@ -93,13 +186,13 @@
                       <select name="AsthmaQ1" id="AsthmaQ1">
                         <option value="no">No</option>
                         <option value="yes">Yes</option>
-                        
+
                       </select>
                       <label>Rapid worsening of shortness of breath or wheezing?</label><br>
                       <select name="AsthmaQ2" id="AsthmaQ2">
                         <option value="no">No</option>
                         <option value="yes">Yes</option>
-                        
+
                       </select>
                     </div>
 
@@ -108,7 +201,7 @@
                       <select name="Acute_bronchitisQ1" id="Acute_bronchitisQ1">
                         <option value="no">No</option>
                         <option value="yes">Yes</option>
-                        
+
                       </select>
                     </div>
 
@@ -117,10 +210,10 @@
                       <select name="AllergyQ1" id="AllergyQ1">
                         <option value="no">No</option>
                         <option value="yes">Yes</option>
-                        
+
                       </select>
 
-                      
+
                     </div>
 
                     <div id="Anthrax">
@@ -128,7 +221,7 @@
                       <select name="AnthraxQ1" id="AnthraxQ1">
                         <option value="no">No</option>
                         <option value="yes">Yes</option>
-                        
+
                       </select>
 
                     </div>
@@ -138,13 +231,13 @@
                       <select name="Acute_liver_failureQ1" id="Acute_liver_failureQ1">
                         <option value="no">No</option>
                         <option value="yes">Yes</option>
-                    
+
                       </select>
                       <label>A general sense of feeling unwell (malaise)?</label><br>
                       <select name="Acute_liver_failureQ2" id="Acute_liver_failureQ2">
                         <option value="no">No</option>
                         <option value="yes">Yes</option>
-                     
+
                       </select>
                     </div>
 
@@ -153,7 +246,7 @@
                       <select name="Chronic_coughQ1" id="Chronic_coughQ1">
                         <option value="no">No</option>
                         <option value="yes">Yes</option>
-                    
+
                       </select>
                       <label>Frequent throat clearing and sore throat?</label><br>
                       <select name="Chronic_coughQ2" id="Chronic_coughQ2">
@@ -168,7 +261,7 @@
                       <select name="ConcussionQ1" id="ConcussionQ1">
                         <option value="no">No</option>
                         <option value="yes">Yes</option>
-                 
+
                       </select>
                     </div>
 
@@ -177,7 +270,7 @@
                       <select name="MalariaQ1" id="MalariaQ1">
                         <option value="no">No</option>
                         <option value="yes">Yes</option>
-                 
+
                       </select>
                     </div>
 
@@ -187,7 +280,7 @@
                       <select name="Lung_AbscessQ1" id="Lung_AbscessQ1">
                         <option value="no">No</option>
                         <option value="yes">Yes</option>
-                       
+
                       </select>
                     </div>
 
@@ -197,13 +290,13 @@
                       <select name="PneumoniaQ1" id="PneumoniaQ1">
                         <option value="no">No</option>
                         <option value="yes">Yes</option>
-                       
+
                       </select>
                       <label>Fast breathing and heartbeat?</label><br>
                       <select name="PneumoniaQ2" id="PneumoniaQ2">
                         <option value="no">No</option>
                         <option value="yes">Yes</option>
-                 
+
                       </select>
                     </div>
 
@@ -212,13 +305,13 @@
                       <select name="LeukemiaQ1" id="LeukemiaQ1">
                         <option value="no">No</option>
                         <option value="yes">Yes</option>
-                        
+
                       </select>
                       <label>Easy bleeding or bruising?</label><br>
                       <select name="LeukemiaQ2" id="LeukemiaQ2">
                         <option value="no">No</option>
                         <option value="yes">Yes</option>
-                       
+
                       </select>
                     </div>
 
@@ -227,9 +320,9 @@
                       <select name="GastritisQ1" id="GastritisQ1">
                         <option value="no">No</option>
                         <option value="yes">Yes</option>
-                    
+
                       </select>
-                    <label>A feeling of fullness in your upper abdomen after eating?</label><br>
+                      <label>A feeling of fullness in your upper abdomen after eating?</label><br>
                       <select name="GastritisQ2" id="GastritisQ2">
                         <option value="no">No</option>
                         <option value="yes">Yes</option>
@@ -240,40 +333,40 @@
                       <select name="DengueQ1" id="DengueQ1">
                         <option value="no">No</option>
                         <option value="no">No</option>
-                        
+
                       </select>
-                    <label>Pain behind the eyes?</label><br>
+                      <label>Pain behind the eyes?</label><br>
                       <select name="DengueQ2" id="DengueQ2">
                         <option value="no">No</option>
                         <option value="yes">Yes</option>
                       </select>
                     </div>
 
-                  <li>
-                    <button class="submit-btn" type="submit">Submit</button>
-                  </li>
-                </ul>
+                    <li>
+                      <button class="submit-btn" type="submit">Submit</button>
+                    </li>
+                  </ul>
+                </div>
               </div>
-            </div>
 
-            <div class="progress-wrap">
-              <div class="line-progress-bar">
-                <div class="line"></div>
-                <ul class="checkout-bar">
-                  <li class="progressbar-dots active"><span>step 1</span></li>
-                  <li class="progressbar-dots"><span>step 2</span></li>
-                  <li class="progressbar-dots"><span>Final step</span></li>
-                </ul>
+              <div class="progress-wrap">
+                <div class="line-progress-bar">
+                  <div class="line"></div>
+                  <ul class="checkout-bar">
+                    <li class="progressbar-dots active"><span>step 1</span></li>
+                    <li class="progressbar-dots"><span>step 2</span></li>
+                    <li class="progressbar-dots"><span>Final step</span></li>
+                  </ul>
+                </div>
               </div>
-            </div>
 
-          </form>
+            </form>
 
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 </section>
 <!-- end of table -->
 

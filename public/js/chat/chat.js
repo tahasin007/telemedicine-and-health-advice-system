@@ -18,7 +18,7 @@ $(document).ready(function() {
         var sender=data.sender;
 		$('#chat').append('<div class="msg left-msg"><div class="msg-bubble"><div class="msg-info">'+sender+'</div><div class="msg-text">'+message+'</div></div></div>');
 	})
-
+    
 	$('#message_form').on('submit', function(e){
         e.preventDefault();
         

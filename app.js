@@ -38,7 +38,7 @@ app.set('view engine', 'handlebars');
 // Map global promise - get rid of warning
 mongoose.Promise = global.Promise;
 // Connect to mongoose
-mongoose.connect('mongodb+srv://padawan:dCBgBJenezS0kvnR@firstcluster-cyefr.mongodb.net/myapp', {
+mongoose.connect('mongodb+srv://padawan:dfcdzQYAVdogSBWI@firstcluster-cyefr.mongodb.net/myapp', {
 	useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true
 })
 .then(() => console.log('MongoDB Connected'))
@@ -174,6 +174,7 @@ app.post('/chat/:name',(req,res,next) => {
 const server = http.createServer(app);
 const io=socketIO(server);
 require('./socket/chat')(io);
+require('./socket/videoChat')(io);
 
 app.use('/users', users);
 app.use('/admin', admin);
