@@ -17,7 +17,7 @@ require('../models/Contact');
 const Contact = mongoose.model('contact');
 
 
-router.get('/:userName',ensureAuthenticated,(req,res) => {
+router.get('/:userName',(req,res) => {
   const navClass = ["current","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
   Users.find({}).then(users =>{
@@ -39,7 +39,7 @@ router.get('/:userName',ensureAuthenticated,(req,res) => {
     });
   });
 });
-router.get('/:userName/contact',ensureAuthenticated,(req, res)=>{
+router.get('/:userName/contact',(req, res)=>{
   const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","current"];
   Contact.find({}).then((contact)=>{
     res.render('admin/contact',{
@@ -54,7 +54,7 @@ router.get('/:userName/contact',ensureAuthenticated,(req, res)=>{
 });
 
 
-router.get('/:userName/notification',ensureAuthenticated, (req, res) => {
+router.get('/:userName/notification', (req, res) => {
   const navClass = ["sidebar-link","current","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
   res.render('admin/notification',{
@@ -65,7 +65,7 @@ router.get('/:userName/notification',ensureAuthenticated, (req, res) => {
   });
 });
 
-router.get('/:userName/patientTable',ensureAuthenticated, (req, res) => {
+router.get('/:userName/patientTable', (req, res) => {
   const navClass = ["sidebar-link","sidebar-link","current","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
   Users.find({role:'patient'}).then((users) => {
@@ -79,7 +79,7 @@ router.get('/:userName/patientTable',ensureAuthenticated, (req, res) => {
   })
 });
 
-router.get('/:userName/doctorTable',ensureAuthenticated, (req, res) => {
+router.get('/:userName/doctorTable', (req, res) => {
   const navClass = ["sidebar-link","sidebar-link","sidebar-link","current","sidebar-link"];
   const userName=req.params.userName;
   Users.find({role:'doctor'}).then((users) => {
@@ -93,7 +93,7 @@ router.get('/:userName/doctorTable',ensureAuthenticated, (req, res) => {
   })
 });
 
-router.get('/:userName/adminProfile',ensureAuthenticated, (req, res) => {
+router.get('/:userName/adminProfile', (req, res) => {
   const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
   Users.findOne({userName:userName}).then((user) => {
@@ -110,7 +110,7 @@ router.get('/:userName/adminProfile',ensureAuthenticated, (req, res) => {
 });
 
 
-router.get('/:userName/adminMail',ensureAuthenticated, (req, res) => {
+router.get('/:userName/adminMail', (req, res) => {
   const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
   res.render('admin/adminMail',{
@@ -121,7 +121,7 @@ router.get('/:userName/adminMail',ensureAuthenticated, (req, res) => {
   });
 });
 
-router.get('/:userName/patientTable/:id',ensureAuthenticated, (req, res) => {
+router.get('/:userName/patientTable/:id', (req, res) => {
   const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
   const id=req.params.id;
@@ -138,13 +138,13 @@ router.get('/:userName/patientTable/:id',ensureAuthenticated, (req, res) => {
   });
 });
 
-router.get('/:userName/patientTable/delete/:id',ensureAuthenticated, (req,res) =>{
+router.get('/:userName/patientTable/delete/:id', (req,res) =>{
   const userName=req.params.userName;
   Users.deleteOne({_id:req.params.id}).then(() => {
     res.redirect('/admin/'+userName+'/patientTable')});
 });
 
-router.get('/:userName/doctorTable/:id', ensureAuthenticated,(req, res) => {
+router.get('/:userName/doctorTable/:id',(req, res) => {
   const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
   const id=req.params.id;
@@ -160,7 +160,7 @@ router.get('/:userName/doctorTable/:id', ensureAuthenticated,(req, res) => {
     });
   });
 });
-router.get('/:userName/doctorTable/delete/:id',ensureAuthenticated, (req,res) =>{
+router.get('/:userName/doctorTable/delete/:id', (req,res) =>{
   const id=req.params.id;
   const userName=req.params.userName;
   Users.deleteOne({_id:id}).then(() => {
@@ -169,7 +169,7 @@ router.get('/:userName/doctorTable/delete/:id',ensureAuthenticated, (req,res) =>
 
 
 
-router.get('/:userName/editAdminProfile',ensureAuthenticated, (req, res) =>{
+router.get('/:userName/editAdminProfile', (req, res) =>{
   const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
   Users.findOne({userName:userName}).then((user=>{
@@ -200,7 +200,7 @@ router.put('/:userName/editAdminProfile',(req, res) =>{
 
 
 
-router.get('/:userName/changePassword', ensureAuthenticated,(req, res) =>{
+router.get('/:userName/changePassword',(req, res) =>{
   const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
   Users.findOne({userName:userName}).then((user=>{
@@ -213,7 +213,7 @@ router.get('/:userName/changePassword', ensureAuthenticated,(req, res) =>{
     })
   }));
 });
-router.get('/:userName/grantAccess/:id',ensureAuthenticated,(req,res) => {  
+router.get('/:userName/grantAccess/:id',(req,res) => {  
   Users.findOne({_id:req.params.id}).then((user) => {
       user.status ='Registered'
       user.save().then((result)=>{
@@ -222,7 +222,7 @@ router.get('/:userName/grantAccess/:id',ensureAuthenticated,(req,res) => {
   });
 });
 
-router.get('/:userName/autocomplete/doc', ensureAuthenticated,(req,res,next) => {
+router.get('/:userName/autocomplete/doc',(req,res,next) => {
   var regex= new RegExp(req.query["term"],'i');
   Users.find({$and:[{name:regex},{role:'doctor'}]}).then((users) => {
     var result=[];
@@ -237,7 +237,7 @@ router.get('/:userName/autocomplete/doc', ensureAuthenticated,(req,res,next) => 
   });
 });
 
-router.get('/:userName/autocomplete/patient',ensureAuthenticated, (req,res,next) => {
+router.get('/:userName/autocomplete/patient', (req,res,next) => {
   var regex= new RegExp(req.query["term"],'i');
   Users.find({$and:[{name:regex},{role:'patient'}]}).then((users) => {
     var result=[];

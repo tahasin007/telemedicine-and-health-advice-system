@@ -1,62 +1,66 @@
   
-    <!-- navbar -->
-    {{> _docNav}}
-    <!-- end of navbar -->
+<!-- navbar -->
+{{> _docNav}}
+<!-- end of navbar -->
 
-    <!-- tables -->
-    <section>
-      <div class="container-fluid">
-        <div class="row mb-5">
-          <div class="col-xl-10 col-lg-9 col-md-8 ml-auto">
-            <div class="pt-md-5 mt-md-3 mb-5 col-xl-12">
-              <div class="container">
-                <h3 class="text-info font-weight-bold text-center mb-3">Patient Info</h3>
-              </div>
+<!-- tables -->
+<section>
+  <div class="container-fluid">
+    <div class="row mb-5">
+      <div class="col-xl-10 col-lg-9 col-md-8 ml-auto">
+        <div class="pt-md-5 mt-md-3 mb-5 col-xl-12">
+          <div class="container">
+            <h3 class="text-info font-weight-bold text-center mb-3">Patient Info</h3>
+          </div>
 
-              <div class="row justify-content-center">
-              <div class="col-12 mt-3">
+          <div class="row justify-content-center">
+            <div class="col-12 mt-3">
               <div class="row profile_info m-2">
-                  <div class="col-6 plabel">Name:</div>
-                  <div class="col-6 bg-light">{{apt.patientId.name}}</div>
+                <div class="col-6 plabel">Name:</div>
+                <div class="col-6 bg-light">{{apt.patientId.name}}</div>
               </div>
               <div class="row profile_info m-2">
-                  <div class="col-6 plabel">Email:</div>
-                  <div class="col-6 bg-light">{{apt.patientId.email}}</div>
+                <div class="col-6 plabel">Email:</div>
+                <div class="col-6 bg-light">{{apt.patientId.email}}</div>
               </div>
               <div class="row profile_info m-2">
-                  <div class="col-6 plabel">Date of Birth:</div>
-                  <div class="col-6 bg-light">{{formatDate apt.patientId.dob "MM-DD-YYYY"}}</div>
+                <div class="col-6 plabel">Date of Birth:</div>
+                <div class="col-6 bg-light">{{formatDate apt.patientId.dob "MM-DD-YYYY"}}</div>
               </div>
               <div class="row profile_info m-2">
-                  <div class="col-6 plabel">Appointment Start:</div>
-                  <div class="col-6 bg-light">{{formatDate apt.appointmentDate "LLLL"}}</div>
+                <div class="col-6 plabel">Appointment Start:</div>
+                <div class="col-6 bg-light">{{formatDate apt.appointmentDate "LLLL"}}</div>
               </div>
               <div class="row profile_info m-2">
-                  <div class="col-6 plabel">Appointment End:</div>
-                  <div class="col-6 bg-light">{{formatDate apt.appointmentEnd "LLLL"}}</div>
+                <div class="col-6 plabel">Appointment End:</div>
+                <div class="col-6 bg-light">{{formatDate apt.appointmentEnd "LLLL"}}</div>
               </div>
-              {{#if patient.gender}}
+              {{#if apt.patientId.gender}}
               <div class="row profile_info m-2">
-                  <div class="col-6 plabel">Gender:</div>
-                  <div class="col-6 bg-light">{{patient.gender}}e</div>
+                <div class="col-6 plabel">Gender:</div>
+                <div class="col-6 bg-light">{{apt.patientId.gender}}</div>
               </div>
               {{/if}}
-              <div class="row profile_info m-2 mt-3">
-                  <div class="col-6 plabel">Symptom:</div>
-                  <textarea class="form-control" rows="3" disabled> Cough , High Fever , Sweating , Chills, Breathing Difficulties ,Vomiting
-                  </textarea>
+
+              <div class="row profile_info m-2">
+                <div class="col-6 plabel">Patient's Stmptomps:</div>
+                <div class="col-6 bg-light">{{apt.symptoms}}</div>
+              </div>
+              <div class="row profile_info m-2">
+                <div class="col-6 plabel">Patient's Medication:</div>
+                <div class="col-6 bg-light">{{apt.medication}}</div>
               </div>
 
-              </div>
-              </div>
-
+            </div>
           </div>
-        </div>
+
         </div>
       </div>
-    </section>
-    <!-- end of tables -->
- 
+    </div>
+  </div>
+</section>
+<!-- end of tables -->
+
 
 
 

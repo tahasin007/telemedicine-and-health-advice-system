@@ -49,10 +49,12 @@
               <label for="exampleFormControlTextarea1">Medication Details:</label>
               <textarea class="form-control" name="medication" id="exampleFormControlTextarea1" placeholder="{{report.medication}}"rows="3"></textarea>
             </div>
+            {{#if report.observation}}
             <div class="form-group">
               <label for="exampleFormControlTextarea1">Addition Information</label>:</label>
               <textarea class="form-control" name="info" id="exampleFormControlTextarea1" placeholder="{{report.observation}}" rows="3"></textarea>
             </div>
+            {{/if}}
 
             <div class="form-group row">
               <label for="example-date-input" name="date" class="col-2 col-form-label">Date</label>
