@@ -1,0 +1,69 @@
+<!-- start of navbar -->
+{{> _patientNav}}
+<!-- end of navbar -->
+
+
+<section>
+  <div class="container-fluid" style="font-size:20px;font-family:Tahoma">
+    <div class="row flex justify-content-center">
+      <div class="col-xl-10 col-lg-9 col-md-8 ml-auto mt-4">
+        <div class="pt-md-5 mt-md-3 mb-5 col-xl-12">
+          {{> _message}}
+
+          <div class="col-12">
+
+            <h3 class="text-center">Appointment Request</h3>
+            <form method="post" action="/patient/{{userName}}/appointment/{{apt._id}}">
+
+              <div class="form-group row">
+                <label for="docName" class="col-sm-6 col-form-label">Doctor Name:</label>
+                <div class="col-sm-6">
+                  <input type="text" readonly class="form-control" name="docName" id="docName" placeholder="{{apt.docId.name}}">
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <label for="patName" class="col-sm-6 col-form-label">Patient Name:</label>
+                <div class="col-sm-6">
+                  <input type="text" readonly class="form-control" name="patName" id="patName" placeholder="{{apt.patientId.name}}">
+                </div>
+              </div>
+
+
+              <div class="form-group row">
+                <label class="col-6" for="example-date-input" name="date" class="col-form-label">Appointment Time:</label>
+                <div class="col-6">
+                  <input class="form-control" type="text" readonly placeholder="{{aptdate}}" id="example-date-input">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="exampleFormControlTextarea1">Your Stmptomps:</label>
+                <textarea class="form-control" name="symptom" id="exampleFormControlTextarea1" placeholder="{{report.symptom}}" rows="3"></textarea>
+              </div>
+              <div class="form-group">
+                <label for="exampleFormControlTextarea1">Medication Details:</label>
+                <textarea class="form-control" name="medication" id="exampleFormControlTextarea1" placeholder="{{report.medication}}"rows="3"></textarea>
+              </div>
+
+
+
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+
+
+
+

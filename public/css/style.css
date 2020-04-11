@@ -144,9 +144,9 @@ body {
 #booking-form li:not(.except) {
   list-style: none;
 }
-#booking-form input, 
-#booking-form textarea,  
-#booking-form select {
+#step1 input,#step3 input, 
+#step1 textarea,#step3 textarea,
+#step1 select,#step3 select {
   font-size: 12px;
   padding: 0 28px;
   width: 80%;
@@ -203,7 +203,7 @@ body {
       display: inline-block;
       text-align: center;
       font-weight: 400;
-      border-radius: 0;
+      border-radius: 0px;
       border: 0;
       transition-property: background-color;
       transition-duration: 0.5s;

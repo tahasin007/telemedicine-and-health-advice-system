@@ -34,12 +34,11 @@
                     </li>
                   </ul>
                 </div>
-
+                
                 <div class="tab-pane" id="step2">
                   <div class="container">
                     <h3 class="text-info font-weight-bold text-center mb-3">Enter Your Conditions</h3>
                   </div>
-
                   <div class="container" >
                     <div class="row justify-content-left">
                       <div class="containerCB col-8 align-items-left" style="border:0px solid grey;">
@@ -79,29 +78,27 @@
                                 </button>
                               </div>
                               <div class="modal-body">
-                                <form>
+                                <form id="feverForm">
                                   <ul class="ks-cboxtags">
-                                    <li><input type="radio" id="lowfever" name="feverCond" value="Bike">
+                                    <li><input type="radio" id="lowfever" name="feverCond" value="low fever">
                                       <label for="lowfever"> Low Fever</label>
                                     </li>(below 38 degree celcius)<br>
-                                    <li><input type="radio" id="mildfever" name="feverCond" value="Car">
+                                    <li><input type="radio" id="mildfever" name="feverCond" value="mild fever">
                                       <label for="mildfever"> Moderate Fever</label>
                                     </li>(38-38.5 degree celcius)<br>
-                                    <li><input type="radio" id="highfever" name="feverCond" value="Boat">
+                                    <li><input type="radio" id="highfever" name="feverCond" value="high fever">
                                       <label for="highfever">High Fever</label>
                                     </li>(above 38.5 degree celcius)<br>
                                   </ul>
                                 </form>
                               </div>
                               <div class="modal-footer">
-                                <button type="button" class="btn btn-info" data-dismiss="modal">Continue</button>
+                                <button type="button" id="feverbtn" class="btn btn-info" data-dismiss="modal">Continue</button>
                               </div>
                             </div>
                           </div>
                         </div>
-
-
-                        <div class="modal fade" id="vomitCondition" tabindex="-1" role="dialog" aria-labelledby="feverConditionLabel" aria-hidden="true">
+                        <div class="modal fade" id="vomitCondition" tabindex="-1" role="dialog" aria-labelledby="vomitConditionLabel" aria-hidden="true">
                           <div class="modal-dialog modal-dialog-centered" role="document">
                             <div class="modal-content">
                               <div class="modal-header">
@@ -113,23 +110,25 @@
                               <div class="modal-body">
                                 <form>
                                   <ul class="ks-cboxtags">
-                                    <li><input type="radio" id="frequentVomit" name="frequentVomit" value="Bike">
+                                    <li><input type="checkbox" id="frequentVomit" name="frequentVomit" value="frequent vomiting">
                                       <label for="frequentVomit"> Frequent</label>
                                     </li><br>
-                                    <li><input type="radio" id="bloodVomit" name="bloodVomit" value="Car">
+                                    <li><input type="checkbox" id="bloodVomit" name="bloodVomit" value="vomiting with blood">
                                       <label for="bloodVomit"> Vomiting with Blood</label>
+                                    </li><br>
+                                    <li><input type="checkbox" id="noneVomit" name="noneVomit" value="vomiting">
+                                      <label for="noneVomit">None of these</label>
                                     </li><br>
                                   </ul>
                                 </form>
                               </div>
                               <div class="modal-footer">
-                                <button type="button" class="btn btn-info" data-dismiss="modal">Continue</button>
+                                <button type="button" id="vomitbtn" class="btn btn-info" data-dismiss="modal">Continue</button>
                               </div>
                             </div>
                           </div>
                         </div>
-
-                        <div class="modal fade" id="vomitCondition" tabindex="-1" role="dialog" aria-labelledby="feverConditionLabel" aria-hidden="true">
+                        <div class="modal fade" id="coughCondition" tabindex="-1" role="dialog" aria-labelledby="feverConditionLabel" aria-hidden="true">
                           <div class="modal-dialog modal-dialog-centered" role="document">
                             <div class="modal-content">
                               <div class="modal-header">
@@ -141,44 +140,51 @@
                               <div class="modal-body">
                                 <form>
                                   <ul class="ks-cboxtags">
-                                    <li><input type="radio" id="frequentCough" name="vomitCond" value="Bike">
-                                      <label for="frequentVomit"> Frequent</label>
+                                    <li><input type="checkbox" id="frequentCough" name="frequentCough" value="frequent cough">
+                                      <label for="frequentCough">Frequent</label>
                                     </li><br>
-                                    <li><input type="radio" id="bloodVomit" name="vomitCond" value="Car">
-                                      <label for="bloodVomit"> Vomiting with Blood</label>
+                                    <li><input type="checkbox" id="bloodCough" name="bloodCough" value="cough with blood">
+                                      <label for="bloodCough"> Cough with Blood</label>
+                                    </li><br>
+                                    <li><input type="checkbox" id="coughDuration" name="coughDuration" value="cough more than 2 weeks">
+                                      <label for="coughDuration"> Cough more than 2 weeks</label>
+                                    </li><br>
+                                    <li><input type="checkbox" id="coughMucas" name="coughMucas" value="cough with mucas">
+                                      <label for="coughMucas"> Cough with mucas</label>
+                                    </li><br>
+                                    <li><input type="checkbox" id="noneCough" name="noneCough" value="cough">
+                                      <label for="noneCough"> None of these</label>
                                     </li><br>
                                   </ul>
                                 </form>
                               </div>
                               <div class="modal-footer">
-                                <button type="button" class="btn btn-info" data-dismiss="modal">Continue</button>
+                                <button type="button" id="coughbtn" class="btn btn-info" data-dismiss="modal">Continue</button>
                               </div>
                             </div>
                           </div>
                         </div>
-
-
                       </div>
                       <div class="col-4 justify-content-left">
-
                         <div class="tagInput" id="tagsInput">
                           <h4>Your Symptom</h4>
                           <textarea name='tags' placeholder='Type Here'></textarea>
                         </div>
                       </div>
                     </div>
-
                   </div>
-
                   <li>
                     <button class="next-btn next-btn2 mb-3" id="checker" type="button">Next</button>
                   </li>
-
                 </div>
 
                 <div class="tab-pane" id="step3">
-                  <div class="container">
+                  <div class="container " id="qLabel">
                     <h3 class="text-info font-weight-bold text-center mb-3">Questionnaire</h3>
+                  </div>
+                  <div class="fa-3x align-items-center justify-content-center" id='processing'>
+                    <h3 class="text-info font-weight-bold text-center mb-3"><i class="fas fa-spinner fa-pulse"></i>Processing</h3>
+                    
                   </div>
                   <ul>
                     <div id="Asthma">
@@ -343,15 +349,15 @@
                     </div>
 
                     <li>
-                      <button class="submit-btn" type="submit">Submit</button>
+                      <button class="submit-btn" id="submit-btn" type="submit">Submit</button>
                     </li>
                   </ul>
                 </div>
               </div>
 
-              <div class="progress-wrap">
+              <div class="progress-wrap" id="progress-line">
                 <div class="line-progress-bar">
-                  <div class="line"></div>
+                  <div class="line" ></div>
                   <ul class="checkout-bar">
                     <li class="progressbar-dots active"><span>step 1</span></li>
                     <li class="progressbar-dots"><span>step 2</span></li>

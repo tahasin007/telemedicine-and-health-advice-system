@@ -29,6 +29,12 @@ const AppointmentSchema = new Schema({
   },
   status:{
     type: String
+  },
+  symptoms:{
+    type:String
+  },
+  medication:{
+    type:String
   }
 
 });

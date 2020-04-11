@@ -19,6 +19,7 @@ require('../models/Disease');
 require('../models/TempDiagnosis');
 require('../models/Report');
 require('../models/Message');
+require('../models/DetailDisease');
 const Users = mongoose.model('users');
 const Schedule = mongoose.model('schedule');
 const Appointmet = mongoose.model('appointment');
@@ -26,6 +27,7 @@ const TempDiagnosis = mongoose.model('tempDiagnosis');
 const Disease = mongoose.model('disease');
 const Report = mongoose.model('report');
 const Message = mongoose.model('message');
+const DiseaseInfo = mongoose.model('detaildisease');
 
 const dayArr=['Saturday','Sunday','Monday','Tuesday','Wednesday','Thursday','Friday'];
 const {
@@ -74,21 +76,9 @@ router.get('/:userName/symptompChecker',(req, res) => {
 router.post('/:userName/symptompChecker', (req, res) => {
   let obj = JSON.parse(JSON.stringify(req.body))
   const arr=req.body.arr;
-  // console.log(req.body)
   const userName=req.params.userName;
   let topMatch =[];
-  // console.log(arr)
-  // const gender=req.body.gender;
-  // const age=req.body.age;
-  // if(typeof req.body.searchSymptom =="undefined")console.log('yes')
 
-  // if(req.body.searchSymptom!=""){
-  //   console.log(req.body.searchSymptom)
-  //   let text=req.body.searchSymptom.toLowerCase().split(",");
-  //   for(let i=0; i<text.length;i++)text[i]=text[i].trim();
-  //   let difference = text.filter(x => !arr.includes(x));
-  //   arr = arr.concat(difference);
-  // }
 
   Users.findOne({userName:req.params.userName}).then(user =>{
     TempDiagnosis.find({patientId:user._id}).then((report)=>{
@@ -129,6 +119,8 @@ router.post('/:userName/symptompChecker', (req, res) => {
     });
   });
 });
+
+
 router.get('/:userName/chat',(req, res)=>{
   const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","current","sidebar-link"];
   const userName=req.params.userName;
@@ -283,6 +275,19 @@ router.get('/:userName/diagnosisRes', (req, res) =>{
   
 });
 
+router.get('/:userName/disease/:diseaseName',(req, res)=>{
+  const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
+  const diseaseName=req.params.diseaseName.replace('%20',' ');
+  DiseaseInfo.findOne({diseaseName:diseaseName}).then((disease) =>{
+    res.render('patient/diseaseInfo',{
+      layout:'mainPatient',
+      userName:req.params.userName,
+      navClass:navClass,
+      info:disease,
+      title:diseaseName
+    });
+  });
+});
 
 
 router.get('/:userName/patientProfile',(req, res) => {
@@ -496,26 +501,58 @@ router.get('/:userName/makeAppointment/:doc/:dayNo/:slot',(req, res) => {
       Appointmet.findOne({$and:[{patientId:user._id},{appointmentDate
         :thisDate}]}).then(apt=>{
           if(apt){
-            type='danger';
-            message='You have another appointment at this time';
+            req.session.message ={
+              type:'danger',
+              msg:'You have another appointment at this time'
+            }
+            res.redirect('/patient/'+patient+'/viewDocProfile/'+docID);
           }
           else{
             schedule.slot.set(dayNo,changeSlotToOne(schedule.slot[dayNo],slotNo));
             schedule.save();
             createAppointment(nextDay,startTime,docID,user._id,schedule._id,'regular',slotNo,'pending');
-            type='success';
-            message='appointment scheduled';
+            res.redirect('/patient/'+patient+'/appointment/'+thisDate);
           }
-          req.session.message ={
-            type:type,
-            msg:message
-          }
-          res.redirect('/patient/'+patient+'/viewDocProfile/'+docID);
-        })
+        });
       });
   }); 
 });
 
+router.get('/:userName/appointment/:date',(req, res)=>{
+  const appointmentDate = req.params.date.replace('%20',' ');
+  const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
+  const userName = req.params.userName;
+  Users.findOne({userName:userName}).then((user)=>{
+    Appointmet.findOne({$and:[{patientId:user._id},{appointmentDate
+      :appointmentDate}]}).populate('patientId').populate('docId').then((apt)=>{
+        const thisdate=apt.appointmentDate;
+        res.render('patient/appointment',{
+          layout:'mainPatient',
+          userName:userName,
+          navClass:navClass,
+          aptdate:moment(thisdate).format('LLL'),
+          title:'Appointmet',
+          apt:apt
+        });
+      });   
+    });
+});
+router.post('/:userName/appointment/:id',(req, res)=>{
+  const symptom=req.body.symptom;
+  const medication=req.body.medication;
+  Appointmet.findOne({_id:req.params.id}).then((appointment)=>{
+    appointment.symptoms=symptom;
+    appointment.medication=medication;
+    appointment.save().then((result)=>{
+    req.session.message ={
+    type:'success',
+    msg:'Appointmet scheduled on '+moment(appointment.appointmentDate).format('LLL')
+     }
+    res.redirect('/patient/'+req.params.userName);
+
+    });
+  });
+});
 
 router.post('/:userName/symptompChecklast', (req, res)=>{
   const AsthmaQ1=req.body.AsthmaQ1;
