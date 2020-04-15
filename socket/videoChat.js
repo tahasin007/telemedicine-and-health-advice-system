@@ -1,71 +1,43 @@
 module.exports = function(io){
-	io.on('connection', (socket) =>{
-		socket.on('join videoChat',(pm) =>{
-			socket.join(pm);
+	// signaling
+	io.on('connection', function (socket) {
+		// console.log('a user connected');
 
-		});
-		socket.on('private videoChat', (data) =>{
-			var message = JSON.parse(data); 
-			switch(message.type){
-				case "login":
-				var info={
-					room:message.room,
-					type:'login',
-					success:true
-				}
-				io.to(message.room).emit('new videoChat',JSON.stringify(info));
-				break;
+		socket.on('create or join', function (room) {
+			// console.log('create or join to room ', room);
+			
+			var myRoom = io.sockets.adapter.rooms[room] || { length: 0 };
+			var numClients = myRoom.length;
 
-				case "offer": 
-				var info={
-					room:message.room,
-					type: "offer", 
-					offer: message.offer,
-					name:'sender'
-				}
-				io.to(message.room).emit('new videoChat',JSON.stringify(info));
-				break;
+			// console.log(room, ' has ', numClients, ' clients');
 
-				case "answer": 
-				var info={
-					room:message.room,
-					type: "answer", 
-					answer: message.answer
-				}
-				io.to(message.room).emit('new videoChat',JSON.stringify(info));
-				break; 
-
-				case "candidate": 
-				var info={
-					room:message.room,
-					type: "candidate", 
-					candidate: message.candidate
-				}
-
-				io.to(message.room).emit('new videoChat',JSON.stringify(info));
-
-				break;
-
-				case "leave": 
-				var info={
-					room:message.room,
-					type: "leave"
-				}
-				console.log("Disconnecting from");
-				io.to(message.room).emit('new videoChat',JSON.stringify(info));
-				break;
-
-				default: 
-				var info={
-					room:message.room,
-					type: "error", 
-					message: "Command not found: "
-				}
-				io.to(message.room).emit('new videoChat',JSON.stringify(info)); 
-				break; 
+			if (numClients == 0) {
+				socket.join(room);
+				socket.emit('created', room);
+			} else if (numClients == 1) {
+				socket.join(room);
+				socket.emit('joined', room);
+			} else {
+				socket.emit('full', room);
 			}
+		});
 
-		})
+		socket.on('ready', function (room){
+			socket.broadcast.to(room).emit('ready');
+		});
+
+		socket.on('candidate', function (event){
+			socket.broadcast.to(event.room).emit('candidate', event);
+		});
+
+		socket.on('offer', function(event){
+			socket.broadcast.to(event.room).emit('offer',event.sdp);
+		});
+
+		socket.on('answer', function(event){
+			socket.broadcast.to(event.room).emit('answer',event.sdp);
+		});
+
 	});
 
 }

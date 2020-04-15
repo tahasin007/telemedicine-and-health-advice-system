@@ -9,6 +9,7 @@ const bcrypt = require('bcryptjs');
 const dateFormat = require('dateformat');
 const date = require('date-and-time');
 const moment = require('moment');
+const multer = require('multer');
 
 // Method override middleware
 router.use(methodOverride('_method'));

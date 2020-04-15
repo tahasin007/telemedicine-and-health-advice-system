@@ -24,7 +24,7 @@ const UserSchema = new Schema({
   //   type: Schema.Types.ObjectId
   // },
   gender:{type: String},
-  // userImage:{type: String,default:'default.png'},
+  profileImage:{type: String},
   // google:{type: String,default:''},
   // googleTokens:{type:String,default:''}
 });

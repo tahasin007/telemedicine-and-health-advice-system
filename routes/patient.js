@@ -9,6 +9,8 @@ const dateFormat = require('dateformat');
 const bcrypt = require('bcryptjs');
 const moment = require('moment');
 const nodemailer = require('nodemailer');
+
+
 // Method override middleware
 router.use(methodOverride('_method'));
 
@@ -35,6 +37,9 @@ const {
   formatDateSub
 } = require('../helpers/hbs');
 
+
+
+
 //Patient Home Route
 router.get('/:userName',(req, res) => {
   const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
@@ -43,6 +48,7 @@ router.get('/:userName',(req, res) => {
     res.render('patient/patientHome',{
       layout:'mainPatient',
       userName:userName,
+      image:users.profileImage,
       user:users,
       navClass:navClass,
       title:'Home Page'
@@ -54,22 +60,28 @@ router.get('/:userName',(req, res) => {
 router.get('/:userName/notification', (req, res) => {
   const navClass = ["current","sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
-  res.render('patient/notification',{
-  	layout:'mainPatient',
-    userName:userName,
-    navClass:navClass,
-    title:'Notification'
-  });
+  Users.findOne({userName:userName}).then((user)=>{
+    res.render('patient/notification',{
+      layout:'mainPatient',
+      userName:userName,
+      image:user.profileImage,
+      navClass:navClass,
+      title:'Notification'
+    });
+  })
 });
 
 router.get('/:userName/symptompChecker',(req, res) => {
   const navClass = ["sidebar-link","current","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
-  res.render('patient/symptompChecker',{
+  Users.findOne({userName:userName}).then((user)=>{ 
+    res.render('patient/symptompChecker',{
     layout:'mainPatient',
     userName:userName,
+    image:user.profileImage,
     navClass:navClass,
     title:'Symptom Checker'
+  });
   });
 });
 
@@ -366,7 +378,7 @@ router.post('/:userName/:docId/sendMail',(req, res) =>{
   }
 });
 
-router.get('/:userName/editPatientProfile', (req, res) => {
+router.get('/:userName/editPatientProfile',(req, res) => {
   const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
   Users.findOne({userName:userName}).then((user) => {
@@ -382,8 +394,9 @@ router.get('/:userName/editPatientProfile', (req, res) => {
   })
 });
 
-router.put('/:userName/editPatientProfile',(req, res) =>{
+router.put('/:userName/editPatientProfile' ,(req, res) =>{
   const userName=req.params.userName;
+
   Users.findOne({userName:userName}).then((user) =>{
     user.name = req.body.name;
     user.email = req.body.email;
@@ -544,11 +557,11 @@ router.post('/:userName/appointment/:id',(req, res)=>{
     appointment.symptoms=symptom;
     appointment.medication=medication;
     appointment.save().then((result)=>{
-    req.session.message ={
-    type:'success',
-    msg:'Appointmet scheduled on '+moment(appointment.appointmentDate).format('LLL')
-     }
-    res.redirect('/patient/'+req.params.userName);
+      req.session.message ={
+        type:'success',
+        msg:'Appointmet scheduled on '+moment(appointment.appointmentDate).format('LLL')
+      }
+      res.redirect('/patient/'+req.params.userName);
 
     });
   });

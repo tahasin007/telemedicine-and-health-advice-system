@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 const methodOverride = require('method-override');
 const dateFormat = require('dateformat');
 const bcrypt = require('bcryptjs');
+const multer = require('multer');
 
 // Method override middleware
 router.use(methodOverride('_method'));

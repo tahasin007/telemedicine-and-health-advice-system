@@ -17,6 +17,8 @@ const cookieParser = require('cookie-parser');
 const validator = require('express-validator')
 const socketIO =require('socket.io');
 const async = require("async");
+const fs = require('fs');
+const formidable = require('formidable');
 
 //Routes
 const users = require('./routes/users');
@@ -152,6 +154,32 @@ app.post('/chat/:name',(req,res,next) => {
       });
     });
   }
+});
+
+app.post('/uploadProfileImage/:id',(req,res) => {
+
+  const form = new formidable.IncomingForm();
+  form.uploadDir = path.join(__dirname, '/public/uploads');
+
+  form.on('file',(field,file) => {
+    fs.rename(file.path,path.join(form.uploadDir,file.name),(err)=>{
+      if(err)throw err;
+      Users.findOne({_id:req.params.id}).then(user => {
+          user.profileImage=file.name;
+          user.save();  
+      }); 
+    });
+  });
+
+  form.on('error',(err) =>{
+    console.log(err)
+  });
+
+  form.on('end',()=>{
+    
+  });
+
+  form.parse(req);
 });
 // app.get('/doctor/:sender/chat/:receiver',(req,res)=>{
 //   Message.find({$or:[{$and:[{senderName:req.params.sender},{receiverName:req.params.receiver}]},

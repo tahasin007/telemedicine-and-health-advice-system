@@ -8,7 +8,13 @@
         <!-- sidebar -->
         <div class="col-xl-2 col-lg-3 col-md-4 sidebar fixed-top">
           <div class="bottom-border pb-3">
+            {{#if image}}
+            <img src="/uploads/{{image}}"  width="50" height="50" class="rounded-circle mr-3">
+
+            {{else}}
             <img src="/images/userProfile.png"  width="50" height="50" class="rounded-circle mr-3">
+            {{/if}}
+
             <b class="text-warning">{{userName}}</b>
           </div>
           <ul class="navbar-nav flex-column mt-4">
