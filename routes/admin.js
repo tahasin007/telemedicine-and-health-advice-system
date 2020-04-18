@@ -21,36 +21,43 @@ const Contact = mongoose.model('contact');
 router.get('/:userName',(req,res) => {
   const navClass = ["current","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
-  Users.find({}).then(users =>{
-    Users.countDocuments({role:'patient'}).then(countUser =>{
-      Users.countDocuments({role:'doctor'}).then(countDocs =>{
-        Contact.countDocuments({}).then(contact=>{
-          res.render('admin/adminHome',{
-          layout:'mainAdmin',
-          users: users,
-          userName:userName,
-          userCount:countUser,
-          docCount:countDocs,
-          contact:contact,
-          navClass:navClass,
-          title:'Home'
+  Users.findOne({userName:userName}).then((user)=>{
+    Users.find({}).then(users =>{
+      Users.countDocuments({role:'patient'}).then(countUser =>{
+        Users.countDocuments({role:'doctor'}).then(countDocs =>{
+          Contact.countDocuments({}).then(contact=>{
+            res.render('admin/adminHome',{
+              layout:'mainAdmin',
+              users: users,
+              userName:userName,
+              image:user.profileImage,
+              userCount:countUser,
+              docCount:countDocs,
+              contact:contact,
+              navClass:navClass,
+              title:'Home'
+            });
+          })
         });
-        })
       });
     });
-  });
+  })
 });
+
+
 router.get('/:userName/contact',(req, res)=>{
   const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","current"];
-  Contact.find({}).then((contact)=>{
-    res.render('admin/contact',{
-          layout:'mainAdmin',
-          userName:req.params.userName,
-          contact:contact,
-          navClass:navClass,
-          title:'Contact Information'
-        });
-
+  Users.findOne({userName: req.params.userName}).then((user)=>{
+    Contact.find({}).then((contact)=>{
+      res.render('admin/contact',{
+        layout:'mainAdmin',
+        userName:user.userName,
+        image:user.profileImage,
+        contact:contact,
+        navClass:navClass,
+        title:'Contact Information'
+      });
+    });
   });
 });
 
@@ -58,41 +65,53 @@ router.get('/:userName/contact',(req, res)=>{
 router.get('/:userName/notification', (req, res) => {
   const navClass = ["sidebar-link","current","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
-  res.render('admin/notification',{
-  	layout:'mainAdmin',
-    userName:userName,
-    navClass:navClass,
-    title:'Notification'
+  Users.findOne({userName:userName}).then((user)=>{
+    res.render('admin/notification',{
+      layout:'mainAdmin',
+      userName:userName,
+      image:user.profileImage,
+      navClass:navClass,
+      title:'Notification'
+    });
   });
 });
+
 
 router.get('/:userName/patientTable', (req, res) => {
   const navClass = ["sidebar-link","sidebar-link","current","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
-  Users.find({role:'patient'}).then((users) => {
-    res.render('admin/patientTable',{
-      layout:'mainAdmin',
-      userName:userName,
-      users:users,
-      navClass:navClass,
-      title:'Patients'
+  Users.findOne({userName:userName}).then((user)=>{
+    Users.find({role:'patient'}).then((users) => {
+      res.render('admin/patientTable',{
+        layout:'mainAdmin',
+        userName:userName,
+        image:user.profileImage,
+        users:users,
+        navClass:navClass,
+        title:'Patients'
+      });
     });
   })
 });
 
+
 router.get('/:userName/doctorTable', (req, res) => {
   const navClass = ["sidebar-link","sidebar-link","sidebar-link","current","sidebar-link"];
   const userName=req.params.userName;
-  Users.find({role:'doctor'}).then((users) => {
-    res.render('admin/doctorTable',{
-      layout:'mainAdmin',
-      userName:userName,
-      users:users,
-      navClass:navClass,
-      title:'Doctors'
+  Users.findOne({userName:userName}).then((user)=>{
+    Users.find({role:'doctor'}).then((users) => {
+      res.render('admin/doctorTable',{
+        layout:'mainAdmin',
+        userName:userName,
+        image:user.profileImage,
+        users:users,
+        navClass:navClass,
+        title:'Doctors'
+      });
     });
-  })
+  });
 });
+
 
 router.get('/:userName/adminProfile', (req, res) => {
   const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
@@ -102,42 +121,50 @@ router.get('/:userName/adminProfile', (req, res) => {
     res.render('admin/adminProfile',{
       layout:'mainAdmin',
       userName:userName,
+      image:user.profileImage,
       user:user,
       dob:dob,
       navClass:navClass,
       title:'Profile'
     });
-  })
+  });
 });
 
 
 router.get('/:userName/adminMail', (req, res) => {
   const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
-  res.render('admin/adminMail',{
-  	layout:'mainAdmin',
-    userName:userName,
-    navClass:navClass,
-    title:'Send Email'
-  });
+  Users.findOne({userName:userName}).then((user)=>{
+    res.render('admin/adminMail',{
+      layout:'mainAdmin',
+      userName:userName,
+      image:user.profileImage,
+      navClass:navClass,
+      title:'Send Email'
+    });
+  })
 });
 
 router.get('/:userName/patientTable/:id', (req, res) => {
   const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
   const id=req.params.id;
-  Users.findOne({_id:id}).then((user) =>{
-    const dob=dateFormat(user.dob, "isoDate");
-    res.render('admin/viewPatient',{
-      layout:'mainAdmin',
-      userName:userName,
-      patient:user,
-      ptDob:dob,
-      navClass:navClass,
-      title:'Pateint Profile'
+  Users.findOne({userName:userName}).then((user)=>{
+    Users.findOne({_id:id}).then((user) =>{
+      const dob=dateFormat(user.dob, "isoDate");
+      res.render('admin/viewPatient',{
+        layout:'mainAdmin',
+        userName:userName,
+        image:user.profileImage,
+        patient:user,
+        ptDob:dob,
+        navClass:navClass,
+        title:'Pateint Profile'
+      });
     });
-  });
+  })
 });
+
 
 router.get('/:userName/patientTable/delete/:id', (req,res) =>{
   const userName=req.params.userName;
@@ -145,22 +172,28 @@ router.get('/:userName/patientTable/delete/:id', (req,res) =>{
     res.redirect('/admin/'+userName+'/patientTable')});
 });
 
+
 router.get('/:userName/doctorTable/:id',(req, res) => {
   const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
   const id=req.params.id;
-  Users.findOne({_id:id}).then((user) =>{
-    const dob=dateFormat(user.dob, "isoDate");
-    res.render('admin/viewDoctor',{
-      layout:'mainAdmin',
-      userName:userName,
-      doctor:user,
-      docDob:dob,
-      navClass:navClass,
-      title:'Doctor Profile'
+  Users.findOne({userName:userName}).then((usr)=>{
+    Users.findOne({_id:id}).then((user) =>{
+      const dob=dateFormat(user.dob, "isoDate");
+      res.render('admin/viewDoctor',{
+        layout:'mainAdmin',
+        userName:userName,
+        image:usr.profileImage,
+        doctor:user,
+        docDob:dob,
+        navClass:navClass,
+        title:'Doctor Profile'
+      });
     });
-  });
+  })
 });
+
+
 router.get('/:userName/doctorTable/delete/:id', (req,res) =>{
   const id=req.params.id;
   const userName=req.params.userName;
@@ -178,6 +211,7 @@ router.get('/:userName/editAdminProfile', (req, res) =>{
     res.render('admin/editAdminProfile',{
       layout:'mainAdmin',
       userName:userName,
+      image:user.profileImage,
       user:user,
       dob:dob,
       navClass:navClass,
@@ -195,8 +229,8 @@ router.put('/:userName/editAdminProfile',(req, res) =>{
     user.dob = req.body.dob;
     user.save().then((user) =>{
       res.redirect('/admin/'+user.userName+'/adminProfile');
-    })
-  })
+    });
+  });
 });
 
 
@@ -208,20 +242,24 @@ router.get('/:userName/changePassword',(req, res) =>{
     res.render('admin/changePassword',{
       layout:'mainAdmin',
       userName:userName,
+      image:user.profileImage,
       user:user,
       navClass:navClass,
       title:'Change Password'
     })
   }));
 });
+
+
 router.get('/:userName/grantAccess/:id',(req,res) => {  
   Users.findOne({_id:req.params.id}).then((user) => {
-      user.status ='Registered'
-      user.save().then((result)=>{
-            res.redirect('/admin/'+req.params.userName+'/doctorTable');
-      });
+    user.status ='Registered'
+    user.save().then((result)=>{
+      res.redirect('/admin/'+req.params.userName+'/doctorTable');
+    });
   });
 });
+
 
 router.get('/:userName/autocomplete/doc',(req,res,next) => {
   var regex= new RegExp(req.query["term"],'i');
@@ -237,6 +275,7 @@ router.get('/:userName/autocomplete/doc',(req,res,next) => {
     res.jsonp(result);
   });
 });
+
 
 router.get('/:userName/autocomplete/patient', (req,res,next) => {
   var regex= new RegExp(req.query["term"],'i');

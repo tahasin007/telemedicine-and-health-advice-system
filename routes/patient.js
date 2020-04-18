@@ -76,12 +76,12 @@ router.get('/:userName/symptompChecker',(req, res) => {
   const userName=req.params.userName;
   Users.findOne({userName:userName}).then((user)=>{ 
     res.render('patient/symptompChecker',{
-    layout:'mainPatient',
-    userName:userName,
-    image:user.profileImage,
-    navClass:navClass,
-    title:'Symptom Checker'
-  });
+      layout:'mainPatient',
+      userName:userName,
+      image:user.profileImage,
+      navClass:navClass,
+      title:'Symptom Checker'
+    });
   });
 });
 
@@ -137,44 +137,53 @@ router.get('/:userName/chat',(req, res)=>{
   const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","current","sidebar-link"];
   const userName=req.params.userName;
   const search=req.query.search;
-  Users.find({role:'doctor'}).then((users) => {
-    res.render('patient/chat',{
-      layout:'mainPatient',
-      userName:userName,
-      doctors:users,
-      navClass:navClass,
-      title:'Message'
+  Users.findOne({userName:userName}).then((user)=>{
+    Users.find({role:'doctor'}).then((users) => {
+      res.render('patient/chat',{
+        layout:'mainPatient',
+        userName:userName,
+        doctors:users,
+        image:user.profileImage,
+        navClass:navClass,
+        title:'Message'
+      });
     });
-  });
+  })
 });
 
 router.get('/:userName/chat/:receiver',(req, res)=>{
   const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
-  Message.find({$or:[{$and:[{senderName:req.params.userName},{receiverName:req.params.receiver}]},
+  Users.findOne({userName:userName}).then((user)=>{
+   Message.find({$or:[{$and:[{senderName:req.params.userName},{receiverName:req.params.receiver}]},
     {$and:[{senderName:req.params.receiver},{receiverName:req.params.userName}]}]}).then((result)=>{
       Users.find({role:'doctor'}).then((users) => {
         res.render('patient/chatUI',{
           layout:'mainPatient',
           userName:userName,
           navClass:navClass,
+          image:user.profileImage,
           receiver:req.params.receiver,
           title:'Message',
           messages:result
         });
       });
     });
-  });
+  })
+});
 
 router.get('/:userName/videoChat',(req, res)=>{
   const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link","current"];
   const userName=req.params.userName;
-  res.render('patient/videoChat',{
-    layout:'mainPatient',
-    userName:userName,
-    navClass:navClass,
-    title:'Message'
-  });
+  Users.findOne({userName:userName}).then((user) => {
+    res.render('patient/videoChat',{
+      layout:'mainPatient',
+      userName:userName,
+      image:user.profileImage,
+      navClass:navClass,
+      title:'Message'
+    });
+  })
 });
 
 
@@ -184,29 +193,35 @@ router.get('/:userName/doctors', (req, res) => {
   const userName=req.params.userName;
   const search=req.query.search;
   if(search == undefined){
-    Users.find({role:'doctor'}).then((users) => {
-      res.render('patient/doctors',{
-        layout:'mainPatient',
-        userName:userName,
-        doctors:users,
-        navClass:navClass,
-        title:'Doctors'
-
+    Users.findOne({userName:userName}).then((user) => {
+      Users.find({role:'doctor'}).then((users) => {
+        res.render('patient/doctors',{
+          layout:'mainPatient',
+          userName:userName,
+          doctors:users,
+          image:user.profileImage,
+          navClass:navClass,
+          title:'Doctors'
+        });
       });
-    });
+    })
   }else{
     const regex = new RegExp(escapeRegex(search),'gi');
-    Users.find({$and:[{$or:[{userName:regex},{email:regex},{name:regex}]},{role:'doctor'}]}).then((users) => {
+    Users.findOne({userName:userName}).then((user) => {
+     Users.find({$and:[{$or:[{userName:regex},{email:regex},{name:regex}]},{role:'doctor'}]}).then((users) => {
       res.render('patient/doctors',{
         layout:'mainPatient',
         userName:userName,
         doctors:users,
+        image:user.profileImage,
         navClass:navClass,
         title:'Doctors'
       });
     });
+   })
   } 
 });
+
 router.get('/:userName/autocomplete', (req,res,next) => {
   var regex= new RegExp(req.query["term"],'i');
   Users.find({$and:[{name:regex},{role:'doctor'}]}).then((users) => {
@@ -234,6 +249,7 @@ router.get('/:userName/report',(req, res) =>{
           formatDate:formatDate},
           layout:'mainPatient',
           userName:userName,
+          image:user.profileImage,
           navClass:navClass,
           apts:result,
           title:'Medical History'
@@ -252,6 +268,7 @@ router.get('/:userName/report/:aptId',(req, res) =>{
         helpers : {
           formatDate:formatDate},
           layout:'mainPatient',
+          image:user.profileImage,
           userName:userName,
           navClass:navClass,
           report:result,
@@ -278,6 +295,7 @@ router.get('/:userName/diagnosisRes', (req, res) =>{
         layout:'mainPatient',
         userName:userName,
         diagnosis:diagnosis,
+        image:user.profileImage,
         navClass:navClass,
         title:'Symptom Checker Result'
       });
@@ -290,15 +308,18 @@ router.get('/:userName/diagnosisRes', (req, res) =>{
 router.get('/:userName/disease/:diseaseName',(req, res)=>{
   const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   const diseaseName=req.params.diseaseName.replace('%20',' ');
-  DiseaseInfo.findOne({diseaseName:diseaseName}).then((disease) =>{
-    res.render('patient/diseaseInfo',{
-      layout:'mainPatient',
-      userName:req.params.userName,
-      navClass:navClass,
-      info:disease,
-      title:diseaseName
+  Users.findOne({userName:userName}).then((user)=>{
+    DiseaseInfo.findOne({diseaseName:diseaseName}).then((disease) =>{
+      res.render('patient/diseaseInfo',{
+        layout:'mainPatient',
+        userName:req.params.userName,
+        navClass:navClass,
+        image:user.profileImage,
+        info:disease,
+        title:diseaseName
+      });
     });
-  });
+  })
 });
 
 
@@ -312,6 +333,7 @@ router.get('/:userName/patientProfile',(req, res) => {
       userName:userName,
       user:users,
       dob:dob,
+      image:users.profileImage,
       navClass:navClass,
       title:'Profile'
     });
@@ -324,18 +346,21 @@ router.get('/:userName/viewDocProfile/:id', (req, res) => {
   const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
   const id=req.params.id;
-  Users.findOne({_id:req.params.id}).then((user) => {
-    Schedule.findOne({doctorId:user._id}).then((schedule) => {
-      res.render('patient/viewDocProfile',{
-        layout:'mainPatient',
-        userName:userName,
-        doctor:user,
-        schedule:schedule,
-        navClass:navClass,
-        title:'Doctor Profile'
-      });
-    })
-  });
+  Users.findOne({userName:userName}).then((usr)=>{
+    Users.findOne({_id:req.params.id}).then((user) => {
+      Schedule.findOne({doctorId:user._id}).then((schedule) => {
+        res.render('patient/viewDocProfile',{
+          layout:'mainPatient',
+          userName:userName,
+          doctor:user,
+          image:usr.profileImage,
+          schedule:schedule,
+          navClass:navClass,
+          title:'Doctor Profile'
+        });
+      })
+    });
+  })
 });
 
 //Get Route for Sending email
@@ -347,6 +372,7 @@ router.get('/:userName/:docId/sendMail', (req, res) => {
       res.render('patient/patientMail',{
         layout:'mainPatient',
         userName:userName,
+        image:patient.profileImage,
         sender:patient,
         receiver:doctor,
         navClass:navClass,
@@ -386,6 +412,7 @@ router.get('/:userName/editPatientProfile',(req, res) => {
     res.render('patient/editPatientProfile',{
       layout:'mainPatient',
       userName:userName,
+      image:user.profileImage,
       user:user,
       dob:dob, 
       navClass:navClass,
@@ -417,6 +444,7 @@ router.get('/:userName/changePassword', (req, res) =>{
     res.render('patient/changePassword',{
       layout:'mainPatient',
       userName:userName,
+      image:user.profileImage,
       user:user,
       navClass:navClass,
       title:'Change Password'
@@ -473,6 +501,7 @@ router.get('/:userName/makeAppointment/:doc/:dayNo', (req, res) =>{
         res.render('patient/viewScheduleBySlot',{
           layout:'mainPatient',
           userName:userName,
+          image:user.profileImage,
           day:dayArr[dayNo],
           timeObj:timeObj,
           user:user,
@@ -542,6 +571,7 @@ router.get('/:userName/appointment/:date',(req, res)=>{
         res.render('patient/appointment',{
           layout:'mainPatient',
           userName:userName,
+          image:user.profileImage,
           navClass:navClass,
           aptdate:moment(thisdate).format('LLL'),
           title:'Appointmet',

@@ -9,6 +9,7 @@
   "license": "ISC",
   "dependencies": {
     "@handlebars/allow-prototype-access": "^1.0.3",
+    "acorn": "^7.1.1",
     "async": "^3.2.0",
     "bcryptjs": "^2.4.3",
     "bluebird": "^3.7.2",
@@ -18,7 +19,9 @@
     "connect-flash": "^0.1.1",
     "connect-flash-plus": "^0.2.1",
     "cookie-parser": "^1.4.5",
+    "core-js": "^3.6.5",
     "cors": "^2.8.5",
+    "crypto-random-string": "^3.2.0",
     "currency-formatter": "^1.5.5",
     "date-and-time": "^0.13.1",
     "dateformat": "^3.0.3",
@@ -37,6 +40,7 @@
     "jspdf": "^1.5.3",
     "just-handlebars-helpers": "^1.0.17",
     "method-override": "^3.0.0",
+    "minimist": "^1.2.5",
     "moment": "^2.24.0",
     "mongoose": "^5.9.6",
     "mongoose-plugin-date-format": "^1.1.2",
@@ -47,6 +51,7 @@
     "passport-http": "^0.3.0",
     "passport-local": "^1.0.0",
     "passport-local-roles": "^1.0.1",
+    "pdfmake": "^0.1.65",
     "popper.js": "^1.16.1",
     "socket.io": "^2.3.0"
   },

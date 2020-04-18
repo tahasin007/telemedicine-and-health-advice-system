@@ -10,6 +10,9 @@ const dateFormat = require('dateformat');
 const date = require('date-and-time');
 const moment = require('moment');
 const multer = require('multer');
+const PdfPrinter = require('pdfmake');
+const fs = require('fs');
+
 
 // Method override middleware
 router.use(methodOverride('_method'));
@@ -38,6 +41,263 @@ const {
 
 const dayArr=['Saturday','Sunday','Monday','Tuesday','Wednesday','Thursday','Friday'];
 
+
+router.post('/:userName/patientForm/:patId/:aptId',(req, res)=>{
+  const userName=req.params.userName;
+  const patientId=req.params.patId;
+  const aptId=req.params.aptId; 
+
+  const ovservation =req.body.info; 
+
+  const symptom=req.body.symptom;
+  const symptomDetails=req.body.symptomDetails;
+
+  const medicine_name=req.body.medicine_name;
+  const daily_dose=req.body.daily_dose;
+  const description=req.body.description;
+
+  const arrSymptom = [];
+  var len=0;
+  arrSymptom.push([{text: 'Symptom', style: 'tableHeader'}, {text: 'Duration/Complication', style: 'tableHeader'}]);
+
+  if(Array.isArray(symptom)){
+    len=symptom.length;
+    for(var i=symptom.length-1;i>-1;i--){
+      arrSymptom.push([{text: symptom[i], alignment: 'center'}, {text: symptomDetails[i],alignment: 'center'}]);
+    }
+  }
+  else{
+    len=1;
+    arrSymptom.push([{text: symptom, alignment: 'center'}, {text: symptomDetails,alignment: 'center'}]);
+  }
+  
+  const arrMedication = [];
+  var Len=0;
+  arrMedication.push([{text: 'Medicine Name', style: 'tableHeader'}, {text: 'Daily Dose', style: 'tableHeader'}, {text: 'Instructions/Description', style: 'tableHeader'}]);
+
+  if(Array.isArray(medicine_name)){
+    for(var i=medicine_name.length-1;i>-1;i--){
+      Len=medicine_name.length;
+      arrMedication.push([{text: medicine_name[i], alignment: 'center'}, {text: daily_dose[i], alignment: 'center'}, {text: description[i], alignment: 'center'}]);
+    }
+  }
+  else{
+    Len=1;
+    arrMedication.push([{text: medicine_name, alignment: 'center'}, {text: daily_dose, alignment: 'center'}, {text: description, alignment: 'center'}]);
+  }
+
+  
+  
+  var fonts = {
+    Courier: {
+      normal: 'Courier',
+      bold: 'Courier-Bold',
+      italics: 'Courier-Oblique',
+      bolditalics: 'Courier-BoldOblique'
+    },
+    Helvetica: {
+      normal: 'Helvetica',
+      bold: 'Helvetica-Bold',
+      italics: 'Helvetica-Oblique',
+      bolditalics: 'Helvetica-BoldOblique'
+    },
+    Times: {
+      normal: 'Times-Roman',
+      bold: 'Times-Bold',
+      italics: 'Times-Italic',
+      bolditalics: 'Times-BoldItalic'
+    }
+  };
+  const printer = new PdfPrinter(fonts);
+
+
+  var docDefinition = {
+
+    content: [
+    {
+      columns: [
+      {
+        width:'auto',
+        image: 'public/images/logo.png',
+        width: 35,
+        height: 35,
+        absolutePosition: {x:90, y:10}
+
+      },
+      {
+        width:'*',
+        text:'A Next Generation Advance Health Advice System',
+        absolutePosition: {x:125, y:20},
+        style:'header'
+      },
+      ] 
+    },
+    {
+      text:'Medical Prescription',
+      absolutePosition: {x:225, y:40},
+      style:'subheader'
+    },
+    {
+      text:'Doctor\'s Name:',
+      absolutePosition: {x:45, y:120},
+      style:'label'
+    },
+    {
+      text:req.body.docName,
+      absolutePosition: {x:225, y:120},
+      style:'value'
+    },
+    {
+
+      text:'Doctor\'s Address/Chamber:',
+      absolutePosition: {x:45, y:145},
+      style:'label'
+    },
+    {
+      text:req.body.docAddress,
+      absolutePosition: {x:225, y:145},
+      style:'value'
+    },
+    {
+
+      text:'Doctor\'s Email:',
+      absolutePosition: {x:45, y:170},
+      style:'label'
+    },
+    {
+      text:req.body.docEmail,
+      absolutePosition: {x:225, y:170},
+      style:'value'
+    },
+    {
+
+      text:'Doctor\'s Phone No.:',
+      absolutePosition: {x:45, y:195},
+      style:'label'
+    },
+    {
+      text:req.body.docPhone,
+      absolutePosition: {x:225, y:195},
+      style:'value'
+    },
+    {
+      text:'Patient\'s Name:',
+      absolutePosition: {x:45, y:220},
+      style:'label'
+    },
+    {
+      text:req.body.patName,
+      absolutePosition: {x:225, y:220},
+      style:'value'
+    },
+    {
+      text:'Patient\'s Gender:',
+      absolutePosition: {x:45, y:245},
+      style:'label'
+    },
+    {
+      text:req.body.patGender,
+      absolutePosition: {x:225, y:245},
+      style:'value'
+    },
+    {
+      text:'Possible Disease/Complication Name:',
+      absolutePosition: {x:45, y:270},
+      style:'label'
+    },
+    {
+      text:req.body.diseaseName,
+      absolutePosition: {x:225, y:270},
+      style:'value'
+    },
+    {
+      text:'Patient\'s Symptom',
+      absolutePosition: {x:45, y:310},
+      style:'label'
+    },
+    {
+      table:{
+        body:arrSymptom
+      },
+      absolutePosition: {x:135, y:330},
+      layout: 'noBorders'
+    },
+    {
+      text:'Medication Details',
+      absolutePosition: {x:45, y:345+len*30},
+      style:'label'
+    },
+    {
+      table:{
+        body:arrMedication
+      },
+      absolutePosition: {x:120, y:365+len*30},
+      layout: 'noBorders'
+    },
+    {
+      text:'Advice/Instructions to Patient:',
+      absolutePosition: {x:45, y:450+Len*30},
+      style:'label'
+    },
+    {
+      text:req.body.info,
+      absolutePosition: {x:225, y:450+Len*30},
+      style:'value'
+    },
+    ],
+    defaultStyle: {
+      font: 'Helvetica'
+    },
+    styles:{
+      header:{
+        fontSize: 16,
+        bold: true,
+        font:'Times',
+        color:'#12A98C'
+      },
+      subheader:{
+        fontSize: 14,
+        color:'#12A98C'
+      },
+      label:{
+        fontSize:12,
+        color:'#5DB4B8',
+        italics:true,
+        bold: true
+      },
+      tableHeader:{
+        fontSize:12,
+        color:'#85E9EE',
+        italics:false,
+        bold: true
+      },
+      value:{
+        fontSize:12,
+        color:'#000000',
+        italics:false,
+        bold: false
+      }
+    }
+  };
+
+
+  var pdfDoc = printer.createPdfKitDocument(docDefinition);
+  pdfDoc.pipe(fs.createWriteStream('public/prescriptions/document.pdf'));
+  pdfDoc.end();
+  // Users.findOne({userName:userName}).then((user) =>{
+  //   const report = new Report({
+  //     aptId:aptId,
+  //     patientId:patientId,
+  //     docId:user._id,
+  //     observation:ovservation
+  //   });
+  //   report.save().then((result)=>{
+  //     res.redirect('/doctor/'+userName+'/patient')
+  //   })
+  // });  
+});
+
+
 router.get('/:userName', (req, res) => {
   const userName=req.params.userName;
   const navClass = ["current","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
@@ -48,6 +308,7 @@ router.get('/:userName', (req, res) => {
           formatDate:formatDate},
           layout:'mainDoc',
           userName:userName,
+          image:user.profileImage,
           apts:result,
           navClass:navClass,
           title:'Home'
@@ -60,12 +321,15 @@ router.get('/:userName', (req, res) => {
 router.get('/:userName/notification', (req, res) => {
   const navClass = ["sidebar-link","current","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
-  res.render('doctor/notification',{
-  	layout:'mainDoc',
-    userName:userName,
-    navClass:navClass,
-    title:'Notification'
-  });
+  Users.findOne({userName:userName}).then((user)=>{
+    res.render('doctor/notification',{
+      layout:'mainDoc',
+      userName:userName,
+      image:user.profileImage,
+      navClass:navClass,
+      title:'Notification'
+    });
+  })
 });
 
 router.get('/:userName/doctorProfile', (req, res) => {
@@ -76,6 +340,7 @@ router.get('/:userName/doctorProfile', (req, res) => {
     res.render('doctor/doctorProfile',{
      layout:'mainDoc',
      userName:userName,
+     image:user.profileImage,
      user:user,
      dob:dob,
      navClass:navClass,
@@ -87,29 +352,34 @@ router.get('/:userName/doctorProfile', (req, res) => {
 router.get('/:userName/chat/:receiver',(req,res) =>{
   const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
-  Message.find({$or:[{$and:[{senderName:req.params.userName},{receiverName:req.params.receiver}]},
-    {$and:[{senderName:req.params.receiver},{receiverName:req.params.userName}]}]}).then((result)=>{
-      res.render('doctor/chatUI',{
-        layout:'mainDoc',
-        userName:userName,
-        navClass:navClass,
-        receiver:req.params.receiver,
-        title:'Message',
-        messages:result
+  Users.findOne({userName:userName}).then((user)=>{
+    Message.find({$or:[{$and:[{senderName:req.params.userName},{receiverName:req.params.receiver}]},
+      {$and:[{senderName:req.params.receiver},{receiverName:req.params.userName}]}]}).then((result)=>{
+        res.render('doctor/chatUI',{
+          layout:'mainDoc',
+          userName:userName,
+          image:user.profileImage,
+          navClass:navClass,
+          receiver:req.params.receiver,
+          title:'Message',
+          messages:result
+        });
       });
-    });
-
-  });
+    })
+});
 
 router.get('/:userName/videoChat',(req, res)=>{
   const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","current"];
   const userName=req.params.userName;
-  res.render('doctor/videoChat',{
-    layout:'mainPatient',
-    userName:userName,
-    navClass:navClass,
-    title:'Message'
-  });
+  Users.findOne({userName:userName}).then((user)=>{
+    res.render('doctor/videoChat',{
+      layout:'mainPatient',
+      userName:userName,
+      image:user.profileImage,
+      navClass:navClass,
+      title:'Message'
+    });
+  })
 });
 
 router.get('/:userName/patient', (req, res) => {
@@ -122,6 +392,7 @@ router.get('/:userName/patient', (req, res) => {
           formatDate:formatDate},
           layout:'mainDoc',
           userName:userName,
+          image:user.profileImage,
           apts:result,
           navClass:navClass,
           title:'Patients'
@@ -142,6 +413,7 @@ router.get('/:userName/appointment', (req, res) => {
           formatDate:formatDate},
           layout:'mainDoc',
           userName:userName,
+          image:user.profileImage,
           apts:result,
           navClass:navClass,
           title:'Appointmets'
@@ -161,6 +433,7 @@ router.get('/:userName/schedule', (req, res) => {
       res.render('doctor/docSchedule',{
         layout:'mainDoc',
         userName:userName,
+        image:user.profileImage,
         schedule:doctor,
         navClass:navClass,
         title:'Schedule'
@@ -182,6 +455,7 @@ router.get('/:userName/viewPatient/:aptId', (req, res) => {
           formatDate:formatDate},
           layout:'mainDoc',
           userName:userName,
+          image:user.profileImage,
           apt:result,
           navClass:navClass,
           title:'Patient Appointmet'
@@ -225,6 +499,7 @@ router.get('/:userName/patientForm/:patId/:aptId',(req, res) => {
       res.render('doctor/patientForm',{
         layout:'mainDoc',
         userName:userName,
+        image:user.profileImage,
         apt:result,
         navClass:navClass,
         title:'Report'
@@ -233,27 +508,7 @@ router.get('/:userName/patientForm/:patId/:aptId',(req, res) => {
   });
 });
 
-router.post('/:userName/patientForm/:patId/:aptId',(req, res)=>{
-  const userName=req.params.userName;
-  const patientId=req.params.patId;
-  const aptId=req.params.aptId; 
-  const symptom=req.body.symptom;
-  const medication=req.body.medication;
-  const ovservation =req.body.info;   
-  Users.findOne({userName:userName}).then((user) =>{
-    const report = new Report({
-      aptId:aptId,
-      patientId:patientId,
-      docId:user._id,
-      symptom:symptom,
-      medication:medication,
-      observation:ovservation
-    });
-    report.save().then((result)=>{
-      res.redirect('/doctor/'+userName+'/patient')
-    })
-  });  
-});
+
 
 
 router.get('/:userName/editDoctorProfile', (req, res) => {
@@ -264,6 +519,7 @@ router.get('/:userName/editDoctorProfile', (req, res) => {
     res.render('doctor/editDoctorProfile',{
      layout:'mainDoc',
      userName:userName,
+     image:user.profileImage,
      user:user,
      dob:dob,
      navClass:navClass,
@@ -297,6 +553,7 @@ router.get('/:userName/changePassword', (req, res) =>{
     res.render('doctor/changePassword',{
       layout:'mainDoc',
       userName:userName,
+      image:user.profileImage,
       user:user,
       navClass:navClass,
       title:'Change Password'
@@ -331,12 +588,15 @@ router.put('/:userName/changePassword', (req, res) =>{
 router.get('/:userName/doctorMail', (req, res) => {
   const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
-  res.render('doctor/doctorMail',{
-    layout:'mainDoc',
-    userName:userName,
-    navClass:navClass,
-    title:'Mail'
-  });
+  Users.findOne({userName:userName}).then((user)=>{
+    res.render('doctor/doctorMail',{
+      layout:'mainDoc',
+      userName:userName,
+      image:user.profileImage,
+      navClass:navClass,
+      title:'Mail'
+    });
+  })
 });
 
 router.get('/:userName/editSchedule', (req, res) => {
@@ -348,6 +608,7 @@ router.get('/:userName/editSchedule', (req, res) => {
         layout:'mainDoc',
         userName:userName,
         schedule:schedule ,
+        image:user.profileImage,
         navClass:navClass,
         title:'Edit Schedule'
       });
@@ -498,6 +759,7 @@ router.get('/:userName/showSlot/:dayNo',(req,res) =>{
           userName:userName,
           day:dayArr[dayNo],
           timeObj:timeObj,
+          image:user.profileImage,
           navClass:navClass,
           title:'Schedule Slot'
         });

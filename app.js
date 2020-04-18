@@ -209,7 +209,7 @@ app.use('/admin', admin);
 app.use('/patient',patient);
 app.use('/doctor',doctor);
 
-const port = process.env.PORT || 5000;
+const port = 5000;
 server.listen(port,()=>{
 	console.log(`Server started on port ${port}`);
 });

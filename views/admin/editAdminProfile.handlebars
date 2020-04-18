@@ -1,80 +1,106 @@
 
-    <!-- navbar -->
-    {{> _adminNav}}
-    <!-- end of navbar -->
+<!-- navbar -->
+{{> _adminNav}}
+<!-- end of navbar -->
 
 
-   <!--  Admin Profile -->
+<!--  Admin Profile -->
 
-   <section>
-      <div class="container-fluid">
-        <div class="row ">
-          <div class="col-xl-10 col-lg-9 col-md-8 ml-auto mt-4">
-             <div class="pt-md-5 mt-md-3 mb-5 col-xl-12">
-               <!-- Form starts for Profile edit -->
-              <div class="container">
-                  <h3>Edit Profile</h3>
-                  <hr>
-                <div class="row d-flex justify-content-center">
-                    <!-- left column -->
-                    <div class="col-xl-4 col-md-12">
-                      <div class="text-center">
-                        <img src="/images/admin.png" width=100 class="avatar img-circle" alt="avatar">
-                        <h6>Upload a different photo...</h6>
-                        
-                        <input type="file" class="form-control">
-                      </div>
-                    </div>
-                    
-                    <!-- edit form column -->
-                    <div class="col-xl-8 col-md-12 personal-info">
-                      <h3>Personal info</h3>
-                      
-                      <form class="form-horizontal" role="form" action="editAdminProfile/?_method=PUT" method="post">
-                        <input type="hidden" name="_method" value="PUT">
-                        <div class="form-group">
-                          <label class="col-lg-3 control-label">Name:</label>
-                          <div class="col-lg-8">
-                            <input class="form-control" name="name" type="text" value="{{user.name}}">
-                          </div>
-                        </div>
-                        <div class="form-group">
-                          <label class="col-lg-3 control-label">Email:</label>
-                          <div class="col-lg-8">
-                            <input class="form-control" type="text" name="email" value="{{user.email}}">
-                          </div>
-                        </div>
-                        <div class="form-group">
-                          <label class="col-lg-3 control-label">Phone No:</label>
-                          <div class="col-lg-8">
-                            <input class="form-control" type="text" name="contact" value="{{user.contact}}">
-                          </div>
-                        </div>
-                        <div class="form-group">
-                          <label class="col-lg-3 control-label">Date of Birth:</label>
-                          <div class="col-lg-8">
-                            <input class="form-control" type="date" name="dob" value="{{dob}}">
-                          </div>
-                        </div>
-                        
-                        <div class="form-group">
-                          <label class="col-md-3 control-label"></label>
-                          <button type="submit" class="btn btn-primary">Submit</button>
-                         <a href="adminProfile"><input type="button" class="btn btn-dark" value="Cancel"></a>
-                        </div>
-                      </form>
-                    </div>
+<section>
+  <div class="container-fluid">
+    <div class="row ">
+      <div class="col-xl-10 col-lg-9 col-md-8 ml-auto mt-4">
+       <div class="pt-md-5 mt-md-3 mb-5 col-xl-12">
+        <form class="form-horizontal" role="form" action="editAdminProfile/?_method=PUT" method="post">
+          <input type="hidden" id="userId" value="{{user._id}}">
+          <!-- Form starts for Profile edit -->
+          <div class="container">
+            <h3>Edit Profile</h3>
+            <hr>
+            <div class="row d-flex justify-content-center">
+              <!-- left column -->
+              <div class="col-xl-4 col-md-12">
+                <div class="text-center">
+                  <img src="/images/admin.png" width=100 class="avatar img-circle" alt="avatar">
+                  <h6>Upload a different photo...</h6>
+
+                  <input type="file" class="form-control" id="upload_image" name="profileImage">
                 </div>
               </div>
-              <hr>
-               <!-- Form ends for profile edit -->
-              
-           </div>
-         </div>
+
+              <!-- edit form column -->
+              <div class="col-xl-8 col-md-12 personal-info">
+                <h3>Personal info</h3>
+
+
+                <input type="hidden" name="_method" value="PUT">
+                <div class="form-group">
+                  <label class="col-lg-3 control-label">Name:</label>
+                  <div class="col-lg-8">
+                    <input class="form-control" name="name" type="text" value="{{user.name}}">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-lg-3 control-label">Email:</label>
+                  <div class="col-lg-8">
+                    <input class="form-control" type="text" name="email" value="{{user.email}}">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-lg-3 control-label">Phone No:</label>
+                  <div class="col-lg-8">
+                    <input class="form-control" type="text" name="contact" value="{{user.contact}}">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-lg-3 control-label">Date of Birth:</label>
+                  <div class="col-lg-8">
+                    <input class="form-control" type="date" name="dob" value="{{dob}}">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-md-3 control-label"></label>
+                  <button type="submit" class="btn btn-primary">Submit</button>
+                  <a href="adminProfile"><input type="button" class="btn btn-dark" value="Cancel"></a>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <hr>
+        <!-- Form ends for profile edit -->
+
       </div>
     </div>
-    </section>
-  
+  </div>
+</div>
+</section>
+
+
+<script>
+$(document).ready(function(){
+  $('#upload_image').on('change', function(){
+    const profileImage = $('#upload_image');
+    if(profileImage.val()!=''){
+      const formData = new FormData();
+      formData.append('profileImage',profileImage[0].files[0]);
+      const id=$('#userId').val();
+      $.ajax({
+        url: '/uploadProfileImage/'+id,
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(){
+          profileImage.val('');
+        }
+      })
+    }
+  });
+});
+</script>
+
 
 
 
