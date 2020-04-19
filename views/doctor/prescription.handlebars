@@ -1,0 +1,150 @@
+<style>
+table {
+  display: table;
+}
+table tr {
+  display: table-cell;
+}
+table tr td {
+  display: block;
+}
+</style>
+<!-- navbar -->
+{{> _docNav}}
+<!-- end of navbar -->
+
+<!-- email sending -->
+
+<section>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-xl-10 col-lg-9 col-md-8 ml-auto mt-4">
+        <div class="pt-md-5 mt-md-3 mb-5 col-xl-12">
+          {{#if report}}
+          <div class="container mt-2">
+            <h3 class="text-info font-weight-bold text-center mb-3">Medical Prescription</h3>
+          </div>
+          {{#if report.date}}
+          <div class="row profile_info m-2">
+            <div class="col-6 plabel">Date:</div>
+            <div class="col-6 bg-light">{{report.date}}</div>
+          </div>
+          {{/if}}
+          <div class="row profile_info m-2">
+            <div class="col-6 plabel">Doctor's Name:</div>
+            <div class="col-6 bg-light">{{apt.docId.name}}</div>
+          </div>
+          <div class="row profile_info m-2">
+            <div class="col-6 plabel">Doctor's Address/Chamber:</div>
+            <div class="col-6 bg-light">{{apt.docId.chamber}}</div>
+          </div>
+          <div class="row profile_info m-2">
+            <div class="col-6 plabel">Doctor's Email:</div>
+            <div class="col-6 bg-light">{{apt.docId.email}}</div>
+          </div>
+          <div class="row profile_info m-2">
+            <div class="col-6 plabel">Doctor's Phone No:</div>
+            <div class="col-6 bg-light">{{apt.docId.contact}}</div>
+          </div>
+          <div class="row profile_info m-2">
+            <div class="col-6 plabel">Patient's Name:</div>
+            <div class="col-6 bg-light">{{apt.patientId.name}}</div>
+          </div>
+          <div class="row profile_info m-2">
+            <div class="col-6 plabel">Patient's Gender:</div>
+            <div class="col-6 bg-light">{{apt.patientId.gender}}</div>
+          </div>
+          <div class="row profile_info m-2">
+            <div class="col-6 plabel">Appointment Date:</div>
+            <div class="col-6 bg-light">{{formatDate apt.appointmentDate 'LLLL'}}</div>
+          </div>
+          <div class="row profile_info m-2">
+            <div class="col-6 plabel">Patient's Disease:</div>
+            <div class="col-6 bg-light">{{report.disease}}</div>
+          </div>
+
+          <div class="row profile_info m-2">
+            <div class="col-6 plabel">Patient's Symptom:</div>
+          </div>
+          <div class="container col-8">
+            <table class="table table-hover">
+              <tr>
+                <th scope="row">Symptom</th>
+                {{#each report.symptom}}
+                <td>{{this}}</td>
+                {{/each}}
+              </tr>
+              <tr>
+                <th scope="row">Duration/Complication</th>
+                {{#each report.symptomDetails}}
+                <td>{{this}}</td>
+                {{/each}}
+              </tr>
+            </table>
+          </div>
+
+          <div class="row profile_info m-2">
+            <div class="col-6 plabel">Medication:</div>
+          </div>
+          <div class="container col-8">
+            <table class="table table-hover">
+              <tr>
+                <th scope="row">Medicine Name</th>
+                {{#each report.medicine_name}}
+                <td>{{this}}</td>
+                {{/each}}
+              </tr>
+              <tr>
+                <th scope="row">Daily Dose</th>
+                {{#each report.daily_dose}}
+                <td>{{this}}</td>
+                {{/each}}
+              </tr>
+              <tr>
+                <th scope="row">Instructions/Description</th>
+                {{#each report.description}}
+                <td>{{this}}</td>
+                {{/each}}
+              </tr>
+            </table>
+          </div>
+
+          <div class="row profile_info m-2">
+            <div class="col-6 plabel">Advice/Instructions to Patient:</div>
+            <div class="col-6 bg-light">{{report.observation}}</div>
+          </div>
+
+          <div class="container m-4">
+            <a href="/doctor/{{userName}}/editPrescription/{{apt.patientId._id}}/{{apt._id}}"><button type="button" class="btn btn-info mr-4">Edit</button></a>
+            <a href=""><button type="button" class="btn btn-info mr-2">Send To Patient</button></a>
+          </div>
+
+          {{else}}
+          <div class="container mt-5">
+            <h3 class="text-info font-weight-bold text-center mb-3">No Prescription was Prepared for this Patient</h3>
+          </div>
+          <a href="/doctor/{{userName}}/editPrescription/{{apt.patientId._id}}/{{apt._id}}"><button type="button" class="btn btn-info mr-4">Make Prescription</button></a>
+
+          {{/if}}
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script type="text/javascript">
+$(document).ready(function(){
+
+
+});
+</script>
+
+
+
+
+
+
+
+
+

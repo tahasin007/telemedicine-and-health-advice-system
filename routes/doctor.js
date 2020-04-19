@@ -12,6 +12,7 @@ const moment = require('moment');
 const multer = require('multer');
 const PdfPrinter = require('pdfmake');
 const fs = require('fs');
+const cryptoRandomString = require('crypto-random-string');
 
 
 // Method override middleware
@@ -34,268 +35,14 @@ const Message = mongoose.model('message');
 
 app.use(express.static(path.join(__dirname, 'public')));
 const {
+  forLoop,
   formatDate,
   formatDateSub
+  
 } = require('../helpers/hbs');
 
 
 const dayArr=['Saturday','Sunday','Monday','Tuesday','Wednesday','Thursday','Friday'];
-
-
-router.post('/:userName/patientForm/:patId/:aptId',(req, res)=>{
-  const userName=req.params.userName;
-  const patientId=req.params.patId;
-  const aptId=req.params.aptId; 
-
-  const ovservation =req.body.info; 
-
-  const symptom=req.body.symptom;
-  const symptomDetails=req.body.symptomDetails;
-
-  const medicine_name=req.body.medicine_name;
-  const daily_dose=req.body.daily_dose;
-  const description=req.body.description;
-
-  const arrSymptom = [];
-  var len=0;
-  arrSymptom.push([{text: 'Symptom', style: 'tableHeader'}, {text: 'Duration/Complication', style: 'tableHeader'}]);
-
-  if(Array.isArray(symptom)){
-    len=symptom.length;
-    for(var i=symptom.length-1;i>-1;i--){
-      arrSymptom.push([{text: symptom[i], alignment: 'center'}, {text: symptomDetails[i],alignment: 'center'}]);
-    }
-  }
-  else{
-    len=1;
-    arrSymptom.push([{text: symptom, alignment: 'center'}, {text: symptomDetails,alignment: 'center'}]);
-  }
-  
-  const arrMedication = [];
-  var Len=0;
-  arrMedication.push([{text: 'Medicine Name', style: 'tableHeader'}, {text: 'Daily Dose', style: 'tableHeader'}, {text: 'Instructions/Description', style: 'tableHeader'}]);
-
-  if(Array.isArray(medicine_name)){
-    for(var i=medicine_name.length-1;i>-1;i--){
-      Len=medicine_name.length;
-      arrMedication.push([{text: medicine_name[i], alignment: 'center'}, {text: daily_dose[i], alignment: 'center'}, {text: description[i], alignment: 'center'}]);
-    }
-  }
-  else{
-    Len=1;
-    arrMedication.push([{text: medicine_name, alignment: 'center'}, {text: daily_dose, alignment: 'center'}, {text: description, alignment: 'center'}]);
-  }
-
-  
-  
-  var fonts = {
-    Courier: {
-      normal: 'Courier',
-      bold: 'Courier-Bold',
-      italics: 'Courier-Oblique',
-      bolditalics: 'Courier-BoldOblique'
-    },
-    Helvetica: {
-      normal: 'Helvetica',
-      bold: 'Helvetica-Bold',
-      italics: 'Helvetica-Oblique',
-      bolditalics: 'Helvetica-BoldOblique'
-    },
-    Times: {
-      normal: 'Times-Roman',
-      bold: 'Times-Bold',
-      italics: 'Times-Italic',
-      bolditalics: 'Times-BoldItalic'
-    }
-  };
-  const printer = new PdfPrinter(fonts);
-
-
-  var docDefinition = {
-
-    content: [
-    {
-      columns: [
-      {
-        width:'auto',
-        image: 'public/images/logo.png',
-        width: 35,
-        height: 35,
-        absolutePosition: {x:90, y:10}
-
-      },
-      {
-        width:'*',
-        text:'A Next Generation Advance Health Advice System',
-        absolutePosition: {x:125, y:20},
-        style:'header'
-      },
-      ] 
-    },
-    {
-      text:'Medical Prescription',
-      absolutePosition: {x:225, y:40},
-      style:'subheader'
-    },
-    {
-      text:'Doctor\'s Name:',
-      absolutePosition: {x:45, y:120},
-      style:'label'
-    },
-    {
-      text:req.body.docName,
-      absolutePosition: {x:225, y:120},
-      style:'value'
-    },
-    {
-
-      text:'Doctor\'s Address/Chamber:',
-      absolutePosition: {x:45, y:145},
-      style:'label'
-    },
-    {
-      text:req.body.docAddress,
-      absolutePosition: {x:225, y:145},
-      style:'value'
-    },
-    {
-
-      text:'Doctor\'s Email:',
-      absolutePosition: {x:45, y:170},
-      style:'label'
-    },
-    {
-      text:req.body.docEmail,
-      absolutePosition: {x:225, y:170},
-      style:'value'
-    },
-    {
-
-      text:'Doctor\'s Phone No.:',
-      absolutePosition: {x:45, y:195},
-      style:'label'
-    },
-    {
-      text:req.body.docPhone,
-      absolutePosition: {x:225, y:195},
-      style:'value'
-    },
-    {
-      text:'Patient\'s Name:',
-      absolutePosition: {x:45, y:220},
-      style:'label'
-    },
-    {
-      text:req.body.patName,
-      absolutePosition: {x:225, y:220},
-      style:'value'
-    },
-    {
-      text:'Patient\'s Gender:',
-      absolutePosition: {x:45, y:245},
-      style:'label'
-    },
-    {
-      text:req.body.patGender,
-      absolutePosition: {x:225, y:245},
-      style:'value'
-    },
-    {
-      text:'Possible Disease/Complication Name:',
-      absolutePosition: {x:45, y:270},
-      style:'label'
-    },
-    {
-      text:req.body.diseaseName,
-      absolutePosition: {x:225, y:270},
-      style:'value'
-    },
-    {
-      text:'Patient\'s Symptom',
-      absolutePosition: {x:45, y:310},
-      style:'label'
-    },
-    {
-      table:{
-        body:arrSymptom
-      },
-      absolutePosition: {x:135, y:330},
-      layout: 'noBorders'
-    },
-    {
-      text:'Medication Details',
-      absolutePosition: {x:45, y:345+len*30},
-      style:'label'
-    },
-    {
-      table:{
-        body:arrMedication
-      },
-      absolutePosition: {x:120, y:365+len*30},
-      layout: 'noBorders'
-    },
-    {
-      text:'Advice/Instructions to Patient:',
-      absolutePosition: {x:45, y:450+Len*30},
-      style:'label'
-    },
-    {
-      text:req.body.info,
-      absolutePosition: {x:225, y:450+Len*30},
-      style:'value'
-    },
-    ],
-    defaultStyle: {
-      font: 'Helvetica'
-    },
-    styles:{
-      header:{
-        fontSize: 16,
-        bold: true,
-        font:'Times',
-        color:'#12A98C'
-      },
-      subheader:{
-        fontSize: 14,
-        color:'#12A98C'
-      },
-      label:{
-        fontSize:12,
-        color:'#5DB4B8',
-        italics:true,
-        bold: true
-      },
-      tableHeader:{
-        fontSize:12,
-        color:'#85E9EE',
-        italics:false,
-        bold: true
-      },
-      value:{
-        fontSize:12,
-        color:'#000000',
-        italics:false,
-        bold: false
-      }
-    }
-  };
-
-
-  var pdfDoc = printer.createPdfKitDocument(docDefinition);
-  pdfDoc.pipe(fs.createWriteStream('public/prescriptions/document.pdf'));
-  pdfDoc.end();
-  // Users.findOne({userName:userName}).then((user) =>{
-  //   const report = new Report({
-  //     aptId:aptId,
-  //     patientId:patientId,
-  //     docId:user._id,
-  //     observation:ovservation
-  //   });
-  //   report.save().then((result)=>{
-  //     res.redirect('/doctor/'+userName+'/patient')
-  //   })
-  // });  
-});
 
 
 router.get('/:userName', (req, res) => {
@@ -488,27 +235,6 @@ router.get('/:userName/rejectPatient/:patId/:aptId', (req, res) => {
     });
   });
 });
-
-
-router.get('/:userName/patientForm/:patId/:aptId',(req, res) => {
-  const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
-  const userName=req.params.userName;
-  const patientId=req.params.patientId;
-  Users.findOne({userName:userName}).then((user) => {
-    Appointmet.findOne({_id:req.params.aptId}).populate('docId').populate('patientId').exec().then(result => {
-      res.render('doctor/patientForm',{
-        layout:'mainDoc',
-        userName:userName,
-        image:user.profileImage,
-        apt:result,
-        navClass:navClass,
-        title:'Report'
-      });
-    });
-  });
-});
-
-
 
 
 router.get('/:userName/editDoctorProfile', (req, res) => {
@@ -806,5 +532,277 @@ function minToStrTime(min){
   return time;
 }
 
+router.put('/:userName/editPrescription/:patId/:aptId',(req, res)=>{
+  const userName=req.params.userName;
+  const patientId=req.params.patId;
+  const aptId=req.params.aptId; 
+  const ovservation =req.body.info; 
+  const symptom=req.body.symptom;
+  const symptomDetails=req.body.symptomDetails;
+  const medicine_name=req.body.medicine_name;
+  const daily_dose=req.body.daily_dose;
+  const description=req.body.description;
+  const arrSymptom = [];
+  var len=0;
+  arrSymptom.push([{text: 'Symptom', style: 'tableHeader'}, {text: 'Duration/Complication', style: 'tableHeader'}]);
+  if(Array.isArray(symptom)){
+    len=symptom.length;
+    for(var i=symptom.length-1;i>-1;i--){
+      arrSymptom.push([{text: symptom[i], alignment: 'center'}, {text: symptomDetails[i],alignment: 'center'}]);
+    }
+  }else{
+    len=1;
+    arrSymptom.push([{text: symptom, alignment: 'center'}, {text: symptomDetails,alignment: 'center'}]);
+  }
+  const arrMedication = [];
+  var Len=0;
+  arrMedication.push([{text: 'Medicine Name', style: 'tableHeader'}, {text: 'Daily Dose', style: 'tableHeader'}, {text: 'Instructions/Description', style: 'tableHeader'}]);
+
+  if(Array.isArray(medicine_name)){
+    for(var i=medicine_name.length-1;i>-1;i--){
+      Len=medicine_name.length;
+      arrMedication.push([{text: medicine_name[i], alignment: 'center'}, {text: daily_dose[i], alignment: 'center'}, {text: description[i], alignment: 'center'}]);
+    }
+  }else{
+    Len=1;
+    arrMedication.push([{text: medicine_name, alignment: 'center'}, {text: daily_dose, alignment: 'center'}, {text: description, alignment: 'center'}]);
+  }
+  var fonts = {
+    Courier: {
+      normal: 'Courier',bold: 'Courier-Bold',italics: 'Courier-Oblique',bolditalics: 'Courier-BoldOblique'
+    },
+    Helvetica: {
+      normal: 'Helvetica',bold: 'Helvetica-Bold',italics: 'Helvetica-Oblique',bolditalics: 'Helvetica-BoldOblique'
+    },
+    Times: {
+      normal: 'Times-Roman',bold: 'Times-Bold',italics: 'Times-Italic',bolditalics: 'Times-BoldItalic'
+    }
+  };
+  const printer = new PdfPrinter(fonts);
+  var docDefinition = {
+    content: [
+    {
+      columns: [
+      {
+        width:'auto',image: 'public/images/logo.png',width: 35, height: 35,absolutePosition: {x:90, y:10}
+
+      },
+      {
+        width:'*',text:'A Next Generation Advance Health Advice System', absolutePosition: {x:125, y:20},style:'header'
+      },
+      ] 
+    },
+    {
+      text:'Medical Prescription',absolutePosition: {x:225, y:40},style:'subheader'
+    },
+    {
+      text:'Date',absolutePosition: {x:410, y:80},style:'label'
+    },
+    {
+      text:req.body.date,absolutePosition: {x:450, y:80},style:'value'
+    },
+    {
+      text:'Doctor\'s Name:',absolutePosition: {x:45, y:120},style:'label'
+    },
+    {
+      text:req.body.docName,
+      absolutePosition: {x:225, y:120},
+      style:'value'
+    },
+    {
+      text:'Doctor\'s Address/Chamber:',absolutePosition: {x:45, y:145},style:'label'
+    },
+    {
+      text:req.body.docAddress,absolutePosition: {x:225, y:145},style:'value'
+    },
+    {
+      text:'Doctor\'s Email:',absolutePosition: {x:45, y:170},style:'label'
+    },
+    {
+      text:req.body.docEmail,absolutePosition: {x:225, y:170},style:'value'
+    },
+    {
+      text:'Doctor\'s Phone No.:',absolutePosition: {x:45, y:195},style:'label'
+    },
+    {
+      text:req.body.docPhone,absolutePosition: {x:225, y:195},style:'value'
+    },
+    {
+      text:'Patient\'s Name:',absolutePosition: {x:45, y:220},style:'label'
+    },
+    {
+      text:req.body.patName,absolutePosition: {x:225, y:220},style:'value'
+    },
+    {
+      text:'Patient\'s Gender:',absolutePosition: {x:45, y:245},style:'label'
+    },
+    {
+      text:req.body.patGender,absolutePosition: {x:225, y:245},style:'value'
+    },
+
+    {
+      text:'Appointmet Date',absolutePosition: {x:45, y:270},style:'label'
+    },
+    {
+      text:req.body.appointmentDate,absolutePosition: {x:225, y:270}, style:'value'
+    },
+
+    {
+      text:'Possible Disease Name:',absolutePosition: {x:45, y:295},style:'label'
+    },
+    {
+      text:req.body.diseaseName,absolutePosition: {x:225, y:295},style:'value'
+    },
+    {
+      text:'Patient\'s Symptom',absolutePosition: {x:45, y:335},style:'label'
+    },
+    {
+      table:{
+        body:arrSymptom
+      },
+      absolutePosition: {x:135, y:355},layout: 'noBorders'
+    },
+    {
+      text:'Medication Details',absolutePosition: {x:45, y:370+len*30},style:'label'
+    },
+    {
+      table:{
+        body:arrMedication
+      },
+      absolutePosition: {x:120, y:390+len*30},layout: 'noBorders'
+    },
+    {
+      text:'Advice/Instructions to Patient:',absolutePosition: {x:45, y:475+Len*30},style:'label'
+    },
+    {
+      text:req.body.info,absolutePosition: {x:225, y:475+Len*30},style:'value'
+    },
+    ],
+    defaultStyle: {
+      font: 'Helvetica'
+    },
+    styles:{
+      header:{
+        fontSize: 16,
+        bold: true,
+        font:'Times',
+        color:'#12A98C'
+      },
+      subheader:{
+        fontSize: 14,
+        color:'#12A98C'
+      },
+      label:{
+        fontSize:12,
+        color:'#5DB4B8',
+        italics:true,
+        bold: true
+      },
+      tableHeader:{
+        fontSize:12,
+        color:'#3BB3B9',
+        italics:false,
+        bold: false
+      },
+      value:{
+        fontSize:12,
+        color:'#000000',
+        italics:false,
+        bold: false
+      }
+    }
+  };
+
+  const string=cryptoRandomString({length: 10, characters: 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXY'})+'.pdf';
+  var pdfDoc = printer.createPdfKitDocument(docDefinition);
+  pdfDoc.pipe(fs.createWriteStream(`public/prescriptions/${string}`));
+  pdfDoc.end();
+  Users.findOne({userName:userName}).then((user)=>{
+    Report.findOne({aptId:aptId}).then((report) => {
+      if(report){
+        report.disease=req.body.diseaseName;
+        report.symptom=req.body.symptom;
+        report.symptomDetails=req.body.symptomDetails;
+        report.observation = req.body.info;
+        report.medicine_name=req.body.medicine_name;
+        report.daily_dose=req.body.daily_dose;
+        report.description=req.body.description;
+        report.pdf=string;
+        report.date=req.body.date;
+        report.save().then((result) =>{
+          res.redirect('/doctor/'+userName+'/patient');
+        })
+      }
+      else{
+        const report = new Report({
+          aptId:aptId,
+          patientId:patientId,
+          docId:user._id,
+          observation:ovservation,
+          disease:req.body.diseaseName,
+          symptom:req.body.symptom,
+          symptomDetails:req.body.symptomDetails,
+          medicine_name:req.body.medicine_name,
+          daily_dose:req.body.daily_dose,
+          description:req.body.description,
+          date:req.body.date,
+          pdf:string
+        });
+        report.save().then((result)=>{
+          res.redirect('/doctor/'+userName+'/patient');
+        });
+      }
+    }); 
+  }); 
+});
+
+
+router.get('/:userName/medicalPrescription/:patId/:aptId',(req, res) => {
+  const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
+  const userName=req.params.userName;
+  const patientId=req.params.patientId;
+  Users.findOne({userName:userName}).then((user) => {
+    Appointmet.findOne({_id:req.params.aptId}).populate('docId').populate('patientId').exec().then(result => {
+      Report.findOne({aptId:req.params.aptId}).then(report=>{
+        res.render('doctor/prescription',{
+          helpers : {
+            formatDate:formatDate
+          },
+          layout:'mainDoc',
+          userName:userName,
+          image:user.profileImage,
+          apt:result,
+          report:report,
+          navClass:navClass,
+          title:'Medical Prescription'
+        });
+      });
+    });
+  });
+});
+
+
+router.get('/:userName/editPrescription/:patId/:aptId',(req, res)=>{
+  const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
+  const date=moment().format('LLLL');
+  Users.findOne({userName:req.params.userName}).then((user) => {
+    Appointmet.findOne({_id:req.params.aptId}).populate('docId').populate('patientId').exec().then(result => {
+      Report.findOne({aptId:req.params.aptId}).then(report=>{
+        res.render('doctor/editPrescription',{
+          helpers : {
+            formatDate:formatDate
+          },
+          layout:'mainDoc',
+          userName:req.params.userName,
+          image:user.profileImage,
+          title:'Medical Prescription',
+          date:date,
+          report:report,
+          apt:result,
+        });
+      });
+    })
+  });
+});
 
 module.exports = router;

@@ -1,0 +1,153 @@
+
+<!-- navbar -->
+{{> _docNav}}
+<!-- end of navbar -->
+
+<!-- email sending -->
+<section>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-xl-10 col-lg-9 col-md-8 ml-auto mt-4">
+        <div class="pt-md-5 mt-md-3 mb-5 col-xl-12">
+          <div class="container mt-2">
+            <h3 class="text-info font-weight-bold text-center mb-3">Medical Prescription</h3>
+          </div>
+          <form role="form" action="/doctor/{{userName}}/editPrescription/{{apt.patientId._id}}/{{apt._id}}/?_method=PUT" method="post">
+
+            <div class="form-row mt-2">
+              <div class="form-group col-md-6">
+                <label for="docName">Doctor Name:</label>
+                <input type="text" readonly class="form-control" name="docName" value="{{apt.docId.name}}">
+              </div>
+              <div class="form-group col-md-6">
+                <label for="inputAddress">Doctor's Address/Chamber:</label>
+                <input type="text" class="form-control" id="inputAddress" name="docAddress" value="{{apt.docId.chamber}}">
+              </div>
+            </div>
+
+            <div class="form-row mt-2">
+              <div class="form-group col-md-6">
+                <label for="docMail">Doctor Email:</label>
+                <input type="email" class="form-control" id="docMail" name="docEmail" value="{{apt.docId.email}}">
+              </div>
+              <div class="form-group col-md-6">
+                <label for="docPhone">Doctor Phone No:</label>
+                <input type="text" class="form-control" id="docPhone" name="docPhone" value="{{apt.docId.contact}}">
+              </div>
+            </div>
+
+            <div class="form-row mt-2">
+              <div class="form-group col-md-6">
+                <label for="patName">Patient Name:</label>
+                <input type="text" readonly class="form-control" name="patName" id="patName" value="{{apt.patientId.name}}">
+              </div>
+              <div class="form-group col-md-6">
+                <label for="patGender">Gender:</label>
+                <input type="text" readonly class="form-control" name="patGender" id="patGender" value="{{apt.patientId.gender}}">
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label for="appointmentDate" class="col-4 col-form-label">Appointment Date:</label>
+              <div class="col-8">
+                <input type="text" class="form-control" readonly id="appointmentDate" name="appointmentDate" value="{{formatDate apt.appointmentDate 'LLLL'}}">
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label for="diseaseName" class="col-4 col-form-label">Possible Disease/Complication Name:</label>
+              <div class="col-8">
+                <input type="text" class="form-control" id="diseaseName" name="diseaseName" value={{report.disease}}>
+              </div>
+            </div>
+            
+            <p>Patient's Symptoms:</p>
+            <div class="dynamicSymptom" style="background:#DFEAF6;border-radius:8px">
+    
+              <div class="form-row align-items-center m-2">
+                <div class="col-5 mt-2">
+                  <input type="text" class="form-control mb-2" id="symptom" name="symptom" placeholder="Symptom">
+                </div>
+                <div class="col-5 mt-2">
+                  <input type="text" class="form-control mb-2" id="symptomDetails" name="symptomDetails" placeholder="Duration/complication">
+                </div>
+              </div>
+             
+              <button type='button' class="btn-info add_form_symptom mb-2 mt-2 ml-3">Add New Field &nbsp; <span style="font-size:16px; font-weight:bold;">+ </span>
+              </button>
+            </div>
+
+            
+
+
+
+            <p class="mt-4">Medication Details:</p>
+            <div class="dynamicForm" style="background:#DFEAF6;border-radius:8px">
+
+              <div class="form-row align-items-center m-2">
+                <div class="col-3 mt-2">
+                  <input type="text" class="form-control mb-2" id="medicine_name" name="medicine_name" placeholder="Medicine Name">
+                </div>
+                <div class="col-3 mt-2">
+                  <input type="number" class="form-control mb-2" id="daily_dose" name="daily_dose" placeholder="Daily Dose">
+                </div>
+                <div class="col-5 mt-2">
+                  <input type="text" class="form-control mb-2" id="description" name="description" placeholder="Instructions/Description">
+                </div>
+              </div>
+
+              <button type='button' class="btn-info add_form_field mb-2 mt-2 ml-3">Add New Field &nbsp; <span style="font-size:16px; font-weight:bold;">+ </span>
+              </button>
+            </div>
+            
+
+            <div class="form-group mt-4">
+              <label for="exampleFormControlTextarea1">Advice/Instructions to Patient</label>:</label>
+              <textarea class="form-control" name="info" id="exampleFormControlTextarea1" value="{{report.observation}}" rows="3"></textarea>
+            </div>
+
+            <div class="form-group row">
+              <label for="example-date-input" name="date" class="col-4 col-form-label">Date</label>
+              <div class="col-8">
+                <input class="form-control" type="text" value="{{date}}" name="date" id="example-date-input">
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Save</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script type="text/javascript">
+$(document).ready(function(){
+  $('.add_form_field').click(function(e){ 
+    $('.dynamicForm').prepend('<div class="form-row align-items-center m-2"><div class="col-3 mt-2"><input type="text" class="form-control mb-2" id="medicine_name" name="medicine_name" placeholder="Medicine Name"/></div><div class="col-3 mt-2"><input type="number" class="form-control mb-2" id="daily_dose" name="daily_dose" placeholder="Daily Dose"/></div><div class="col-5 mt-2"><input type="text" class="form-control mb-2" id="description" name="description" placeholder="Instructions/Description"></div><button type="button" class="delete btn btn-danger"><i class="fas fa-trash-alt"></i></button></div>');
+  });
+
+  $('.dynamicForm').on("click",".delete", function(e){  
+   e.preventDefault(); 
+   $(this).parent('div').last().remove();
+ })
+
+  $('.add_form_symptom').click(function(e){
+    $('.dynamicSymptom').prepend('<div class="form-row align-items-center m-2"><div class="col-5 mt-2"><input type="text" class="form-control mb-2" id="symptom" name="symptom" placeholder="Symptom"></div><div class="col-5 mt-2"><input type="text" class="form-control mb-2" id="symptomDetails" name="symptomDetails" placeholder="Duration/complication"></div><button type="button" class="deleteSymptom btn btn-danger"><i class="fas fa-trash-alt"></i></button></div>');
+  });
+
+  $('.dynamicSymptom').on("click",".deleteSymptom", function(e){  
+   e.preventDefault(); 
+   $(this).parent('div').last().remove();
+ })
+
+});
+</script>
+
+
+
+
+
+
+
+
+
