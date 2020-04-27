@@ -25,7 +25,7 @@ var socket = io();
 
 btnGoRoom.onclick = function () {
     if (inputRoomNumber.value === '') {
-        alert("Please type room number")
+        alert("Please type a room number")
     } else {
         roomNumber = inputRoomNumber.value;
         socket.emit('create or join', roomNumber);

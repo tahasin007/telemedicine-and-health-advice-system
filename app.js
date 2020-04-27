@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const http = require('http');
+const http = require('http').Server(app);
 const path = require('path');
 const mongoose = require('mongoose');
 const Handlebars = require('handlebars')
@@ -199,8 +199,7 @@ app.post('/uploadProfileImage/:id',(req,res) => {
 // });
 
 //socketIO
-const server = http.createServer(app);
-const io=socketIO(server);
+var io = require('socket.io')(http);
 require('./socket/chat')(io);
 require('./socket/videoChat')(io);
 
@@ -209,7 +208,7 @@ app.use('/admin', admin);
 app.use('/patient',patient);
 app.use('/doctor',doctor);
 
-const port = 5000;
-server.listen(port,()=>{
-	console.log(`Server started on port ${port}`);
+const port = process.env.PORT || 5000;
+http.listen(port, function () {
+    console.log('listening on', port);
 });

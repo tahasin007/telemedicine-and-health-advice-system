@@ -2,7 +2,7 @@ module.exports = function(io){
 	// signaling
 	io.on('connection', function (socket) {
 		// console.log('a user connected');
-
+		
 		socket.on('create or join', function (room) {
 			// console.log('create or join to room ', room);
 			
