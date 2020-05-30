@@ -1,6 +1,6 @@
 
 <!-- navbar -->
-{{> _patientNav}}
+{{> _docNav}}
 <!-- end of navbar -->
 
 <!-- patient table -->
@@ -25,7 +25,7 @@
               <ul class="friends-list">
                 {{#each friendList}}
                 <li class="friendlist">
-                  <a href="/patient/{{../userName}}/chat/{{this.friendId.userName}}" style="text-decoration: none;">
+                  <a href="/doctor/{{../userName}}/chat/{{this.friendId.userName}}" style="text-decoration: none;">
                     <div class="row">
                       <div class="col-md-3 p-2">
                         {{#if this.friendId.profileImage}}
@@ -66,36 +66,3 @@
   </div>
 </div>
 </section>
-<!-- end of table -->
-
-<script>
-$(function(){
-  $('#search').autocomplete({
-    source: function(req,res){
-      console.log(req,res)
-      $.ajax({
-        url:"autocomplete/",
-        dataType:"jsonp",
-        type:"GET",
-        data:req,
-        success: function(data){
-          console.log(data);
-          res(data)
-
-        },
-        error: function(err){
-          console.log(err.status);
-        }
-      });
-    },
-
-    minLength:1,
-    select: function(event,ui){
-      if(ui.item){
-        $('#search').val(ui.item.label);
-      }
-    }
-  });
-
-});
-</script> 

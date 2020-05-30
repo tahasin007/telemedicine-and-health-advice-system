@@ -12,7 +12,6 @@ const session = require('express-session');
 const methodOverride = require('method-override');
 const passport = require('passport')
 const helpers = require('handlebars-helpers')();
-const helperDateFormat=require('handlebars-dateformat');
 const cookieParser = require('cookie-parser');
 const validator = require('express-validator')
 const socketIO =require('socket.io');
@@ -25,6 +24,7 @@ const users = require('./routes/users');
 const admin = require('./routes/admin');
 const patient = require('./routes/patient');
 const doctor = require('./routes/doctor');
+const friendRequest = require('./routes/friendRequest');
 
 // Handlebars Middleware
 
@@ -128,7 +128,7 @@ app.post('/contact',(req, res) => {
   });
 });
 
-app.post('/chat/:name',(req,res,next) => {
+app.post('/privateChat/:name',(req,res,next) => {
   const params = req.params.name.split('.');
   const sender=params[0];
   const receiver=params[1];
@@ -143,72 +143,53 @@ app.post('/chat/:name',(req,res,next) => {
         newMessage.message = req.body.message;
         newMessage.createdAt = new Date();
         newMessage.save().then(result => {
-          if(sender.role =='patient'){
-            res.redirect('/patient/'+sender+'/chat/'+receiver);
-          }
-          else if(sender.role =='doctor'){
-            res.redirect('/doctor/'+sender+'/chat/'+receiver);
-          } 
         })
-
       });
     });
   }
 });
 
-app.post('/uploadProfileImage/:id',(req,res) => {
+app.post('/chat/getProfileImage', (req, res)=>{
+Users.findOne({userName:req.body.userName}).then((user)=>{
+  res.send(user.profileImage);
+})
+});
 
+app.post('/uploadProfileImage/:id',(req,res) => {
   const form = new formidable.IncomingForm();
   form.uploadDir = path.join(__dirname, '/public/uploads');
-
   form.on('file',(field,file) => {
     fs.rename(file.path,path.join(form.uploadDir,file.name),(err)=>{
       if(err)throw err;
       Users.findOne({_id:req.params.id}).then(user => {
-          user.profileImage=file.name;
-          user.save();  
+        user.profileImage=file.name;
+        user.save();  
       }); 
     });
   });
-
   form.on('error',(err) =>{
     console.log(err)
   });
-
   form.on('end',()=>{
-    
   });
 
   form.parse(req);
 });
-// app.get('/doctor/:sender/chat/:receiver',(req,res)=>{
-//   Message.find({$or:[{$and:[{senderName:req.params.sender},{receiverName:req.params.receiver}]},
-//     {$and:[{senderName:req.params.receiver},{receiverName:req.params.sender}]}]})
-//   .populate('sender').populate('receiver').exec((result)=>{
-//     console.log(result)
-//   });
-// });
 
-
-// app.get('/patient/:sender/chat/:receiver',(req,res)=>{
-//   Message.find({$or:[{$and:[{senderName:req.params.sender},{receiverName:req.params.receiver}]},
-//     {$and:[{senderName:req.params.receiver},{receiverName:req.params.sender}]}]})
-//   .populate('receiver').exec((result)=>{
-//     console.log(result)
-//   });
-// });
 
 //socketIO
 var io = require('socket.io')(http);
 require('./socket/chat')(io);
 require('./socket/videoChat')(io);
+require('./socket/friend')(io);
 
 app.use('/users', users);
 app.use('/admin', admin);
 app.use('/patient',patient);
 app.use('/doctor',doctor);
+app.use('/friendRequest',friendRequest);
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 4000;
 http.listen(port, function () {
-    console.log('listening on', port);
+  console.log('listening on', port);
 });

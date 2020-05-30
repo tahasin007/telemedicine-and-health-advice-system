@@ -1,25 +1,59 @@
 $(document).ready(function() {
-	var socket =io();
-	var paramOne = $.deparam(window.location.pathname);
-	var newParam = paramOne.split('.');
-	swap(newParam,0,1);
-	var paramTwo = newParam[0]+'.'+newParam[1];
+    var socket =io();
+    var paramOne = $.deparam(window.location.pathname);
+    var newParam = paramOne.split('.');
+    swap(newParam,0,1);
+    var paramTwo = newParam[0]+'.'+newParam[1];
 
-	socket.on('connect',function(){
-		var params = {
-           room1: paramOne,
-           room2: paramTwo
-        }
-        socket.emit('join PM',params);
+    socket.on('connect',function(){
+      var params = {
+       room1: paramOne,
+       room2: paramTwo
+   }
+   socket.emit('join PM',params);
 
-	});
-	socket.on('new message',function(data){
+});
+    socket.on('new message',function(data){
         var message=data.text;
         var sender=data.sender;
-		$('#chat').append('<div class="msg left-msg"><div class="msg-bubble"><div class="msg-info">'+sender+'</div><div class="msg-text">'+message+'</div></div></div>');
-	})
+        var room=data.room.split('.');
+        $.ajax({
+            url:'/chat/getProfileImage',
+            type: 'POST',
+            data:{
+                userName: sender 
+            },
+            success: function(data){
+                if(room[0]== $('#name-user').val()){
+                    console.log(data)
+                    if(typeof data == '')
+                    {
+                        $('#chat').append('<div class="msg right-msg m-2"><div class="msg-img" style="background-image: url(/uploads/default.jpg)"></div><div class="msg-bubble"><div class="msg-info"> <div class="msg-info-name">'+sender+'</div></div><div class="msg-text">'+message+'</div></div></div>');
+                    }
+                    else{
+                        $('#chat').append('<div class="msg right-msg m-2"><div class="msg-img" style="background-image: url(/uploads/'+data+')"></div><div class="msg-bubble"><div class="msg-info"> <div class="msg-info-name">'+sender+'</div></div><div class="msg-text">'+message+'</div></div></div>');
+                    }
+                    
+                }
+                else{
+                    if(typeof data == '')
+                    {
+                        $('#chat').append('<div class="msg left-msg m-2"><div class="msg-img" style="background-image: url(/uploads/default.jpg)"></div><div class="msg-bubble"><div class="msg-info"><div class="msg-info-name">'+sender+'</div></div><div class="msg-text">'+message+'</div></div></div>');
+                    }
+                    else{
+                        $('#chat').append('<div class="msg left-msg m-2"><div class="msg-img" style="background-image: url(/uploads/'+data+')"></div><div class="msg-bubble"><div class="msg-info"><div class="msg-info-name">'+sender+'</div></div><div class="msg-text">'+message+'</div></div></div>');
+                    }
+                    
+                }
+            },
+            error: function(err){
+              console.log(err.status);
+          } 
+      });
+    })
+
     
-	$('#message_form').on('submit', function(e){
+    $('#message_form').on('submit', function(e){
         e.preventDefault();
         
         var msg = $('#msg').val();
@@ -39,7 +73,7 @@ $(document).ready(function() {
 
         
         $.ajax({
-            url:'/chat/'+paramOne,
+            url:'/privateChat/'+paramOne,
             type: 'POST',
             data: {
                 message: message
@@ -48,9 +82,9 @@ $(document).ready(function() {
                 $('#msg').val('');
             },
             error: function(err){
-          console.log(err.status);
-        }
-        })
+              console.log(err.status);
+          }
+      })
     });
 });
 

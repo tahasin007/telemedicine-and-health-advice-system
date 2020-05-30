@@ -25,6 +25,19 @@ const UserSchema = new Schema({
   // },
   gender:{type: String},
   profileImage:{type: String},
+  sentRequest: [{
+    userId:{type: Schema.Types.ObjectId,ref:'users'},
+    userName: {type: String, default: ''}
+  }],
+  request:[{
+    userId:{type: Schema.Types.ObjectId,ref:'users'},
+    userName:{type: String, default:''}
+  }],
+  friendList:[{
+    friendId:{type: Schema.Types.ObjectId,ref:'users'},
+    friendName:{type: String, default:''}
+  }],
+  totalRequest:{type: Number, default: 0}
   // google:{type: String,default:''},
   // googleTokens:{type:String,default:''}
 });
