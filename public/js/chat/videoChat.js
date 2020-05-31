@@ -12,12 +12,27 @@ var localStream;
 var remoteStream;
 var rtcPeerConnection;
 var iceServers = {
-    'iceServers': [
-        { 'urls': 'stun:stun.services.mozilla.com' },
-        { 'urls': 'stun:stun.l.google.com:19302' }
+    iceServers: [
+    {
+        urls: ["stun:eu-turn4.xirsys.com"]
+    }, 
+    {
+        username: "ml0jh0qMKZKd9P_9C0UIBY2G0nSQMCFBUXGlk6IXDJf8G2uiCymg9WwbEJTMwVeiAAAAAF2__hNSaW5vbGVl", 
+        credential: "4dd454a6-feee-11e9-b185-6adcafebbb45",
+        urls: [
+        "turn:eu-turn4.xirsys.com:80?transport=udp",                         
+        "turn:eu-turn4.xirsys.com:3478?transport=tcp"
+        ]
+    }
     ]
 }
-var streamConstraints = { audio: true, video: true };
+var streamConstraints = { video: true,audio: {
+    echoCancellation: true,
+    noiseSuppression: true,
+    googEchoCancellation:true,
+    googAutoGainControl:true,
+    googHighpassFilte:true
+} };
 var isCaller;
 
 // Let's do this
@@ -71,17 +86,17 @@ socket.on('ready', function () {
         rtcPeerConnection.addTrack(localStream.getTracks()[0], localStream);
         rtcPeerConnection.addTrack(localStream.getTracks()[1], localStream);
         rtcPeerConnection.createOffer()
-            .then(sessionDescription => {
-                rtcPeerConnection.setLocalDescription(sessionDescription);
-                socket.emit('offer', {
-                    type: 'offer',
-                    sdp: sessionDescription,
-                    room: roomNumber
-                });
-            })
-            .catch(error => {
-                console.log(error)
-            })
+        .then(sessionDescription => {
+            rtcPeerConnection.setLocalDescription(sessionDescription);
+            socket.emit('offer', {
+                type: 'offer',
+                sdp: sessionDescription,
+                room: roomNumber
+            });
+        })
+        .catch(error => {
+            console.log(error)
+        })
     }
 });
 
@@ -94,17 +109,17 @@ socket.on('offer', function (event) {
         rtcPeerConnection.addTrack(localStream.getTracks()[1], localStream);
         rtcPeerConnection.setRemoteDescription(new RTCSessionDescription(event));
         rtcPeerConnection.createAnswer()
-            .then(sessionDescription => {
-                rtcPeerConnection.setLocalDescription(sessionDescription);
-                socket.emit('answer', {
-                    type: 'answer',
-                    sdp: sessionDescription,
-                    room: roomNumber
-                });
-            })
-            .catch(error => {
-                console.log(error)
-            })
+        .then(sessionDescription => {
+            rtcPeerConnection.setLocalDescription(sessionDescription);
+            socket.emit('answer', {
+                type: 'answer',
+                sdp: sessionDescription,
+                room: roomNumber
+            });
+        })
+        .catch(error => {
+            console.log(error)
+        })
     }
 });
 
