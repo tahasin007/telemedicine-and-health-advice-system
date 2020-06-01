@@ -73,7 +73,7 @@ $(document).ready(function() {
 
         
         $.ajax({
-            url:'/privateChat/'+paramOne,
+            url:'/chat/'+paramOne,
             type: 'POST',
             data: {
                 message: message

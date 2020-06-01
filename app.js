@@ -25,6 +25,7 @@ const admin = require('./routes/admin');
 const patient = require('./routes/patient');
 const doctor = require('./routes/doctor');
 const friendRequest = require('./routes/friendRequest');
+const chat = require('./routes/chat');
 
 // Handlebars Middleware
 
@@ -128,32 +129,7 @@ app.post('/contact',(req, res) => {
   });
 });
 
-app.post('/privateChat/:name',(req,res,next) => {
-  const params = req.params.name.split('.');
-  const sender=params[0];
-  const receiver=params[1];
-  if(req.body.message){
-    Users.findOne({userName:sender}).then((sender)=>{
-      Users.findOne({userName:receiver}).then((receiver)=>{
-        const newMessage = new Message();
-        newMessage.sender = sender._id;
-        newMessage.receiver = receiver._id;
-        newMessage.senderName = sender.userName;
-        newMessage.receiverName = receiver.userName;
-        newMessage.message = req.body.message;
-        newMessage.createdAt = new Date();
-        newMessage.save().then(result => {
-        })
-      });
-    });
-  }
-});
 
-app.post('/chat/getProfileImage', (req, res)=>{
-Users.findOne({userName:req.body.userName}).then((user)=>{
-  res.send(user.profileImage);
-})
-});
 
 app.post('/uploadProfileImage/:id',(req,res) => {
   const form = new formidable.IncomingForm();
@@ -179,8 +155,8 @@ app.post('/uploadProfileImage/:id',(req,res) => {
 
 //socketIO
 var io = require('socket.io')(http);
+var stream = require('./ws/stream');
 require('./socket/chat')(io);
-require('./socket/videoChat')(io);
 require('./socket/friend')(io);
 
 app.use('/users', users);
@@ -188,8 +164,11 @@ app.use('/admin', admin);
 app.use('/patient',patient);
 app.use('/doctor',doctor);
 app.use('/friendRequest',friendRequest);
+app.use('/chat',chat);
 
-const port = process.env.PORT || 4000;
+io.of('/stream').on('connection', stream);
+
+const port = process.env.PORT || 5050;
 http.listen(port, function () {
   console.log('listening on', port);
 });

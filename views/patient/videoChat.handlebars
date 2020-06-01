@@ -4,24 +4,101 @@
 
 
 <section>
+  <div>
   <div class="container-fluid">
-    <div class="row flex justify-content-center">
-      <div class="col-xl-10 col-lg-9 col-md-8 ml-auto mt-4">
-        <div class="pt-md-5 mt-md-3 mb-5 col-xl-12">
-          {{> _message}}
-          <div id="selectRoom">
-            <label>Type the room number</label>
-            <input id="roomNumber" type="text" />
-            <button id="goRoom">Go</button>
-          </div>
+    {{> _message}}
 
-          <div id="consultingRoom" style="display:none">
-            <video id="localVideo" autoplay></video>
-            <video id="remoteVideo" autoplay></video>
-          </div>
+    <div class="container-fluid mt-5 ml-4" id='room-create'>
+      <div class="row">
+        <div class="col-12 h2 mt-5 text-center">Enter Room ID</div>
+      </div>
 
+      <div class="row mt-2">
+        <div class="col-12 text-center">
+          <span class="form-text small text-danger" id='err-msg'></span>
+        </div>
+
+        <div class="col-12 col-md-4 offset-md-4 mb-3">
+          <label for="room-name">Room ID</label>
+          <input type="text" id='room-name' class="form-control rounded-0" placeholder="Room ID">
+        </div>
+        <div class="col-12 col-md-4 offset-md-4 mb-3">
+          <button id='create-room' class="btn btn-block rounded-0 btn-info">Join Call</button>
+        </div>
+
+      </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+    <div class="custom-modal" id='recording-options-modal'>
+      <div class="custom-modal-content">
+        <div class="row text-center">
+          <div class="col-md-6 mb-2">
+            <span class="record-option" id='record-video'>Record video</span>
+          </div>
+          <div class="col-md-6 mb-2">
+            <span class="record-option" id='record-screen'>Record screen</span>
+          </div>
+        </div>
+
+        <div class="row mt-3">
+          <div class="col-md-12 text-center">
+            <button class="btn btn-outline-danger" id='closeModal'>Close</button>
+          </div>
         </div>
       </div>
     </div>
+
+
+
+
+
+
+    <div class="container-fluid">
+      <div class="local_video">
+        <video class="local-video" disablePictureInPicture id='local' volume='0' autoplay muted></video>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12 main" id='main-section'>                    
+          <div class="row mt-2 mb-2" id='videos'></div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+
+      <div class="cntbtn">
+        <button class="btn btn-primary btn-sm rounded-0 btn-no-effect " id='toggle-video' title="Hide Video">
+          <i class="fa fa-video text-white"></i>
+        </button>
+
+        <button class="btn btn-primary btn-sm rounded-0 btn-no-effect" id='toggle-mute' title="Mute">
+          <i class="fa fa-microphone-alt text-white"></i>
+        </button>
+
+        <button class="btn btn-primary btn-sm rounded-0 btn-no-effect" id='share-screen' title="Share screen">
+          <i class="fa fa-desktop text-white"></i>
+        </button>
+
+        <button class="btn btn-primary btn-sm rounded-0 btn-no-effect" id='record' title="Record">
+          <i class="fa fa-dot-circle text-white"></i>
+        </button>
+
+      </div>
+    </div>
+
   </div>
 </section>
