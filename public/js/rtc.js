@@ -164,7 +164,7 @@ window.addEventListener('load', ()=>{
                     newVid.className = 'remote-video';
                     newVid.style.height = "450px";
                     newVid.style.width =  "800px";
-             
+
                     //create a new div for card
                     let cardDiv = document.createElement('div');
                     cardDiv.className = 'remote_video';
@@ -220,6 +220,7 @@ window.addEventListener('load', ()=>{
                 //share the new stream with all partners
                 broadcastNewTracks(stream, 'video', false);
 
+
                 //When the stop sharing button shown by the browser is clicked
                 screen.getVideoTracks()[0].addEventListener('ended', ()=>{
                     stopSharingScreen();
@@ -269,14 +270,15 @@ window.addEventListener('load', ()=>{
 
             if(isRecording){
                 e.setAttribute('title', 'Stop recording');
-                e.children[0].classList.add('text-danger');
-                e.children[0].classList.remove('text-white');
+                $('#record').addClass('btn-danger');
+                $('#record').removeClass('btn-success');
             }
+
 
             else{
                 e.setAttribute('title', 'Record');
-                e.children[0].classList.add('text-white');
-                e.children[0].classList.remove('text-danger');
+                $('#record').addClass('btn-success');
+                $('#record').removeClass('btn-danger');
             }
         }
 
@@ -315,17 +317,23 @@ window.addEventListener('load', ()=>{
             let elem = document.getElementById('toggle-video');
             
             if(myStream.getVideoTracks()[0].enabled){
-                e.target.classList.remove('fa-video');
-                e.target.classList.add('fa-video-slash');
+
+                $('#toggle-video').removeClass('btn-success');
+                $('#toggle-video').addClass('btn-danger');
+                $('#toggle-video-icon').removeClass('fa-video');
+                $('#toggle-video-icon').addClass('fa-video-slash');
                 elem.setAttribute('title', 'Show Video');
 
                 myStream.getVideoTracks()[0].enabled = false;
             }
 
             else{
-                e.target.classList.remove('fa-video-slash');
-                e.target.classList.add('fa-video');
+                $('#toggle-video').addClass('btn-success');
+                $('#toggle-video').removeClass('btn-danger');
+                $('#toggle-video-icon').addClass('fa-video');
+                $('#toggle-video-icon').removeClass('fa-video-slash');
                 elem.setAttribute('title', 'Hide Video');
+
 
                 myStream.getVideoTracks()[0].enabled = true;
             }
@@ -341,16 +349,20 @@ window.addEventListener('load', ()=>{
             let elem = document.getElementById('toggle-mute');
             
             if(myStream.getAudioTracks()[0].enabled){
-                e.target.classList.remove('fa-microphone-alt');
-                e.target.classList.add('fa-microphone-alt-slash');
+                $('#toggle-mute').removeClass('btn-success');
+                $('#toggle-mute').addClass('btn-danger');
+                $('#toggle-mute-icon').removeClass('fa-microphone');
+                $('#toggle-mute-icon').addClass('fa-microphone-slash');
                 elem.setAttribute('title', 'Unmute');
 
                 myStream.getAudioTracks()[0].enabled = false;
             }
 
             else{
-                e.target.classList.remove('fa-microphone-alt-slash');
-                e.target.classList.add('fa-microphone-alt');
+                $('#toggle-mute').addClass('btn-success');
+                $('#toggle-mute').removeClass('btn-danger');
+                $('#toggle-mute-icon').addClass('fa-microphone');
+                $('#toggle-mute-icon').removeClass('fa-microphone-slash');
                 elem.setAttribute('title', 'Mute');
 
                 myStream.getAudioTracks()[0].enabled = true;
@@ -366,10 +378,12 @@ window.addEventListener('load', ()=>{
 
             if(screen && screen.getVideoTracks().length && screen.getVideoTracks()[0].readyState != 'ended'){
                 stopSharingScreen();
+
             }
 
             else{
                 shareScreen();
+
             }
         });
 
@@ -424,6 +438,32 @@ window.addEventListener('load', ()=>{
                 }).catch(()=>{});
             }
         });
+
+        //end Up Call
+        $('#end-call').on('click',function(){
+
+           var id = pc[0] ;
+           var remoteVideo = document.getElementById("remote-video");
+           var localVideo = document.getElementById("local");
+           
+           pc[id].ontrack = null;
+           pc[id].onicecandidate = null;
+           pc[id].onsignalingstatechange = null;
+
+
+
+
+           if (remoteVideo.srcObject) {
+              remoteVideo.srcObject.getTracks().forEach(track => track.stop());
+          }
+
+          if (localVideo.srcObject) {
+              localVideo.srcObject.getTracks().forEach(track => track.stop());
+          }
+          
+
+
+      })
     }
 });
 

@@ -1,5 +1,5 @@
 export default {
-    
+
     closeVideo(elemId){
         if(document.getElementById(elemId)){
             document.getElementById(elemId).remove();
@@ -77,17 +77,17 @@ export default {
         // "turn:eu-turn4.xirsys.com:3478?transport=udp",
         return {
             iceServers: [
-                {
-                    urls: ["stun:eu-turn4.xirsys.com"]
-                }, 
-                {
-                    username: "ml0jh0qMKZKd9P_9C0UIBY2G0nSQMCFBUXGlk6IXDJf8G2uiCymg9WwbEJTMwVeiAAAAAF2__hNSaW5vbGVl", 
-                    credential: "4dd454a6-feee-11e9-b185-6adcafebbb45",
-                    urls: [
-                        "turn:eu-turn4.xirsys.com:80?transport=udp",                         
-                        "turn:eu-turn4.xirsys.com:3478?transport=tcp"
-                    ]
-                }
+            {
+                urls: ["stun:eu-turn4.xirsys.com"]
+            }, 
+            {
+                username: "ml0jh0qMKZKd9P_9C0UIBY2G0nSQMCFBUXGlk6IXDJf8G2uiCymg9WwbEJTMwVeiAAAAAF2__hNSaW5vbGVl", 
+                credential: "4dd454a6-feee-11e9-b185-6adcafebbb45",
+                urls: [
+                "turn:eu-turn4.xirsys.com:80?transport=udp",                         
+                "turn:eu-turn4.xirsys.com:3478?transport=tcp"
+                ]
+            }
             ]
         };
     },
@@ -105,14 +105,16 @@ export default {
         
         if(share){
             shareIconElem.setAttribute('title', 'Stop sharing screen');
-            shareIconElem.children[0].classList.add('text-primary');
-            shareIconElem.children[0].classList.remove('text-white');
+            $('#share-screen').addClass('btn-danger')
+            $('#share-screen').removeClass('btn-success');
+            
         }
 
         else{
             shareIconElem.setAttribute('title', 'Share screen');
-            shareIconElem.children[0].classList.add('text-white');
-            shareIconElem.children[0].classList.remove('text-primary');
+            $('#share-screen').removeClass('btn-danger')
+            $('#share-screen').addClass('btn-success');
+            
         }
     },
 
@@ -126,41 +128,13 @@ export default {
         let elem = e.target.parentElement.previousElementSibling;
 
         elem.requestFullscreen() || elem.mozRequestFullScreen() || elem.webkitRequestFullscreen() || elem.msRequestFullscreen();
-        // document.querySelector('#close-single-peer-btn').style.display = 'block';
-
-        // e.target.parentElement.previousElementSibling.classList.remove('remote-video');
-        // e.target.parentElement.previousElementSibling.classList.add('single-peer-video');
-
-        // //hide the other elements
-        // let remoteVideoElems = document.getElementsByClassName('remote-video');
-
-        // if(remoteVideoElems.length){
-        //     for(let i = 0; i < remoteVideoElems.length; i++){
-        //         remoteVideoElems[i].style.display = 'none';
-        //     }
-        // }
-    },
-
-
-    singleStreamToggleMute(e){
-        if(e.target.classList.contains('fa-microphone')){
-            e.target.parentElement.previousElementSibling.muted = true;
-            e.target.classList.add('fa-microphone-slash');
-            e.target.classList.remove('fa-microphone');
-        }
-
-        else{
-            e.target.parentElement.previousElementSibling.muted = false;
-            e.target.classList.add('fa-microphone');
-            e.target.classList.remove('fa-microphone-slash');
-        }
     },
 
 
     saveRecordedStream(stream, user){
         let blob = new Blob(stream, {type:'video/webm'});
 
-        let file = new File([blob], `${user}-${moment().unix()}-record.webm`);
+        let file = new File([blob], `abcd-record.webm`);
 
         saveAs(file);
     },
