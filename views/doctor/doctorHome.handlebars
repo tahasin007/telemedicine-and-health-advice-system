@@ -1,6 +1,20 @@
 <!-- navbar -->
   {{> _docNav}}
 <!-- end of navbar -->
+<style>
+  .calendar_body {
+    margin: 0px 0px;
+    margin-top: 15px;
+    padding: 0;
+    font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
+    font-size: 14px;
+  }
+
+  #calendar {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+</style>
 
     <!-- cards -->
     <section>
@@ -71,14 +85,13 @@
       <div class="container-fluid">
         <div class="row mb-5">
           <div class="col-xl-10 col-lg-9 col-md-8 ml-auto">
-            <div class="row align-items-center">
+            <div class="row justify-content-center ">
               <div class="col-xl-12 col-12 mb-4 mb-xl-0">
-                <h3 class="text-muted text-center mb-3">Appointment Requests</h3>
+                <h3 class="text-muted text-center mb-3">New Appointment Requests</h3>
                 <table class="table table-striped bg-light text-center">
                   <thead>
                     <tr class="text-muted">
                       <div class="col-6">
-                      <th>#</th>
                       <th>Patient Name</th>
                       <th>Email</th>
                       <th>Date</th>
@@ -90,7 +103,6 @@
                   <tbody>
                     {{#each apts}}
                     <tr>
-                      <th>{{add @index 1}}</th>
                       <td>{{patientId.userName}}</td>
                       <td>{{patientId.email}}</td>
                       <td>{{formatDate appointmentDate 'L'}}</td>
@@ -107,38 +119,9 @@
                     {{/each}}
                   </tbody>
                 </table>
-
-                <!-- pagination -->
-                <nav>
-                  <ul class="pagination justify-content-center">
-                    <li class="page-item">
-                      <a href="#" class="page-link py-2 px-3">
-                        <span>&laquo;</span>
-                      </a>
-                    </li>
-                    <li class="page-item active">
-                      <a href="#" class="page-link py-2 px-3">
-                        1
-                      </a>
-                    </li>
-                    <li class="page-item">
-                      <a href="#" class="page-link py-2 px-3">
-                        2
-                      </a>
-                    </li>
-                    <li class="page-item">
-                      <a href="#" class="page-link py-2 px-3">
-                        3
-                      </a>
-                    </li>
-                    <li class="page-item">
-                      <a href="#" class="page-link py-2 px-3">
-                        <span>&raquo;</span>
-                      </a>
-                    </li>
-                  </ul>
-                </nav>
-                <!-- end of pagination -->
+              </div>
+              <div class="col-xl-10 col-12 calendar_body align-item-center">
+                <div value='litera' id='calendar'></div>
               </div>
             </div>
           </div>
@@ -147,5 +130,41 @@
     </section>
     <!-- end of tables -->
 
+    <script>
+    var startTime, endTime, eventTitle;
+    var timeObj = new Array();
+    "{{#each aptCal}}"
+    startTime = "{{formatDate appointmentDate ''}}".split("+");
+    startTime = startTime[0];
+    endTime = "{{formatDate appointmentEnd ''}}".split("+");
+    endTime = endTime[0];
+    eventTitle = 'Appointmet with '+ "{{patientId.name}}";
 
+    timeObj.push({end:endTime,
+    start:startTime,
+    title:eventTitle});
+    "{{/each}}"
+      document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
 
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+          headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+          },
+          initialDate: '2020-12-30',
+          navLinks: true, // can click day/week names to navigate views
+          nowIndicator: true,
+
+          weekNumbers: true,
+          weekNumberCalculation: 'ISO',
+
+          editable: true,
+          selectable: true,
+          dayMaxEvents: true, // allow "more" link when too many events
+          events: timeObj
+        });
+        calendar.render();
+      });
+    </script>

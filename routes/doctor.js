@@ -50,6 +50,7 @@ router.get('/:userName', (req, res) => {
   Users.findOne({userName:userName}).then((user) => {
     Appointmet.find({$and:[{docId:user._id},{status:'pending'}]}).populate('docId').populate('patientId').exec().then(result => {
       Users.findOne({userName:userName}).populate('request.userId').exec().then((friendRequest)=>{
+        Appointmet.find({$and:[{docId:user._id},{status:'accepted'}]}).populate('docId').populate('patientId').exec().then(result1 => {
         res.render('doctor/doctorHome',{
           helpers : {
             formatDate:formatDate},
@@ -60,8 +61,10 @@ router.get('/:userName', (req, res) => {
             id:user._id,
             apts:result,
             navClass:navClass,
-            title:'Home'
+            title:'Home',
+            aptCal:result1
           });
+        });
       });
     })
   });
@@ -443,7 +446,7 @@ router.put('/:userName/editSchedule',(req, res) => {
 
   const friStart=req.body.friStart;
   const friEnd=req.body.friEnd;
-  
+
 
 
   Users.findOne({userName:userName}).then((user) => {
@@ -535,7 +538,7 @@ result.save().then((r) => {
         }//end else
       });
   });
-  
+
 });
 
 //Will show Slots of a Particular Day
@@ -617,8 +620,8 @@ function minToStrTime(min){
 router.put('/:userName/editPrescription/:patId/:aptId',(req, res)=>{
   const userName=req.params.userName;
   const patientId=req.params.patId;
-  const aptId=req.params.aptId; 
-  const ovservation =req.body.info; 
+  const aptId=req.params.aptId;
+  const ovservation =req.body.info;
   const symptom=req.body.symptom;
   const symptomDetails=req.body.symptomDetails;
   const medicine_name=req.body.medicine_name;
@@ -672,7 +675,7 @@ router.put('/:userName/editPrescription/:patId/:aptId',(req, res)=>{
       {
         width:'*',text:'A Next Generation Advance Health Advice System', absolutePosition: {x:125, y:20},style:'header'
       },
-      ] 
+      ]
     },
     {
       text:'Medical Prescription',absolutePosition: {x:225, y:40},style:'subheader'
@@ -835,8 +838,8 @@ router.put('/:userName/editPrescription/:patId/:aptId',(req, res)=>{
           res.redirect('/doctor/'+userName+'/patient');
         });
       }
-    }); 
-  }); 
+    });
+  });
 });
 
 
