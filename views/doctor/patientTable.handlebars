@@ -1,61 +1,64 @@
 
-    <!-- navbar -->
-    {{> _docNav}}
-    <!-- end of navbar -->
+<!-- navbar -->
+{{> _docNav}}
+<!-- end of navbar -->
 
-    <!-- patient table -->
-    <section>
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col-xl-10 col-lg-9 col-md-8 ml-auto mt-4">
-            <div class="pt-md-5 mt-md-3 mb-5 col-xl-12">
-              <h3 class="text-muted text-center mb-3">Patient Record</h3>
-              <div class="table responsive">
-                    <table class="table table-striped bg-light text-center">
-                  <thead>
-                    <tr class="text-muted">
-                      <th>User Name</th>
-                      <th>Email</th>
-                      <th>Appointment Date</th>
-                      <th>Report</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {{#each apts}}
-                    <tr>
-                      <td>{{patientId.name}}</td>
-                      <td>{{patientId.email}}</td>
-                      <td>{{formatDate appointmentDate 'YYYY-MM-DD'}}</td>
-                      <td>
-                        <a href="medicalPrescription/{{patientId._id}}/{{_id}}">
-                          
-                          <button type="button" class="btn btn-secondary">
-                            <i class="fa fa-file text-dark"></i></button>
+<!-- patient table -->
+<section>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-xl-10 col-lg-9 col-md-8 ml-auto mt-4">
+        <div class="pt-md-5 mt-md-3 mb-5 col-xl-12">
+          {{#if apts.length}}
+          <h3 class="text-muted text-center mb-3">Patient Record</h3>
+          <div class="table responsive">
+            <table class="table table-striped bg-light text-center">
+              <thead>
+                <tr class="text-muted">
+                  <th>User Name</th>
+                  <th>Email</th>
+                  <th>Appointment Date</th>
+                  <th>Report</th>
+                </tr>
+              </thead>
+              <tbody>
+                {{#each apts}}
+                <tr>
+                  <td>{{patientId.name}}</td>
+                  <td>{{patientId.email}}</td>
+                  <td>{{formatDate appointmentDate 'YYYY-MM-DD'}}</td>
+                  <td>
+                    <a href="medicalPrescription/{{patientId._id}}/{{_id}}">
+
+                      <button type="button" class="btn btn-secondary">
+                        <i class="fa fa-file text-dark"></i></button>
+                      </a>
+                      <a href="doctorMail">
+
+                        <button type="button" class="btn btn-secondary">
+                          <i class="fas fa-envelope text-dark"></i></button>
                         </a>
-                        <a href="doctorMail">
-                          
+
+                        <a href="chat/{{patientId.userName}}">
+
                           <button type="button" class="btn btn-secondary">
-                            <i class="fas fa-envelope text-dark"></i></button>
-                          </a>
+                            <i class="fas fa-comment-alt text-dark"></i>
+                          </button>
 
-                          <a href="chat/{{patientId.userName}}">
-
-                            <button type="button" class="btn btn-secondary">
-                              <i class="fas fa-comment-alt text-dark"></i>
-                            </button>
-                          
                         </a>
                       </td>
                     </tr>
-                    {{/each}}                   
+                    {{/each}}
                   </tbody>
                 </table>
               </div>
+              {{else}}
+              <h3 class="text-dark text-center mb-3 display-4 mt-5">Nothing to Show</h3>
+              <h6 class="text-muted text-center mb-3">Attend Some Appoinments to See Patient Record</h6>
+              {{/if}}
             </div>
-         </div>
+          </div>
+        </div>
       </div>
-    </div>
     </section>
     <!-- end of table -->
-
-

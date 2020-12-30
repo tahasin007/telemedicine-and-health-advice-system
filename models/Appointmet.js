@@ -27,6 +27,9 @@ const AppointmentSchema = new Schema({
   slotNo:{
     type: Number
   },
+  dayNo:{
+    type: Number
+  },
   status:{
     type: String
   },

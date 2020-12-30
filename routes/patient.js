@@ -82,7 +82,7 @@ router.get('/:userName/notification', (req, res) => {
 router.get('/:userName/symptompChecker',(req, res) => {
   const navClass = ["sidebar-link","current","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
-  Users.findOne({userName:userName}).then((user)=>{ 
+  Users.findOne({userName:userName}).then((user)=>{
     Users.findOne({userName:userName}).populate('request.userId').exec().then((friendRequest)=>{
       res.render('patient/symptompChecker',{
         layout:'mainPatient',
@@ -252,7 +252,7 @@ router.get('/:userName/doctors', (req, res) => {
       });
      });
     });
-  } 
+  }
 });
 
 router.get('/:userName/autocomplete', (req,res,next) => {
@@ -343,7 +343,7 @@ router.get('/:userName/diagnosisRes', (req, res) =>{
       })
     });
   });
-  
+
 });
 
 router.get('/:userName/disease/:diseaseName',(req, res)=>{
@@ -472,7 +472,7 @@ router.get('/:userName/editPatientProfile',(req, res) => {
         id:user._id,
         image:user.profileImage,
         user:user,
-        dob:dob, 
+        dob:dob,
         navClass:navClass,
         title:'Edit Profile'
       });
@@ -617,12 +617,12 @@ router.get('/:userName/makeAppointment/:doc/:dayNo/:slot',(req, res) => {
           else{
             schedule.slot.set(dayNo,changeSlotToOne(schedule.slot[dayNo],slotNo));
             schedule.save();
-            createAppointment(nextDay,startTime,docID,user._id,schedule._id,'regular',slotNo,'pending');
+            createAppointment(nextDay,startTime,docID,user._id,schedule._id,'regular',slotNo,'pending', dayNo);
             res.redirect('/patient/'+patient+'/appointment/'+thisDate);
           }
         });
       });
-  }); 
+  });
 });
 
 router.get('/:userName/appointment/:date',(req, res)=>{
@@ -645,7 +645,7 @@ router.get('/:userName/appointment/:date',(req, res)=>{
             apt:apt
           });
         });
-      });   
+      });
   });
 });
 router.post('/:userName/appointment/:id',(req, res)=>{
@@ -686,7 +686,7 @@ router.post('/:userName/symptompChecklast', (req, res)=>{
   const GastritisQ2=req.body.GastritisQ2;
   const DengueQ1=req.body.DengueQ1;
   const DengueQ2=req.body.DengueQ2;
-  
+
   let Asthma=0;
   if(AsthmaQ1 =='yes' && AsthmaQ2 =='yes')Asthma=1;
   else if((AsthmaQ1 =='yes' && AsthmaQ2 =='no')||(AsthmaQ1 =='no' && AsthmaQ2 =='yes'))Asthma=.5;
@@ -799,7 +799,7 @@ router.post('/:userName/symptompChecklast', (req, res)=>{
 
 
 //create Appointment and save to MongoDB
-function createAppointment(datNo,stime,docId,patientId,scheduleId,type,slotNo,status){
+function createAppointment(datNo,stime,docId,patientId,scheduleId,type,slotNo,status, dayNo){
   const d = new Date();
   d.setDate(d.getDate() + (datNo - 1 - d.getDay() + 7) % 7 + 1);
   const year=d.getFullYear();
@@ -817,7 +817,8 @@ function createAppointment(datNo,stime,docId,patientId,scheduleId,type,slotNo,st
     appointmentDate:date,
     appointmentEnd:findEndTime(date),
     slotNo:slotNo,
-    status:status
+    status:status,
+    dayNo: dayNo
   });
   newAppointment.save();
 
@@ -874,16 +875,16 @@ function sendEmailFunc(sender,password,receiver,subject,message){
     port: 587,
     secure: false,
     auth: {
-      user: sender, 
-      pass: password 
+      user: sender,
+      pass: password
     },
     tls: { rejectUnauthorized: false }
   });
 
 
   let mailOptions = {
-    from: sender, 
-    to: receiver, 
+    from: sender,
+    to: receiver,
     subject: subject,
     html: message
   };

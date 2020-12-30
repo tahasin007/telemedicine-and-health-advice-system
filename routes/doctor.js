@@ -47,6 +47,9 @@ const dayArr=['Saturday','Sunday','Monday','Tuesday','Wednesday','Thursday','Fri
 router.get('/:userName', (req, res) => {
   const userName=req.params.userName;
   const navClass = ["current","sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
+  Appointmet.find({}).exec().then(appointments=>{
+    
+  });
   Users.findOne({userName:userName}).then((user) => {
     Appointmet.find({$and:[{docId:user._id},{status:'pending'}]}).populate('docId').populate('patientId').exec().then(result => {
       Users.findOne({userName:userName}).populate('request.userId').exec().then((friendRequest)=>{
@@ -381,25 +384,6 @@ router.put('/:userName/changePassword', (req, res) =>{
     });
 
   }));
-});
-
-
-router.get('/:userName/doctorMail', (req, res) => {
-  const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
-  const userName=req.params.userName;
-  Users.findOne({userName:userName}).then((user)=>{
-    Users.findOne({userName:userName}).populate('request.userId').exec().then((friendRequest)=>{
-    res.render('doctor/doctorMail',{
-      layout:'mainDoc',
-      userName:userName,
-      friendRequest:friendRequest,
-      image:user.profileImage,
-      id:user._id,
-      navClass:navClass,
-      title:'Mail'
-    });
-  })
-  })
 });
 
 router.get('/:userName/editSchedule', (req, res) => {

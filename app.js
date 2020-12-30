@@ -139,8 +139,8 @@ app.post('/uploadProfileImage/:id',(req,res) => {
       if(err)throw err;
       Users.findOne({_id:req.params.id}).then(user => {
         user.profileImage=file.name;
-        user.save();  
-      }); 
+        user.save();
+      });
     });
   });
   form.on('error',(err) =>{
@@ -167,6 +167,7 @@ app.use('/friendRequest',friendRequest);
 app.use('/chat',chat);
 
 io.of('/stream').on('connection', stream);
+
 
 const port = process.env.PORT || 5050;
 http.listen(port, function () {
