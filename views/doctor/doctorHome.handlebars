@@ -89,6 +89,7 @@
         <div class="row mb-5">
           <div class="col-xl-10 col-lg-9 col-md-8 ml-auto">
             <div class="row justify-content-center ">
+              {{#if apts}}
               <div class="col-xl-12 col-12 mb-4 mb-xl-0">
                 <h3 class="text-muted text-center mb-3">New Appointment Requests</h3>
                 <table class="table table-striped bg-light text-center">
@@ -123,6 +124,7 @@
                   </tbody>
                 </table>
               </div>
+              {{/if}}
               <div class="col-xl-10 col-12 calendar_body align-item-center">
                 <div value='litera' id='calendar'></div>
               </div>

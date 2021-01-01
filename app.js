@@ -42,7 +42,7 @@ app.set('view engine', 'handlebars');
 mongoose.Promise = global.Promise;
 // Connect to mongoose
 mongoose.connect('mongodb+srv://padawan:dfcdzQYAVdogSBWI@firstcluster-cyefr.mongodb.net/myapp', {
-	useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true
+  useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true
 })
 .then(() => console.log('MongoDB Connected'))
 .catch(err => console.log(err));
@@ -173,3 +173,44 @@ const port = process.env.PORT || 5050;
 http.listen(port, function () {
   console.log('listening on', port);
 });
+
+require('./models/Appointmet');
+const Appointmet = mongoose.model('appointment');
+require('./models/Schedule');
+const Schedule = mongoose.model('schedule');
+const moment = require('moment');
+
+Appointmet.find({status:{ $ne:'done'}}).exec().then(appointments=>{
+  appointments.forEach(object=>{
+    var flag = moment().isAfter(moment(object.appointmentEnd))
+    if(flag == true){
+      object.set('status','done');
+      object.save();
+      var aptDate = moment.utc(object.appointmentDate)
+      var slotNo = object.slotNo;
+      var dayNo = getDayNo(aptDate.weekday());
+      Schedule.findOne({doctorId:object.docId}).exec().then(schedule=>{
+        schedule.slot.set(dayNo, freeSlot(schedule.slot[dayNo],slotNo));
+        schedule.save();
+      });
+    }
+  })
+});
+
+
+function freeSlot(slotArr,changeSlot){
+  slotArr[changeSlot] = 0;
+  return slotArr;
+}
+
+function getDayNo(dayNo){
+  if(dayNo < 6)dayNo = dayNo + 1;
+  else if(dayNo == 6)dayNo = 0;
+  else if(dayNo == 7)dayNo = 1;
+  return dayNo;
+}
+// function intervalFunc() {
+//   console.log('Cant stop me now!');
+// }
+//
+// setInterval(intervalFunc, 1500);
