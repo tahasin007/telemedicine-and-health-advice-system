@@ -4,23 +4,29 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-  
+
   <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
   <script src="//code.jquery.com/jquery-1.12.4.js"></script>
   <script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
-  
+
   <link rel="title icon" href="/images/title-img.png">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
   <link href="/fontawesome-free-5.12.1-web/css/all.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css">
-
+  <link rel="stylesheet" href="/css/styleNotification.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
   <link rel='stylesheet' href='https://yaireo.github.io/tagify/dist/tagify.css'>
 
   <script src='https://yaireo.github.io/tagify/dist/tagify.js'></script>
   <link rel="stylesheet" href="/css/tagStyle.css">
+
+  <!-- Google fonts -->
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Oswald&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Philosopher:ital@1&display=swap" rel="stylesheet">
 
 
   <script type="module" src='/js/rtc.js'></script>
@@ -28,13 +34,13 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/webrtc-adapter/7.3.0/adapter.min.js" integrity="sha256-2qQheewaqnZlXJ3RJRghVUwD/3fD9HNqxh4C+zvgmF4=" crossorigin="anonymous"></script>
   <script src='https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.8/FileSaver.min.js'></script>
 
-  
+
   <title>{{title}}</title>
 </head>
-<body>   
+<body>
 
   {{{body}}}
-  
+
   <script src="https://cdn.ckeditor.com/4.14.0/standard/ckeditor.js"></script>
   <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
 
@@ -57,8 +63,8 @@
   <script src="/socket.io/socket.io.js"></script>
   <script src="/js/chat/chat.js"></script>
   <script src="/js/chat/friend.js"></script>
-  
-  
+
+
 
   <script src='https://yaireo.github.io/tagify/dist/tagify.js'></script>
   <script src='https://use.fontawesome.com/releases/v5.0.13/js/all.js'></script>
@@ -74,7 +80,7 @@
       var splitUrl = value1.split('/');
       var finalUrl = splitUrl[2]+'.'+splitUrl[4];
       return finalUrl;
-    }    
+    }
   })(jQuery);
   </script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
@@ -82,9 +88,3 @@
 
 </body>
 </html>
-
-
-
-
-
-

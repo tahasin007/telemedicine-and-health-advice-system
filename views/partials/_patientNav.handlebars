@@ -27,9 +27,9 @@
                   <li class="nav-item"><a href="/patient/{{userName}}/notification" class="nav-link text-dark p-3 mb-2 {{navClass.[0]}}"><i class="fas fa-bell text-dark fa-lg mr-3"></i>Notification</a></li>
                   <li class="nav-item"><a href="/patient/{{userName}}/symptompChecker" class="nav-link text-dark p-3 mb-2 {{navClass.[1]}}"><i class="fas fa-briefcase-medical text-dark fa-lg mr-3"></i>Symptom Checker</a></li>
                   <li class="nav-item"><a href="/patient/{{userName}}/doctors" class="nav-link text-dark p-3 mb-2 {{navClass.[2]}}"><i class="fa fa-user-md text-dark fa-lg mr-3"></i>Medical Support</a></li>
-                  <li class="nav-item"><a href="/patient/{{userName}}/report" class="nav-link text-dark p-3 mb-2 {{navClass.[3]}}"><i class="fa fa-file text-dark mr-3"></i></i>Medical Record</a></li> 
-                  <li class="nav-item"><a href="/patient/{{userName}}/chat" class="nav-link text-dark p-3 mb-2 {{navClass.[4]}}"><i class="fas fa-comment mr-3"></i>Message</a></li> 
-                  <li class="nav-item"><a href="/patient/{{userName}}/videoChat" class="nav-link text-dark p-3 mb-2 {{navClass.[5]}}"><i class="fas fa-video mr-3"></i>Video Chat</a></li> 
+                  <li class="nav-item"><a href="/patient/{{userName}}/report" class="nav-link text-dark p-3 mb-2 {{navClass.[3]}}"><i class="fa fa-file text-dark mr-3"></i></i>Medical Record</a></li>
+                  <li class="nav-item"><a href="/patient/{{userName}}/chat" class="nav-link text-dark p-3 mb-2 {{navClass.[4]}}"><i class="fas fa-comment mr-3"></i>Message</a></li>
+                  <li class="nav-item"><a href="/patient/{{userName}}/videoChat" class="nav-link text-dark p-3 mb-2 {{navClass.[5]}}"><i class="fas fa-video mr-3"></i>Video Chat</a></li>
 
 
                 </ul>
@@ -60,8 +60,62 @@
                        <a class="dropdown-item" href="#">Something else here</a> -->
                      </div>
                    </li>
-                   
-                   <li class="nav-item"><a href="/patient/{{userName}}/notification" class="nav-link"><i class="fas fa-bell text-primary fa-lg"></i></a></li>
+
+                   <li class="nav-item dropdown">
+                     <a href="#" class="nav-link text-primary"  id="notification-dropdown"  role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                       <i class="fas fa-bell text-primary fa-lg mr-1"></i></a>
+
+                       <div class="dropdown-menu dropdown-menu-right notification" aria-labelledby="notification-dropdown">
+                         <div class="row">
+                           <div class="col-md-12">
+                             <div class="notification-heading ml-3">Notifications</div>
+                           </div>
+                         </div>
+                         <div class="dropdown-divider"></div>
+
+                         <div class="notification-wrapper">
+                           <div class="notification-item">
+                             <div class="row d-flex">
+                               <div class="col-2 col-md-2 col-lg-2">
+                                 <img src="/images/appointment_notification.png"  width="35" height="35" class="rounded-circle">
+                               </div>
+                               <div calss="col-10 col-md-10 col-lg-10">
+                                 <div class="notification-title">
+                                     New Appointment Request
+                                 </div>
+                                 <div class="notification-details" style="word-wrap: break-word">
+                                     Dipok Sarkar Dipu Requested an appointment on 23rd february, 3:30pm
+                                 </div>
+                             </div>
+                             </div>
+                           </div>
+                         </div>
+                         <div class="dropdown-divider"></div>
+
+                         <div class="notification-wrapper">
+                           <div class="notification-item">
+                             <div class="row d-flex">
+                               <div class="col-2 col-md-2 col-lg-2">
+                                 <img src="/images/medical-report.png"  width="35" height="35" class="rounded-circle">
+                               </div>
+                               <div calss="col-10 col-md-10 col-lg-10">
+                                 <div class="notification-title">
+                                     Medical Prescription
+                                 </div>
+                                 <div class="notification-details" style="word-wrap: break-word">
+                                     Medical Prescription of Dipok Sarkar Dipu was sent to him
+                                 </div>
+                             </div>
+                             </div>
+                           </div>
+                         </div>
+
+                         <div class="dropdown-divider"></div>
+                         <div class="row justify-content-center notification-bottom-msg">
+                           View All
+                         </div>
+                       </div>
+                     </li>
 
                    <li class="nav-item dropdown" id="reload">
                     <a class="nav-link" href="#" id="navbarNotificationDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

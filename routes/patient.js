@@ -9,6 +9,7 @@ const dateFormat = require('dateformat');
 const bcrypt = require('bcryptjs');
 const moment = require('moment');
 const nodemailer = require('nodemailer');
+var randomstring = require("randomstring");
 
 
 // Method override middleware
@@ -22,6 +23,7 @@ require('../models/TempDiagnosis');
 require('../models/Report');
 require('../models/Message');
 require('../models/DetailDisease');
+require('../models/Notification');
 const Users = mongoose.model('users');
 const Schedule = mongoose.model('schedule');
 const Appointmet = mongoose.model('appointment');
@@ -30,6 +32,7 @@ const Disease = mongoose.model('disease');
 const Report = mongoose.model('report');
 const Message = mongoose.model('message');
 const DiseaseInfo = mongoose.model('detaildisease');
+const Notification = mongoose.model('notification');
 
 const dayArr=['Saturday','Sunday','Monday','Tuesday','Wednesday','Thursday','Friday'];
 const {
@@ -605,20 +608,39 @@ router.get('/:userName/appointment/:date',(req, res)=>{
       });
   });
 });
+
 router.post('/:userName/appointment/:id',(req, res)=>{
   const symptom=req.body.symptom;
   const medication=req.body.medication;
   Appointmet.findOne({_id:req.params.id}).then((appointment)=>{
+    Users.findOne({_id:appointment.docId}).then(doctor=>{
+      Users.findOne({userName:req.params.userName}).then(usr=>{
     appointment.symptoms=symptom;
     appointment.medication=medication;
     appointment.save().then((result)=>{
-      req.session.message ={
-        type:'success',
-        msg:'Appointmet scheduled on '+moment(appointment.appointmentDate).format('LLL')
-      }
-      res.redirect('/patient/'+req.params.userName);
+      const notification_patient = new Notification({
+        title: 'Appointment Request',
+        description: 'You requested an appointment with '+doctor.name+' on '+ moment().format('LLLL'),
+        category: 'appointment',
+        userId:usr._id
+      });
+      notification_patient.save();
+      const notification_doctor = new Notification({
+        title: 'Appointment Request',
+        description: usr.name+ ' requested an appointment on '+ moment().format('LLLL'),
+        category: 'appointment',
+        userId:appointment.docId
+      });
+      notification_patient.save();
 
+      // req.session.message ={
+      //   type:'success',
+      //   msg:'Appointmet scheduled on '+moment(appointment.appointmentDate).format('LLL')
+      // }
+      res.redirect('/patient/'+req.params.userName);
     });
+    });
+  });
   });
 });
 

@@ -4,25 +4,24 @@ const Schema = mongoose.Schema;
 
 var notificationSchema = mongoose.Schema({
   title:{
-    type:String
+    type: String
   },
   description:{
-    type:String
+    type: String
   },
   time : {
     type : Date,
     default: Date.now
   },
   category :{
-    type:String
+    type: String
   },
-  docId:{
+  userId:{
     type: Schema.Types.ObjectId,
-    ref:'users'
+    ref: 'users'
   },
-  patientId:{
-    type: Schema.Types.ObjectId,
-    ref:'users'
+  videoId:{
+    type: String
   }
 });
 
