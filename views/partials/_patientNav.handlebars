@@ -79,7 +79,7 @@
                                <div class="col-2 col-md-2 col-lg-2">
                                  <img src="/images/appointment_notification.png"  width="35" height="35" class="rounded-circle">
                                </div>
-                               <div calss="col-10 col-md-10 col-lg-10">
+                               <div class="col-10 col-md-10 col-lg-10">
                                  <div class="notification-title">
                                      New Appointment Request
                                  </div>
@@ -98,7 +98,7 @@
                                <div class="col-2 col-md-2 col-lg-2">
                                  <img src="/images/medical-report.png"  width="35" height="35" class="rounded-circle">
                                </div>
-                               <div calss="col-10 col-md-10 col-lg-10">
+                               <div class="col-10 col-md-10 col-lg-10">
                                  <div class="notification-title">
                                      Medical Prescription
                                  </div>
@@ -146,14 +146,14 @@
                             <div class="col-md-3">
                               <img src="/uploads/{{userId.profileImage}}"  width="50" height="50" class="rounded-circle mr-3">
                             </div>
-                            <div calss="col-md-9 pull-right">
-                              <div class="row ml-1">
+                            <div class="col-md-9 pull-right">
+                              <div class="row ml-1 notification-title">
                                 {{userId.name}}
                               </div>
                               <input type="hidden" id="senderID" value="{{userId._id}}">
                               <input type="hidden" id="senderNAME" value="{{userId.userName}}">
                               <button type="button" class="btn btn-info" id="accept_request"><i class="fas fa-user-plus mr-1"></i>Accept</button>
-                              <button type="button" class="btn btn-light" id="cancel_request"><i class="fa fa-times mr-1" aria-hidden="true"></i>Cancel</button>
+                              <button type="button" class="btn btn-danger" id="cancel_request"><i class="fa fa-times mr-1" aria-hidden="true"></i>Cancel</button>
                             </div>
                           </div>
                         </div>

@@ -33,6 +33,11 @@
   font-size: 15px;
 }
 
+.request-user-title{
+  font-family: 'Oswald', sans-serif;
+  font-size: 17px;
+}
+
 .notification-bottom-msg{
   font-family: 'Oswald', sans-serif;
   font-size: 13px;
@@ -93,4 +98,24 @@
     -ms-transform: translate3d(0, -2px, 0);
     transform: translate3d(0, -2px, 0);
   }
+}
+
+.general-Title1{
+ font-family: 'Lato', sans-serif;', serif;
+}
+
+.general-Title2{
+ font-family: 'Open Sans', sans-serif;', serif;
+}
+
+.general-Title3{
+ font-family: 'Ubuntu', sans-serif;', serif;
+}
+
+.general-Title4{
+ font-family: 'Noto Sans JP', sans-serif;', serif;
+}
+
+.general-Title5{
+ font-family: 'Roboto', sans-serif;', serif;
 }

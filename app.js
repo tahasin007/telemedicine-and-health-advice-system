@@ -180,22 +180,6 @@ require('./models/Schedule');
 const Schedule = mongoose.model('schedule');
 const moment = require('moment');
 
-Appointmet.find({status:{ $ne:'done'}}).exec().then(appointments=>{
-  appointments.forEach(object=>{
-    var flag = moment().isAfter(moment(object.appointmentEnd))
-    if(flag == true){
-      object.set('status','done');
-      object.save();
-      var aptDate = moment.utc(object.appointmentDate)
-      var slotNo = object.slotNo;
-      var dayNo = getDayNo(aptDate.weekday());
-      Schedule.findOne({doctorId:object.docId}).exec().then(schedule=>{
-        schedule.slot.set(dayNo, freeSlot(schedule.slot[dayNo],slotNo));
-        schedule.save();
-      });
-    }
-  })
-});
 
 
 function freeSlot(slotArr,changeSlot){
@@ -209,8 +193,23 @@ function getDayNo(dayNo){
   else if(dayNo == 7)dayNo = 1;
   return dayNo;
 }
-// function intervalFunc() {
-//   console.log('Cant stop me now!');
-// }
-//
-// setInterval(intervalFunc, 1500);
+function intervalFunc() {
+  Appointmet.find({status:{ $ne:'done'}}).exec().then(appointments=>{
+    appointments.forEach(object=>{
+      var flag = moment().isAfter(moment(object.appointmentEnd))
+      if(flag == true){
+        object.set('status','done');
+        object.save();
+        var aptDate = moment.utc(object.appointmentDate)
+        var slotNo = object.slotNo;
+        var dayNo = getDayNo(aptDate.weekday());
+        Schedule.findOne({doctorId:object.docId}).exec().then(schedule=>{
+          schedule.slot.set(dayNo, freeSlot(schedule.slot[dayNo],slotNo));
+          schedule.save();
+        });
+      }
+    })
+  });
+}
+
+setInterval(intervalFunc, 1500);

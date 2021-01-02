@@ -31,14 +31,20 @@
                     <div class="d-flex justify-content-between">
                       <i class="fas fa-user fa-3x text-danger"></i>
                       <div class="text-right text-secondary">
-                        <h5>Requested Appointments</h5>
-                        <h3>4</h3>
+                        <h5>Appointment Requests</h5>
+                        {{#if apts}}
+                        <h3>{{apts.length}}</h3>
+                        {{else}}
+                        <h3>0</h3>
+                        {{/if}}
                       </div>
                     </div>
                   </div>
                   <div class="card-footer text-secondary">
+                    <a href="{{userName}}/newAppointments" style="text-decoration:none">
                     <i class="far fa-eye mr-3"></i>
-                    <span>View Now</span>
+                    <span>View</span>
+                  </a>
                   </div>
                 </div>
               </div>
@@ -55,7 +61,7 @@
                   </div>
                   <div class="card-footer text-secondary">
                     <i class="far fa-eye mr-3"></i>
-                    <span>View Now</span>
+                    <span>View</span>
                   </div>
                 </div>
               </div>
@@ -72,7 +78,7 @@
                   </div>
                   <div class="card-footer text-secondary">
                     <i class="far fa-eye mr-3"></i>
-                    <span>View Now</span>
+                    <span>View</span>
                   </div>
                 </div>
               </div>
@@ -89,42 +95,7 @@
         <div class="row mb-5">
           <div class="col-xl-10 col-lg-9 col-md-8 ml-auto">
             <div class="row justify-content-center ">
-              {{#if apts}}
-              <div class="col-xl-12 col-12 mb-4 mb-xl-0">
-                <h3 class="text-muted text-center mb-3">New Appointment Requests</h3>
-                <table class="table table-striped bg-light text-center">
-                  <thead>
-                    <tr class="text-muted">
-                      <div class="col-6">
-                      <th>Patient Name</th>
-                      <th>Email</th>
-                      <th>Date</th>
-                      <th>Time</th>
-                      </div>
-                      <th>Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {{#each apts}}
-                    <tr>
-                      <td>{{patientId.userName}}</td>
-                      <td>{{patientId.email}}</td>
-                      <td>{{formatDate appointmentDate 'L'}}</td>
-                      <td>{{formatDate appointmentDate 'LT'}}-{{formatDate appointmentEnd 'LT'}}</td>
-                      <td>
-                        <a href="{{docId.userName}}/viewPatient/{{_id}}">
-                          <button type="button" class="btn btn-primary"><i class="fas fa-eye"></i></button></a>
-                          <a href="{{docId.userName}}/rejectPatient/{{_id}}">
-                          <button type="button" class="btn btn-danger"><i class="fas fa-trash-alt"></i></button></a>
-                          <a href="{{docId.userName}}/acceptPatient/{{_id}}">
-                          <button type="button" class="btn btn-success"><i class="fas fa-check"></i></button></a>
-                      </td>
-                    </tr>
-                    {{/each}}
-                  </tbody>
-                </table>
-              </div>
-              {{/if}}
+
               <div class="col-xl-10 col-12 calendar_body align-item-center">
                 <div value='litera' id='calendar'></div>
               </div>

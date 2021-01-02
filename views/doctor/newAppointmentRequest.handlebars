@@ -1,0 +1,66 @@
+
+<!-- navbar -->
+{{> _docNav}}
+<!-- end of navbar -->
+
+
+<!-- tables -->
+<section>
+  <div class="container-fluid">
+    <div class="row mb-5 mt-3">
+      <div class="col-xl-10 col-lg-9 col-md-8 ml-auto">
+        <div class="pt-md-5 mt-md-3 mb-5 col-xl-12">
+          <div class="row justify-content-center">
+
+
+            <div class="col-xl-12 col-12 mb-4 mb-xl-0">
+              {{#if apts}}
+              <h3 class="text-muted text-center mb-3">New Appointment Requests</h3>
+              <table class="table table-striped bg-light text-center">
+                <thead>
+                  <tr class="text-muted">
+                    <div class="col-6">
+                    <th>Patient Name</th>
+                    <th>Email</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    </div>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {{#each apts}}
+                  <tr>
+                    <td>{{patientId.userName}}</td>
+                    <td>{{patientId.email}}</td>
+                    <td>{{formatDate appointmentDate 'L'}}</td>
+                    <td>{{formatDate appointmentDate 'LT'}}-{{formatDate appointmentEnd 'LT'}}</td>
+                    <td>
+                      <a href="/doctor/{{docId.userName}}/viewPatient/{{_id}}">
+                        <button type="button" class="btn btn-primary"><i class="fas fa-eye"></i></button></a>
+                        <a href="/doctor/{{docId.userName}}/rejectPatient/{{_id}}">
+                        <button type="button" class="btn btn-danger"><i class="fas fa-trash-alt"></i></button></a>
+                        <a href="/doctor/{{docId.userName}}/acceptPatient/{{_id}}">
+                        <button type="button" class="btn btn-success"><i class="fas fa-check"></i></button></a>
+                    </td>
+                  </tr>
+                  {{/each}}
+                </tbody>
+              </table>
+              {{else}}
+              <h3 class="text-dark text-center mb-3 display-4 mt-5">Nothing to Show</h3>
+              <h6 class="text-muted text-center mb-3">New Appointmet Requests will be Displayed Here</h6>
+              {{/if}}
+            </div>
+
+                <!-- 2nd table ends -->
+
+
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- end of tables -->

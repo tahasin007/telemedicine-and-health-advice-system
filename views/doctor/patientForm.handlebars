@@ -54,7 +54,7 @@
               </div>
             </div>
 
-            
+
             <p>Patient's Symptoms:</p>
             <div class="dynamicSymptom" style="background:#DFEAF6;border-radius:8px">
               <div class="form-row align-items-center m-2">
@@ -69,7 +69,7 @@
               </button>
             </div>
 
-            
+
 
 
 
@@ -89,7 +89,7 @@
               <button type='button' class="btn-info add_form_field mb-2 mt-2 ml-3">Add New Field &nbsp; <span style="font-size:16px; font-weight:bold;">+ </span>
               </button>
             </div>
-            
+
 
             <div class="form-group mt-4">
               <label for="exampleFormControlTextarea1">Advice/Instructions to Patient</label>:</label>
@@ -112,33 +112,24 @@
 
 <script type="text/javascript">
 $(document).ready(function(){
-  $('.add_form_field').click(function(e){ 
+  $('.add_form_field').click(function(e){
     $('.dynamicForm').prepend('<div class="form-row align-items-center m-2"><div class="col-3 mt-2"><input type="text" class="form-control mb-2" id="medicine_name" name="medicine_name" placeholder="Medicine Name"/></div><div class="col-3 mt-2"><input type="number" class="form-control mb-2" id="daily_dose" name="daily_dose" placeholder="Daily Dose"/></div><div class="col-5 mt-2"><input type="text" class="form-control mb-2" id="description" name="description" placeholder="Instructions/Description"></div><button type="button" class="delete btn btn-danger"><i class="fas fa-trash-alt"></i></button></div>');
   });
 
-  $('.dynamicForm').on("click",".delete", function(e){  
-   e.preventDefault(); 
+  $('.dynamicForm').on("click",".delete", function(e){
+   e.preventDefault();
    $(this).parent('div').last().remove();
- })
+ });
 
 
   $('.add_form_symptom').click(function(e){
     $('.dynamicSymptom').prepend('<div class="form-row align-items-center m-2"><div class="col-5 mt-2"><input type="text" class="form-control mb-2" id="symptom" name="symptom" placeholder="Symptom"></div><div class="col-5 mt-2"><input type="text" class="form-control mb-2" id="symptomDetails" name="symptomDetails" placeholder="Duration/complication"></div><button type="button" class="deleteSymptom btn btn-danger"><i class="fas fa-trash-alt"></i></button></div>');
   });
 
-  $('.dynamicSymptom').on("click",".deleteSymptom", function(e){  
-   e.preventDefault(); 
+  $('.dynamicSymptom').on("click",".deleteSymptom", function(e){
+   e.preventDefault();
    $(this).parent('div').last().remove();
- })
+ });
 
 });
 </script>
-
-
-
-
-
-
-
-
-

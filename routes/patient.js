@@ -176,8 +176,7 @@ router.get('/:userName/chat/:receiver',(req, res)=>{
   const userName=req.params.userName;
   Users.findOne({userName:userName}).then((user)=>{
     Users.findOne({userName:userName}).populate('request.userId').populate('friendList.friendId').exec().then((friendRequest)=>{
-     Message.find({$or:[{$and:[{senderName:req.params.userName},{receiverName:req.params.receiver}]},
-      {$and:[{senderName:req.params.receiver},{receiverName:req.params.userName}]}]}).populate('receiver').populate('sender').exec().then((result)=>{
+      Message.find({$or:[{$and:[{senderName:req.params.userName},{receiverName:req.params.receiver}]}, {$and:[{senderName:req.params.receiver},{receiverName:req.params.userName}]}]}).populate('receiver').populate('sender').exec().then((result)=>{
         Users.find({role:'doctor'}).then((users) => {
           res.render('patient/chatUI',{
             layout:'mainPatient',
@@ -241,19 +240,19 @@ router.get('/:userName/doctors', (req, res) => {
     const regex = new RegExp(escapeRegex(search),'gi');
     Users.findOne({userName:userName}).then((user) => {
       Users.findOne({userName:userName}).populate('request.userId').exec().then((friendRequest)=>{
-       Users.find({$and:[{$or:[{userName:regex},{email:regex},{name:regex}]},{role:'doctor'}]}).then((users) => {
-        res.render('patient/doctors',{
-          layout:'mainPatient',
-          userName:userName,
-          id:user._id,
-          friendRequest:friendRequest,
-          doctors:users,
-          image:user.profileImage,
-          navClass:navClass,
-          title:'Doctors'
+        Users.find({$and:[{$or:[{userName:regex},{email:regex},{name:regex}]},{role:'doctor'}]}).then((users) => {
+          res.render('patient/doctors',{
+            layout:'mainPatient',
+            userName:userName,
+            id:user._id,
+            friendRequest:friendRequest,
+            doctors:users,
+            image:user.profileImage,
+            navClass:navClass,
+            title:'Doctors'
+          });
         });
       });
-     });
     });
   }
 });
@@ -264,12 +263,12 @@ router.get('/:userName/autocomplete', (req,res,next) => {
 
     var result=[];
     users.forEach(user=>{
-     let obj={
-       id:user._id,
-       label: user.name
-     };
-     result.push(obj);
-   });
+      let obj={
+        id:user._id,
+        label: user.name
+      };
+      result.push(obj);
+    });
     res.jsonp(result);
   });
 });
@@ -283,16 +282,17 @@ router.get('/:userName/report',(req, res) =>{
       Appointmet.find({$and:[{patientId:user._id},{status:'done'}]}).populate('docId').populate('patientId').exec().then(result => {
         res.render('patient/medicalRecord',{
           helpers : {
-            formatDate:formatDate},
-            layout:'mainPatient',
-            userName:userName,
-            id:user._id,
-            friendRequest:friendRequest,
-            image:user.profileImage,
-            navClass:navClass,
-            apts:result,
-            title:'Medical History'
-          });
+            formatDate:formatDate
+          },
+          layout:'mainPatient',
+          userName:userName,
+          id:user._id,
+          friendRequest:friendRequest,
+          image:user.profileImage,
+          navClass:navClass,
+          apts:result,
+          title:'Medical History'
+        });
       })
     });
   });
@@ -307,16 +307,17 @@ router.get('/:userName/report/:aptId',(req, res) =>{
       Report.findOne({aptId:req.params.aptId}).populate('docId').populate('patientId').exec().then(result => {
         res.render('patient/prescription',{
           helpers : {
-            formatDate:formatDate},
-            layout:'mainPatient',
-            friendRequest:friendRequest,
-            image:user.profileImage,
-            userName:userName,
-            id:user._id,
-            navClass:navClass,
-            report:result,
-            title:'Report'
-          });
+            formatDate:formatDate
+          },
+          layout:'mainPatient',
+          friendRequest:friendRequest,
+          image:user.profileImage,
+          userName:userName,
+          id:user._id,
+          navClass:navClass,
+          report:result,
+          title:'Report'
+        });
       })
     });
   });
@@ -498,8 +499,6 @@ router.put('/:userName/changePassword', (req, res) =>{
 });
 
 
-
-
 //routing for appointments by slot
 router.get('/:userName/makeAppointment/:doc/:dayNo', (req, res) =>{
   const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
@@ -518,22 +517,22 @@ router.get('/:userName/makeAppointment/:doc/:dayNo', (req, res) =>{
           const status = schedule.slot[dayNo][i];
           let condition;
           if(status == 0)condition = 'Free'
-            else if(status == 1)condition = 'Booked'
-              timeObj.push({start:tempArr[0],end:tempArr[1],status:condition,dayNo:dayNo})
-          }
-          res.render('patient/viewScheduleBySlot',{
-            layout:'mainPatient',
-            userName:userName,
-            id:user._id,
-            image:user.profileImage,
-            day:dayArr[dayNo],
-            timeObj:timeObj,
-            user:user,
-            navClass:navClass,
-            docId:docId,
-            title:'Schedule'
-          });
+          else if(status == 1)condition = 'Booked'
+          timeObj.push({start:tempArr[0],end:tempArr[1],status:condition,dayNo:dayNo})
+        }
+        res.render('patient/viewScheduleBySlot',{
+          layout:'mainPatient',
+          userName:userName,
+          id:user._id,
+          image:user.profileImage,
+          day:dayArr[dayNo],
+          timeObj:timeObj,
+          user:user,
+          navClass:navClass,
+          docId:docId,
+          title:'Schedule'
         });
+      });
     })
   });
 });
@@ -554,34 +553,33 @@ router.get('/:userName/makeAppointment/:doc/:dayNo/:slot',(req, res) => {
       const time=start.split(':');
       var i1=Number(time[0]*60)+Number(time[1]);
       for(var j=0; j<slotNo; j++)i1=i1+30;
-        const div=Math.floor(i1/60);
+      const div=Math.floor(i1/60);
       const rem=i1%60;
       let s1,s2,startTime;
       if(div<10)s1='0'+String(div);
       if(div>=10 && div<24)s1=String(div);
       if(div>=24)s1=String("00");
       if(rem==0)s2=String("00")
-        if(rem>0)s2=String(rem);
+      if(rem>0)s2=String(rem);
       startTime=s1+":"+s2;
       var thisDate=returnDate(nextDay,startTime);
 
-      Appointmet.findOne({$and:[{patientId:user._id},{appointmentDate
-        :thisDate}]}).then(apt=>{
-          if(apt){
-            req.session.message ={
-              type:'danger',
-              msg:'You have another appointment at this time'
-            }
-            res.redirect('/patient/'+patient+'/viewDocProfile/'+docID);
+      Appointmet.findOne({$and:[{patientId:user._id},{appointmentDate:thisDate}]}).then(apt=>{
+        if(apt){
+          req.session.message ={
+            type:'danger',
+            msg:'You have another appointment at this time'
           }
-          else{
-            schedule.slot.set(dayNo,changeSlotToOne(schedule.slot[dayNo],slotNo));
-            schedule.save();
-            createAppointment(nextDay,startTime,docID,user._id,schedule._id,'regular',slotNo,'pending', dayNo);
-            res.redirect('/patient/'+patient+'/appointment/'+thisDate);
-          }
-        });
+          res.redirect('/patient/'+patient+'/viewDocProfile/'+docID);
+        }
+        else{
+          schedule.slot.set(dayNo,changeSlotToOne(schedule.slot[dayNo],slotNo));
+          schedule.save();
+          createAppointment(nextDay,startTime,docID,user._id,schedule._id,'regular',slotNo,'pending', dayNo);
+          res.redirect('/patient/'+patient+'/appointment/'+thisDate);
+        }
       });
+    });
   });
 });
 
@@ -591,21 +589,20 @@ router.get('/:userName/appointment/:date',(req, res)=>{
   const userName = req.params.userName;
   Users.findOne({userName:userName}).then((user)=>{
     Users.findOne({userName:userName}).populate('request.userId').exec().then((friendRequest)=>{
-      Appointmet.findOne({$and:[{patientId:user._id},{appointmentDate
-        :appointmentDate}]}).populate('patientId').populate('docId').then((apt)=>{
-          const thisdate=apt.appointmentDate;
-          res.render('patient/appointment',{
-            layout:'mainPatient',
-            userName:userName,
-            id:user._id,
-            image:user.profileImage,
-            navClass:navClass,
-            aptdate:moment(thisdate).format('LLL'),
-            title:'Appointmet',
-            apt:apt
-          });
+      Appointmet.findOne({$and:[{patientId:user._id},{appointmentDate:appointmentDate}]}).populate('patientId').populate('docId').then((apt)=>{
+        const thisdate=apt.appointmentDate;
+        res.render('patient/appointment',{
+          layout:'mainPatient',
+          userName:userName,
+          id:user._id,
+          image:user.profileImage,
+          navClass:navClass,
+          aptdate:moment(thisdate).format('LLL'),
+          title:'Appointmet',
+          apt:apt
         });
       });
+    });
   });
 });
 
@@ -615,32 +612,32 @@ router.post('/:userName/appointment/:id',(req, res)=>{
   Appointmet.findOne({_id:req.params.id}).then((appointment)=>{
     Users.findOne({_id:appointment.docId}).then(doctor=>{
       Users.findOne({userName:req.params.userName}).then(usr=>{
-    appointment.symptoms=symptom;
-    appointment.medication=medication;
-    appointment.save().then((result)=>{
-      const notification_patient = new Notification({
-        title: 'Appointment Request',
-        description: 'You requested an appointment with '+doctor.name+' on '+ moment().format('LLLL'),
-        category: 'appointment',
-        userId:usr._id
-      });
-      notification_patient.save();
-      const notification_doctor = new Notification({
-        title: 'Appointment Request',
-        description: usr.name+ ' requested an appointment on '+ moment().format('LLLL'),
-        category: 'appointment',
-        userId:appointment.docId
-      });
-      notification_patient.save();
+        appointment.symptoms=symptom;
+        appointment.medication=medication;
+        appointment.save().then((result)=>{
+          const notification_patient = new Notification({
+            title: 'Appointment Request',
+            description: 'You requested an appointment with '+doctor.name+' on '+ moment(appointment.appointmentDate).format('LLLL'),
+            category: 'appointment',
+            userId:usr._id
+          });
+          notification_patient.save();
+          const notification_doctor = new Notification({
+            title: 'Appointment Request',
+            description: usr.name+ ' requested an appointment on '+ moment(appointment.appointmentDate).format('LLLL'),
+            category: 'appointment',
+            userId:appointment.docId
+          });
+          notification_doctor.save();
 
-      // req.session.message ={
-      //   type:'success',
-      //   msg:'Appointmet scheduled on '+moment(appointment.appointmentDate).format('LLL')
-      // }
-      res.redirect('/patient/'+req.params.userName);
+          // req.session.message ={
+          //   type:'success',
+          //   msg:'Appointmet scheduled on '+moment(appointment.appointmentDate).format('LLL')
+          // }
+          res.redirect('/patient/'+req.params.userName);
+        });
+      });
     });
-    });
-  });
   });
 });
 
@@ -787,8 +784,7 @@ function createAppointment(datNo,stime,docId,patientId,scheduleId,type,slotNo,st
   const str=stime;
   const time=str.split(":");
   const date = new Date(year, month, day, time[0], time[1]);
-  const newAppointment = new Appointmet(
-  {
+  const newAppointment = new Appointmet({
     docId:docId,
     patientId:patientId,
     scheduleId:scheduleId,

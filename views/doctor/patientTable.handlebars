@@ -19,6 +19,7 @@
                   <th>Email</th>
                   <th>Appointment Date</th>
                   <th>Report</th>
+                  <th>Message</th>
                 </tr>
               </thead>
               <tbody>
@@ -29,36 +30,31 @@
                   <td>{{formatDate appointmentDate 'YYYY-MM-DD'}}</td>
                   <td>
                     <a href="medicalPrescription/{{patientId._id}}/{{_id}}">
-
-                      <button type="button" class="btn btn-secondary">
+                      <button type="button" class="btn btn-light">
                         <i class="fa fa-file text-dark"></i></button>
                       </a>
-                      <a href="doctorMail">
-
-                        <button type="button" class="btn btn-secondary">
-                          <i class="fas fa-envelope text-dark"></i></button>
-                        </a>
-
-                        <a href="chat/{{patientId.userName}}">
-
-                          <button type="button" class="btn btn-secondary">
-                            <i class="fas fa-comment-alt text-dark"></i>
-                          </button>
-
-                        </a>
-                      </td>
-                    </tr>
-                    {{/each}}
-                  </tbody>
-                </table>
-              </div>
-              {{else}}
-              <h3 class="text-dark text-center mb-3 display-4 mt-5">Nothing to Show</h3>
-              <h6 class="text-muted text-center mb-3">Attend Some Appoinments to See Patient Record</h6>
-              {{/if}}
+                    </td>
+                    <td>
+                      {{#iff @root.friends patientId.userName}}
+                      <a href="chat/{{patientId.userName}}">
+                        <button type="button" class="btn btn-info">
+                          <i class="fas fa-comment-alt text-dark"></i>
+                        </button>
+                      </a>
+                    </td>
+                    {{/iff}}
+                  </tr>
+                  {{/each}}
+                </tbody>
+              </table>
             </div>
+            {{else}}
+            <h3 class="text-dark text-center mb-3 display-4 mt-5">Nothing to Show</h3>
+            <h6 class="text-muted text-center mb-3">Attend Some Appoinments to See Patient Record</h6>
+            {{/if}}
           </div>
         </div>
       </div>
-    </section>
-    <!-- end of table -->
+    </div>
+  </section>
+  <!-- end of table -->

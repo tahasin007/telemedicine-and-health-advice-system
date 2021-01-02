@@ -121,12 +121,13 @@ table tr td {
 
           {{else}}
           <div class="container mt-5">
-            <h3 class="text-info font-weight-bold text-center mb-3">No Prescription was Prepared for this Patient</h3>
+            <h1 class="text-dark text-center mb-3 general-Title3">No Prescription was Prepared for this Patient</h3>
           </div>
-          <a href="/doctor/{{userName}}/editPrescription/{{apt.patientId._id}}/{{apt._id}}"><button type="button" class="btn btn-info mr-4">Make Prescription</button></a>
-
+          <div class="row justify-content-center">
+          <a href="/doctor/{{userName}}/editPrescription/{{apt.patientId._id}}/{{apt._id}}"><button type="button" class="btn btn-info mr-4 general-Title2 font-weight-bold">Make Prescription</button></a>
+        </div>
           {{/if}}
-          
+
         </div>
       </div>
     </div>
@@ -139,12 +140,3 @@ $(document).ready(function(){
 
 });
 </script>
-
-
-
-
-
-
-
-
-
