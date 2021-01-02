@@ -33,6 +33,7 @@
     "handlebars": "^4.7.6",
     "handlebars-dateformat": "^1.1.1",
     "handlebars-helpers": "^0.10.0",
+    "highlight.js": "^10.5.0",
     "http": "0.0.1-security",
     "i": "^0.3.6",
     "jquery": "^3.5.1",

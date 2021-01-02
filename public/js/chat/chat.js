@@ -21,7 +21,7 @@ $(document).ready(function() {
             url:'/chat/getProfileImage',
             type: 'POST',
             data:{
-                userName: sender 
+                userName: sender
             },
             success: function(data){
                 if(room[0]== $('#name-user').val()){
@@ -33,7 +33,7 @@ $(document).ready(function() {
                     else{
                         $('#chat').append('<div class="msg right-msg m-2"><div class="msg-img" style="background-image: url(/uploads/'+data+')"></div><div class="msg-bubble"><div class="msg-info"> <div class="msg-info-name">'+sender+'</div></div><div class="msg-text">'+message+'</div></div></div>');
                     }
-                    
+
                 }
                 else{
                     if(typeof data == '')
@@ -43,19 +43,17 @@ $(document).ready(function() {
                     else{
                         $('#chat').append('<div class="msg left-msg m-2"><div class="msg-img" style="background-image: url(/uploads/'+data+')"></div><div class="msg-bubble"><div class="msg-info"><div class="msg-info-name">'+sender+'</div></div><div class="msg-text">'+message+'</div></div></div>');
                     }
-                    
+
                 }
             },
             error: function(err){
               console.log(err.status);
-          } 
+          }
       });
     })
-
-    
     $('#message_form').on('submit', function(e){
         e.preventDefault();
-        
+
         var msg = $('#msg').val();
         var sender = $('#name-user').val();
         if(msg.trim().length>0){
@@ -71,7 +69,7 @@ $(document).ready(function() {
     $('#send-message').on('click', function(){
         var message = $('#msg').val();
 
-        
+
         $.ajax({
             url:'/chat/'+paramOne,
             type: 'POST',

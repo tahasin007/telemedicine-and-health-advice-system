@@ -10,7 +10,7 @@ module.exports = function(io){
 				sender:message.sender,
 				room:message.room
 			});
-			callback(); 
+			callback();
 		})
 	});
 }

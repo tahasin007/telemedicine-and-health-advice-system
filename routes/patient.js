@@ -416,49 +416,6 @@ router.get('/:userName/viewDocProfile/:id', (req, res) => {
   })
 });
 
-//Get Route for Sending email
-router.get('/:userName/:docId/sendMail', (req, res) => {
-  const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
-  const userName=req.params.userName;
-  Users.findOne({userName:userName}).then((patient) => {
-    Users.findOne({userName:userName}).populate('request.userId').exec().then((friendRequest)=>{
-      Users.findOne({_id:req.params.docId}).then((doctor) => {
-        res.render('patient/patientMail',{
-          layout:'mainPatient',
-          userName:userName,
-          image:patient.profileImage,
-          id:patient._id,
-          sender:patient,
-          receiver:doctor,
-          navClass:navClass,
-          title:'Send Email'
-        });
-      });
-    })
-  });
-});
-//Post Route for Sending Email
-router.post('/:userName/:docId/sendMail',(req, res) =>{
-  const sender=req.body.sender;
-  const receiver=req.body.receiver;
-  const subject=req.body.subject;
-  const message=req.body.mail;
-  const password=req.body.password;
-  const flag=sendEmailFunc(sender,password,receiver,subject,message);
-  if(flag){
-    // req.session.message ={
-    //   type:'success',
-    //   msg:'Email Sent Successfully'
-    // }
-    res.redirect('/patient/'+req.params.userName);
-  }else{
-    // req.session.message ={
-    // type:'danger',
-    // msg:'Email Couldn\'t be sent'
-    //  }
-    res.redirect('/patient/'+req.params.userName);
-  }
-});
 
 router.get('/:userName/editPatientProfile',(req, res) => {
   const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];

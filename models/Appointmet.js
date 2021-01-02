@@ -16,7 +16,7 @@ const AppointmentSchema = new Schema({
     ref:'users'
   },
   appointmentType:{
-    type: String,
+    type: String
   },
   appointmentDate:{
     type: Date
