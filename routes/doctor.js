@@ -179,33 +179,6 @@ router.get('/:userName/videoChat',(req, res)=>{
   })
 });
 
-router.get('/:userName/patient', (req, res) => {
-  const userName=req.params.userName;
-  const navClass = ["sidebar-link","sidebar-link","current","sidebar-link","sidebar-link","sidebar-link"];
-  Users.findOne({userName:userName}).then((user) => {
-    Users.findOne({userName:userName}).populate('request.userId').exec().then((friendRequest)=>{
-      Appointmet.find({$and:[{docId:user._id},{status:'done'}]}).populate('docId').populate('patientId').exec().then(result => {
-        res.render('doctor/patientTable',{
-          helpers : {
-            formatDate:formatDate,
-            iff:iff
-          },
-          layout:'mainDoc',
-          userName:userName,
-          friendRequest:friendRequest,
-          image:user.profileImage,
-          id:user._id,
-          apts:result,
-          navClass:navClass,
-          title:'Patients',
-          friends: user.friendList
-        });
-      });
-    });
-  });
-
-});
-
 
 router.get('/:userName/appointment', (req, res) => {
   const userName=req.params.userName;
@@ -667,6 +640,33 @@ function minToStrTime(min){
   return time;
 }
 
+router.get('/:userName/patient', (req, res) => {
+  const userName=req.params.userName;
+  const navClass = ["sidebar-link","sidebar-link","current","sidebar-link","sidebar-link","sidebar-link"];
+  Users.findOne({userName:userName}).then((user) => {
+    Users.findOne({userName:userName}).populate('request.userId').exec().then((friendRequest)=>{
+      Appointmet.find({$and:[{docId:user._id},{status:'done'}]}).populate('docId').populate('patientId').exec().then(result => {
+        res.render('doctor/patientTable',{
+          helpers : {
+            formatDate:formatDate,
+            iff:iff
+          },
+          layout:'mainDoc',
+          userName:userName,
+          friendRequest:friendRequest,
+          image:user.profileImage,
+          id:user._id,
+          apts:result,
+          navClass:navClass,
+          title:'Patients',
+          friends: user.friendList
+        });
+      });
+    });
+  });
+
+});
+
 router.put('/:userName/editPrescription/:patId/:aptId',(req, res)=>{
   const userName=req.params.userName;
   const patientId=req.params.patId;
@@ -792,19 +792,31 @@ router.put('/:userName/editPrescription/:patId/:aptId',(req, res)=>{
         text:'Patient\'s Symptom',absolutePosition: {x:45, y:335},style:'label'
       },
       {
+        style: 'tableExample',
         table:{
           body:arrSymptom
         },
-        absolutePosition: {x:135, y:355},layout: 'noBorders'
+        absolutePosition: {x:135, y:355},
+        layout: {
+				fillColor: function (rowIndex, node, columnIndex) {
+					return (rowIndex % 2 === 0) ? '#CCCCCC' : null;
+				}
+			}
       },
       {
         text:'Medication Details',absolutePosition: {x:45, y:370+len*30},style:'label'
       },
       {
+        style: 'tableExample',
         table:{
           body:arrMedication
         },
-        absolutePosition: {x:120, y:390+len*30},layout: 'noBorders'
+        absolutePosition: {x:120, y:390+len*30},
+        layout: {
+				fillColor: function (rowIndex, node, columnIndex) {
+					return (rowIndex % 2 === 0) ? '#CCCCCC' : null;
+				}
+			}
       },
       {
         text:'Advice/Instructions to Patient:',absolutePosition: {x:45, y:475+Len*30},style:'label'
@@ -844,11 +856,14 @@ router.put('/:userName/editPrescription/:patId/:aptId',(req, res)=>{
         color:'#000000',
         italics:false,
         bold: false
-      }
+      },
+      tableExample: {
+			margin: [0, 5, 0, 15]
+		}
     }
   };
 
-  const string=cryptoRandomString({length: 10, characters: 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXY'})+'.pdf';
+  const string=cryptoRandomString({length: 8, characters: 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXY'})+'.pdf';
   var pdfDoc = printer.createPdfKitDocument(docDefinition);
   pdfDoc.pipe(fs.createWriteStream(`public/prescriptions/${string}`));
   pdfDoc.end();
@@ -865,6 +880,7 @@ router.put('/:userName/editPrescription/:patId/:aptId',(req, res)=>{
         report.pdf=string;
         report.date=req.body.date;
         report.save().then((result) =>{
+
           res.redirect('/doctor/'+userName+'/patient');
         })
       }
@@ -885,6 +901,22 @@ router.put('/:userName/editPrescription/:patId/:aptId',(req, res)=>{
           pdf:string
         });
         report.save().then((result)=>{
+          const notification_patient = new Notification({
+            title: 'Medical Prescription',
+            description: user.name+' sent your medical prescription',
+            category: 'report',
+            userId: patientId
+          });
+          notification_patient.save();
+
+          const notification_doctor = new Notification({
+            title: 'Medical Prescription',
+            description: 'Prescription of '+req.body.patName+ ' was sent',
+            category: 'report',
+            userId: user._id
+          });
+          notification_doctor.save();
+          
           res.redirect('/doctor/'+userName+'/patient');
         });
       }

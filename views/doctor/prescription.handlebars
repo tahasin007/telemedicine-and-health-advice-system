@@ -115,8 +115,10 @@ table tr td {
           </div>
 
           <div class="container m-4">
-            <a href="/doctor/{{userName}}/editPrescription/{{apt.patientId._id}}/{{apt._id}}"><button type="button" class="btn btn-info mr-4">Edit</button></a>
-            <a href=""><button type="button" class="btn btn-info mr-2">Send To Patient</button></a>
+            <!-- <a href="/doctor/{{userName}}/editPrescription/{{apt.patientId._id}}/{{apt._id}}"><button type="button" class="btn btn-info mr-4">Edit</button></a> -->
+            <a href="/prescriptions/{{report.pdf}}"><button type="button" class="btn btn-info mr-2">
+              <i class="fa fa-download mr-1" aria-hidden="true"></i>Download PDF</button>
+            </a>
           </div>
 
           {{else}}
