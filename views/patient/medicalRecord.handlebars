@@ -11,8 +11,8 @@
           <h3 class="text-dark text-center mb-3 general-Title5">Medical History</h3>
           <div class="container align-items-center">
 
-            <div class="table responsive ">
-              <table class="table table-bordered">
+            <div class="table responsive">
+              <table class="table table-bordered table-text-align">
                 <thead>
                   <tr class="text-muted">
                     <th>Doctor Name</th>
@@ -29,22 +29,26 @@
                     <td>{{docId.email}}</td>
                     <td>{{formatDate appointmentDate 'LLLL'}}</td>
                     <td>
+                      {{#eq reportSent 'Yes'}}
                       <a href="/patient/{{patientId.userName}}/report/{{_id}}">
-                        <span class="align-middle">
                           <button type="button" class="btn btn-green btn-sm">
                             <i class="fa fa-download text-dark"></i>
                           </button>
-                        </span>
                       </a>
+                      {{else}}
+                          <button type="button" class="btn btn-green btn-sm" disabled>
+                            <i class="fas fa-file-times"></i>
+                          </button>
+                      {{/eq}}
                     </td>
                     <td>
-                      <a href="/patient/{{patientId.userName}}/{{docId._id}}/sendMail">
-                        <span class="align-middle">
+                      {{#iff @root.friends docId.userName}}
+                      <a href="/patient/{{patientId.userName}}/chat/{{docId.userName}}">
                           <button type="button" class="btn btn-info btn-sm">
                             <i class="fas fa-envelope text-light"></i>
                           </button>
-                        </span>
                       </a>
+                      {{/iff}}
                     </td>
                   </tr>
                   {{/each}}

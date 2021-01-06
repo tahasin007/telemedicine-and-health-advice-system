@@ -38,6 +38,13 @@ const AppointmentSchema = new Schema({
   },
   medication:{
     type:String
+  },
+  reportSent:{
+    type:String,
+    default:'No'
+  },
+  pdf:{
+    type:String
   }
 
 });

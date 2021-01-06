@@ -17,7 +17,7 @@ router.use(methodOverride('_method'));
 
 require('../models/Schedule');
 require('../models/Users');
-require('../models/Appointmet');
+require('../models/Appointment');
 require('../models/Disease');
 require('../models/TempDiagnosis');
 require('../models/Report');
@@ -26,7 +26,7 @@ require('../models/DetailDisease');
 require('../models/Notification');
 const Users = mongoose.model('users');
 const Schedule = mongoose.model('schedule');
-const Appointmet = mongoose.model('appointment');
+const Appointment = mongoose.model('appointment');
 const TempDiagnosis = mongoose.model('tempDiagnosis');
 const Disease = mongoose.model('disease');
 const Report = mongoose.model('report');
@@ -37,7 +37,9 @@ const Notification = mongoose.model('notification');
 const dayArr=['Saturday','Sunday','Monday','Tuesday','Wednesday','Thursday','Friday'];
 const {
   formatDate,
-  formatDateSub
+  formatDateSub,
+  iff,
+  timeDiff
 } = require('../helpers/hbs');
 
 
@@ -49,17 +51,21 @@ router.get('/:userName',(req, res) => {
   const userName=req.params.userName;
   Users.findOne({userName:userName}).then((users) =>{
     Users.findOne({userName:userName}).populate('request.userId').exec().then((friendRequest)=>{
-      res.render('patient/patientHome',{
-        layout:'mainPatient',
-        userName:userName,
-        id:users._id,
-        friendRequest:friendRequest,
-        image:users.profileImage,
-        user:users,
-        navClass:navClass,
-        title:'Home Page'
+      Notification.find({userId:users._id}).sort({time:-1}).limit(4).then(notification=>{
+        res.render('patient/patientHome',{
+          layout:'mainPatient',
+          userName:userName,
+          id:users._id,
+          friendRequest:friendRequest,
+          image:users.profileImage,
+          user:users,
+          navClass:navClass,
+          title:'Home Page',
+          notification:notification,
+          timeDiff:timeDiff
+        });
       });
-    })
+    });
   });
 });
 
@@ -69,17 +75,24 @@ router.get('/:userName/notification', (req, res) => {
   const userName=req.params.userName;
   Users.findOne({userName:userName}).then((user)=>{
     Users.findOne({userName:userName}).populate('request.userId').exec().then((friendRequest)=>{
-      res.render('patient/notification',{
-        layout:'mainPatient',
-        userName:userName,
-        id:user._id,
-        friendRequest:friendRequest,
-        image:user.profileImage,
-        navClass:navClass,
-        title:'Notification'
+      Notification.find({userId:user._id}).sort({time:-1}).limit(4).then(notification=>{
+        Notification.find({userId:user._id}).sort({time:-1}).then(notificationAll=>{
+          res.render('patient/notification',{
+            layout:'mainPatient',
+            userName:userName,
+            id:user._id,
+            friendRequest:friendRequest,
+            image:user.profileImage,
+            navClass:navClass,
+            title:'Notification',
+            notification:notification,
+            timeDiff:timeDiff,
+            notificationAll:notificationAll
+          });
+        });
       });
-    })
-  })
+    });
+  });
 });
 
 router.get('/:userName/symptompChecker',(req, res) => {
@@ -87,16 +100,20 @@ router.get('/:userName/symptompChecker',(req, res) => {
   const userName=req.params.userName;
   Users.findOne({userName:userName}).then((user)=>{
     Users.findOne({userName:userName}).populate('request.userId').exec().then((friendRequest)=>{
-      res.render('patient/symptompChecker',{
-        layout:'mainPatient',
-        userName:userName,
-        id:user._id,
-        friendRequest:friendRequest,
-        image:user.profileImage,
-        navClass:navClass,
-        title:'Symptom Checker'
+      Notification.find({userId:user._id}).sort({time:-1}).limit(4).then(notification=>{
+        res.render('patient/symptompChecker',{
+          layout:'mainPatient',
+          userName:userName,
+          id:user._id,
+          friendRequest:friendRequest,
+          image:user.profileImage,
+          navClass:navClass,
+          title:'Symptom Checker',
+          notification:notification,
+          timeDiff:timeDiff
+        });
       });
-    })
+    });
   });
 });
 
@@ -155,20 +172,24 @@ router.get('/:userName/chat',(req, res)=>{
   Users.findOne({userName:userName}).then((user)=>{
     Users.findOne({userName:userName}).populate('request.userId').populate('friendList.friendId').exec().then((friendRequest)=>{
       Users.find({role:'doctor'}).then((users) => {
-        res.render('patient/chat',{
-          layout:'mainPatient',
-          userName:userName,
-          id:user._id,
-          friendRequest:friendRequest,
-          friendList:friendRequest.friendList,
-          doctors:users,
-          image:user.profileImage,
-          navClass:navClass,
-          title:'Message'
+        Notification.find({userId:user._id}).sort({time:-1}).limit(4).then(notification=>{
+          res.render('patient/chat',{
+            layout:'mainPatient',
+            userName:userName,
+            id:user._id,
+            friendRequest:friendRequest,
+            friendList:friendRequest.friendList,
+            doctors:users,
+            image:user.profileImage,
+            navClass:navClass,
+            title:'Message',
+            notification:notification,
+            timeDiff:timeDiff
+          });
         });
       });
-    })
-  })
+    });
+  });
 });
 
 router.get('/:userName/chat/:receiver',(req, res)=>{
@@ -178,22 +199,26 @@ router.get('/:userName/chat/:receiver',(req, res)=>{
     Users.findOne({userName:userName}).populate('request.userId').populate('friendList.friendId').exec().then((friendRequest)=>{
       Message.find({$or:[{$and:[{senderName:req.params.userName},{receiverName:req.params.receiver}]}, {$and:[{senderName:req.params.receiver},{receiverName:req.params.userName}]}]}).populate('receiver').populate('sender').exec().then((result)=>{
         Users.find({role:'doctor'}).then((users) => {
-          res.render('patient/chatUI',{
-            layout:'mainPatient',
-            userName:userName,
-            id:user._id,
-            friendRequest:friendRequest,
-            friendList:friendRequest.friendList,
-            navClass:navClass,
-            image:user.profileImage,
-            receiver:req.params.receiver,
-            title:'Message',
-            messages:result
+          Notification.find({userId:user._id}).sort({time:-1}).limit(4).then(notification=>{
+            res.render('patient/chatUI',{
+              layout:'mainPatient',
+              userName:userName,
+              id:user._id,
+              friendRequest:friendRequest,
+              friendList:friendRequest.friendList,
+              navClass:navClass,
+              image:user.profileImage,
+              receiver:req.params.receiver,
+              title:'Message',
+              messages:result,
+              notification:notification,
+              timeDiff:timeDiff
+            });
           });
         });
       });
     });
-  })
+  });
 });
 
 router.get('/:userName/videoChat',(req, res)=>{
@@ -201,17 +226,21 @@ router.get('/:userName/videoChat',(req, res)=>{
   const userName=req.params.userName;
   Users.findOne({userName:userName}).then((user) => {
     Users.findOne({userName:userName}).populate('request.userId').exec().then((friendRequest)=>{
-      res.render('patient/videoChat',{
-        layout:'mainPatient',
-        userName:userName,
-        id:user._id,
-        friendRequest:friendRequest,
-        image:user.profileImage,
-        navClass:navClass,
-        title:'Message'
+      Notification.find({userId:user._id}).sort({time:-1}).limit(4).then(notification=>{
+        res.render('patient/videoChat',{
+          layout:'mainPatient',
+          userName:userName,
+          id:user._id,
+          friendRequest:friendRequest,
+          image:user.profileImage,
+          navClass:navClass,
+          title:'Message',
+          notification:notification,
+          timeDiff:timeDiff
+        });
       });
     });
-  })
+  });
 });
 
 
@@ -224,32 +253,40 @@ router.get('/:userName/doctors', (req, res) => {
     Users.findOne({userName:userName}).then((user) => {
       Users.find({role:'doctor'}).then((users) => {
         Users.findOne({userName:userName}).populate('request.userId').exec().then((friendRequest)=>{
-          res.render('patient/doctors',{
-            layout:'mainPatient',
-            userName:userName,
-            friendRequest:friendRequest,
-            doctors:users,
-            image:user.profileImage,
-            navClass:navClass,
-            title:'Doctors'
+          Notification.find({userId:user._id}).sort({time:-1}).limit(4).then(notification=>{
+            res.render('patient/doctors',{
+              layout:'mainPatient',
+              userName:userName,
+              friendRequest:friendRequest,
+              doctors:users,
+              image:user.profileImage,
+              navClass:navClass,
+              title:'Doctors',
+              notification:notification,
+              timeDiff:timeDiff
+            });
           });
         });
-      })
-    })
+      });
+    });
   }else{
     const regex = new RegExp(escapeRegex(search),'gi');
-    Users.findOne({userName:userName}).then((user) => {
+    Users.findOne({userName:userName}).then(user => {
       Users.findOne({userName:userName}).populate('request.userId').exec().then((friendRequest)=>{
         Users.find({$and:[{$or:[{userName:regex},{email:regex},{name:regex}]},{role:'doctor'}]}).then((users) => {
-          res.render('patient/doctors',{
-            layout:'mainPatient',
-            userName:userName,
-            id:user._id,
-            friendRequest:friendRequest,
-            doctors:users,
-            image:user.profileImage,
-            navClass:navClass,
-            title:'Doctors'
+          Notification.find({userId:user._id}).sort({time:-1}).limit(4).then(notification=>{
+            res.render('patient/doctors',{
+              layout:'mainPatient',
+              userName:userName,
+              id:user._id,
+              friendRequest:friendRequest,
+              doctors:users,
+              image:user.profileImage,
+              navClass:navClass,
+              title:'Doctors',
+              notification:notification,
+              timeDiff:timeDiff
+            });
           });
         });
       });
@@ -279,52 +316,30 @@ router.get('/:userName/report',(req, res) =>{
   const userName=req.params.userName;
   Users.findOne({userName:userName}).then((user) => {
     Users.findOne({userName:userName}).populate('request.userId').exec().then((friendRequest)=>{
-      Appointmet.find({$and:[{patientId:user._id},{status:'done'}]}).populate('docId').populate('patientId').exec().then(result => {
-        res.render('patient/medicalRecord',{
-          helpers : {
-            formatDate:formatDate
-          },
-          layout:'mainPatient',
-          userName:userName,
-          id:user._id,
-          friendRequest:friendRequest,
-          image:user.profileImage,
-          navClass:navClass,
-          apts:result,
-          title:'Medical History'
+      Appointment.find({$and:[{patientId:user._id},{status:'done'}]}).populate('docId').populate('patientId').exec().then(result => {
+        Notification.find({userId:user._id}).sort({time:-1}).limit(4).then(notification=>{
+          res.render('patient/medicalRecord',{
+            helpers : {
+              formatDate:formatDate,
+              iff:iff
+            },
+            layout:'mainPatient',
+            userName:userName,
+            id:user._id,
+            friendRequest:friendRequest,
+            image:user.profileImage,
+            navClass:navClass,
+            apts:result,
+            title:'Medical History',
+            friends: user.friendList,
+            notification:notification,
+            timeDiff:timeDiff
+          });
         });
-      })
+      });
     });
   });
 });
-
-//Routing for Showing report from a  doctor
-router.get('/:userName/report/:aptId',(req, res) =>{
-  const navClass = ["sidebar-link","sidebar-link","sidebar-link","current","sidebar-link","sidebar-link"];
-  const userName=req.params.userName;
-  Users.findOne({userName:userName}).then((user) => {
-    Users.findOne({userName:userName}).populate('request.userId').exec().then((friendRequest)=>{
-      Report.findOne({aptId:req.params.aptId}).populate('docId').populate('patientId').exec().then(result => {
-        res.render('patient/prescription',{
-          helpers : {
-            formatDate:formatDate
-          },
-          layout:'mainPatient',
-          friendRequest:friendRequest,
-          image:user.profileImage,
-          userName:userName,
-          id:user._id,
-          navClass:navClass,
-          report:result,
-          title:'Report'
-        });
-      })
-    });
-  });
-});
-
-
-
 
 router.get('/:userName/diagnosisRes', (req, res) =>{
   const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
@@ -332,22 +347,25 @@ router.get('/:userName/diagnosisRes', (req, res) =>{
   Users.findOne({userName:userName }).then((user) => {
     Users.findOne({userName:userName}).populate('request.userId').exec().then((friendRequest)=>{
       TempDiagnosis.findOne({patientId:user._id }).sort({'matching.matchPercent':'asc'}).then((rpt)=>{
-        const diagnosis =[];
-        diagnosis.push(rpt.matching[0],rpt.matching[1],rpt.matching[2],rpt.matching[3]);
-        res.render('patient/symptomRes',{
-          layout:'mainPatient',
-          userName:userName,
-          id:user._id,
-          diagnosis:diagnosis,
-          friendRequest:friendRequest,
-          image:user.profileImage,
-          navClass:navClass,
-          title:'Symptom Checker Result'
+        Notification.find({userId:user._id}).sort({time:-1}).limit(4).then(notification=>{
+          const diagnosis =[];
+          diagnosis.push(rpt.matching[0],rpt.matching[1],rpt.matching[2],rpt.matching[3]);
+          res.render('patient/symptomRes',{
+            layout:'mainPatient',
+            userName:userName,
+            id:user._id,
+            diagnosis:diagnosis,
+            friendRequest:friendRequest,
+            image:user.profileImage,
+            navClass:navClass,
+            title:'Symptom Checker Result',
+            notification:notification,
+            timeDiff:timeDiff
+          });
         });
-      })
+      });
     });
   });
-
 });
 
 router.get('/:userName/disease/:diseaseName',(req, res)=>{
@@ -356,19 +374,23 @@ router.get('/:userName/disease/:diseaseName',(req, res)=>{
   Users.findOne({userName:userName}).then((user)=>{
     DiseaseInfo.findOne({diseaseName:diseaseName}).then((disease) =>{
       Users.findOne({userName:userName}).populate('request.userId').exec().then((friendRequest)=>{
-        res.render('patient/diseaseInfo',{
-          layout:'mainPatient',
-          userName:req.params.userName,
-          id:user._id,
-          friendRequest:friendRequest,
-          navClass:navClass,
-          image:user.profileImage,
-          info:disease,
-          title:diseaseName
+        Notification.find({userId:user._id}).sort({time:-1}).limit(4).then(notification=>{
+          res.render('patient/diseaseInfo',{
+            layout:'mainPatient',
+            userName:req.params.userName,
+            id:user._id,
+            friendRequest:friendRequest,
+            navClass:navClass,
+            image:user.profileImage,
+            info:disease,
+            title:diseaseName,
+            notification:notification,
+            timeDiff:timeDiff
+          });
         });
       });
-    })
-  })
+    });
+  });
 });
 
 
@@ -377,20 +399,24 @@ router.get('/:userName/patientProfile',(req, res) => {
   const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   Users.findOne({userName:userName}).then((users) =>{
     Users.findOne({userName:userName}).populate('request.userId').exec().then((friendRequest)=>{
-      const dob=dateFormat(users.dob, "isoDate");
-      res.render('patient/patientProfile',{
-        layout:'mainPatient',
-        userName:userName,
-        id:users._id,
-        friendRequest:friendRequest,
-        user:users,
-        dob:dob,
-        image:users.profileImage,
-        navClass:navClass,
-        title:'Profile'
+      Notification.find({userId:users._id}).sort({time:-1}).limit(4).then(notification=>{
+        const dob=dateFormat(users.dob, "isoDate");
+        res.render('patient/patientProfile',{
+          layout:'mainPatient',
+          userName:userName,
+          id:users._id,
+          friendRequest:friendRequest,
+          user:users,
+          dob:dob,
+          image:users.profileImage,
+          navClass:navClass,
+          title:'Profile',
+          notification:notification,
+          timeDiff:timeDiff
+        });
       });
     });
-  })
+  });
 });
 
 
@@ -403,21 +429,25 @@ router.get('/:userName/viewDocProfile/:id', (req, res) => {
     Users.findOne({_id:req.params.id}).then((user) => {
       Users.findOne({userName:userName}).populate('request.userId').exec().then((friendRequest)=>{
         Schedule.findOne({doctorId:user._id}).then((schedule) => {
-          res.render('patient/viewDocProfile',{
-            layout:'mainPatient',
-            userName:userName,
-            doctor:user,
-            image:usr.profileImage,
-            schedule:schedule,
-            navClass:navClass,
-            name:usr.name,
-            id:usr._id,
-            title:'Doctor Profile'
+          Notification.find({userId:user._id}).sort({time:-1}).limit(4).then(notification=>{
+            res.render('patient/viewDocProfile',{
+              layout:'mainPatient',
+              userName:userName,
+              doctor:user,
+              image:usr.profileImage,
+              schedule:schedule,
+              navClass:navClass,
+              name:usr.name,
+              id:usr._id,
+              title:'Doctor Profile',
+              notification:notification,
+              timeDiff:timeDiff
+            });
           });
-        })
-      })
+        });
+      });
     });
-  })
+  });
 });
 
 
@@ -426,19 +456,23 @@ router.get('/:userName/editPatientProfile',(req, res) => {
   const userName=req.params.userName;
   Users.findOne({userName:userName}).then((user) => {
     Users.findOne({userName:userName}).populate('request.userId').exec().then((friendRequest)=>{
-      const dob=dateFormat(user.dob, "isoDate");
-      res.render('patient/editPatientProfile',{
-        layout:'mainPatient',
-        userName:userName,
-        id:user._id,
-        image:user.profileImage,
-        user:user,
-        dob:dob,
-        navClass:navClass,
-        title:'Edit Profile'
+      Notification.find({userId:user._id}).sort({time:-1}).limit(4).then(notification=>{
+        const dob=dateFormat(user.dob, "isoDate");
+        res.render('patient/editPatientProfile',{
+          layout:'mainPatient',
+          userName:userName,
+          id:user._id,
+          image:user.profileImage,
+          user:user,
+          dob:dob,
+          navClass:navClass,
+          title:'Edit Profile',
+          notification:notification,
+          timeDiff:timeDiff
+        });
       });
-    })
-  })
+    });
+  });
 });
 
 router.put('/:userName/editPatientProfile' ,(req, res) =>{
@@ -460,20 +494,23 @@ router.put('/:userName/editPatientProfile' ,(req, res) =>{
 router.get('/:userName/changePassword', (req, res) =>{
   const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
-  Users.findOne({userName:userName}).then((user=>{
-    Users.findOne({userName:userName}).populate('request.userId').exec().then((friendRequest)=>{
-      res.render('patient/changePassword',{
-        layout:'mainPatient',
-        userName:userName,
-        id:user._id,
-        image:user.profileImage,
-        user:user,
-        navClass:navClass,
-        title:'Change Password'
-
-      })
-    })
-  }));
+  Users.findOne({userName:userName}).then(user=>{
+    Users.findOne({userName:userName}).populate('request.userId').exec().then(friendRequest=>{
+      Notification.find({userId:user._id}).sort({time:-1}).limit(4).then(notification=>{
+        res.render('patient/changePassword',{
+          layout:'mainPatient',
+          userName:userName,
+          id:user._id,
+          image:user.profileImage,
+          user:user,
+          navClass:navClass,
+          title:'Change Password',
+          notification:notification,
+          timeDiff:timeDiff
+        });
+      });
+    });
+  });
 });
 
 
@@ -510,30 +547,34 @@ router.get('/:userName/makeAppointment/:doc/:dayNo', (req, res) =>{
   Users.findOne({userName:userName}).then(user=>{
     Users.findOne({userName:userName}).populate('request.userId').exec().then((friendRequest)=>{
       Schedule.findOne({doctorId:docId}).then((schedule)=>{
-        tempTime=schedule.start[dayNo];
-        for(let i=0;i<schedule.slot[dayNo].length;i++){
-          const tempArr=addThirtyMin(tempTime);
-          tempTime=tempArr[1];
-          const status = schedule.slot[dayNo][i];
-          let condition;
-          if(status == 0)condition = 'Free'
-          else if(status == 1)condition = 'Booked'
-          timeObj.push({start:tempArr[0],end:tempArr[1],status:condition,dayNo:dayNo})
-        }
-        res.render('patient/viewScheduleBySlot',{
-          layout:'mainPatient',
-          userName:userName,
-          id:user._id,
-          image:user.profileImage,
-          day:dayArr[dayNo],
-          timeObj:timeObj,
-          user:user,
-          navClass:navClass,
-          docId:docId,
-          title:'Schedule'
+        Notification.find({userId:user._id}).sort({time:-1}).limit(4).then(notification=>{
+          tempTime=schedule.start[dayNo];
+          for(let i=0;i<schedule.slot[dayNo].length;i++){
+            const tempArr=addThirtyMin(tempTime);
+            tempTime=tempArr[1];
+            const status = schedule.slot[dayNo][i];
+            let condition;
+            if(status == 0)condition = 'Free'
+            else if(status == 1)condition = 'Booked'
+            timeObj.push({start:tempArr[0],end:tempArr[1],status:condition,dayNo:dayNo})
+          }
+          res.render('patient/viewScheduleBySlot',{
+            layout:'mainPatient',
+            userName:userName,
+            id:user._id,
+            image:user.profileImage,
+            day:dayArr[dayNo],
+            timeObj:timeObj,
+            user:user,
+            navClass:navClass,
+            docId:docId,
+            title:'Schedule',
+            notification:notification,
+            timeDiff:timeDiff
+          });
         });
       });
-    })
+    });
   });
 });
 
@@ -564,7 +605,7 @@ router.get('/:userName/makeAppointment/:doc/:dayNo/:slot',(req, res) => {
       startTime=s1+":"+s2;
       var thisDate=returnDate(nextDay,startTime);
 
-      Appointmet.findOne({$and:[{patientId:user._id},{appointmentDate:thisDate}]}).then(apt=>{
+      Appointment.findOne({$and:[{patientId:user._id},{appointmentDate:thisDate}]}).then(apt=>{
         if(apt){
           req.session.message ={
             type:'danger',
@@ -589,17 +630,21 @@ router.get('/:userName/appointment/:date',(req, res)=>{
   const userName = req.params.userName;
   Users.findOne({userName:userName}).then((user)=>{
     Users.findOne({userName:userName}).populate('request.userId').exec().then((friendRequest)=>{
-      Appointmet.findOne({$and:[{patientId:user._id},{appointmentDate:appointmentDate}]}).populate('patientId').populate('docId').then((apt)=>{
-        const thisdate=apt.appointmentDate;
-        res.render('patient/appointment',{
-          layout:'mainPatient',
-          userName:userName,
-          id:user._id,
-          image:user.profileImage,
-          navClass:navClass,
-          aptdate:moment(thisdate).format('LLL'),
-          title:'Appointmet',
-          apt:apt
+      Appointment.findOne({$and:[{patientId:user._id},{appointmentDate:appointmentDate}]}).populate('patientId').populate('docId').then((apt)=>{
+        Notification.find({userId:user._id}).sort({time:-1}).limit(4).then(notification=>{
+          const thisdate=apt.appointmentDate;
+          res.render('patient/appointment',{
+            layout:'mainPatient',
+            userName:userName,
+            id:user._id,
+            image:user.profileImage,
+            navClass:navClass,
+            aptdate:moment(thisdate).format('LLL'),
+            title:'Appointment',
+            apt:apt,
+            notification:notification,
+            timeDiff:timeDiff
+          });
         });
       });
     });
@@ -609,7 +654,7 @@ router.get('/:userName/appointment/:date',(req, res)=>{
 router.post('/:userName/appointment/:id',(req, res)=>{
   const symptom=req.body.symptom;
   const medication=req.body.medication;
-  Appointmet.findOne({_id:req.params.id}).then((appointment)=>{
+  Appointment.findOne({_id:req.params.id}).then((appointment)=>{
     Users.findOne({_id:appointment.docId}).then(doctor=>{
       Users.findOne({userName:req.params.userName}).then(usr=>{
         appointment.symptoms=symptom;
@@ -632,7 +677,7 @@ router.post('/:userName/appointment/:id',(req, res)=>{
 
           // req.session.message ={
           //   type:'success',
-          //   msg:'Appointmet scheduled on '+moment(appointment.appointmentDate).format('LLL')
+          //   msg:'Appointment scheduled on '+moment(appointment.appointmentDate).format('LLL')
           // }
           res.redirect('/patient/'+req.params.userName);
         });
@@ -784,7 +829,7 @@ function createAppointment(datNo,stime,docId,patientId,scheduleId,type,slotNo,st
   const str=stime;
   const time=str.split(":");
   const date = new Date(year, month, day, time[0], time[1]);
-  const newAppointment = new Appointmet({
+  const newAppointment = new Appointment({
     docId:docId,
     patientId:patientId,
     scheduleId:scheduleId,
@@ -842,38 +887,6 @@ function minToStrTime(min){
   return time;
 }
 
-//Function to Send Email
-function sendEmailFunc(sender,password,receiver,subject,message){
-  var flag;
-  let transporter = nodemailer.createTransport({
-    service: 'gmail',
-    port: 587,
-    secure: false,
-    auth: {
-      user: sender,
-      pass: password
-    },
-    tls: { rejectUnauthorized: false }
-  });
-
-
-  let mailOptions = {
-    from: sender,
-    to: receiver,
-    subject: subject,
-    html: message
-  };
-
-
-  transporter.sendMail(mailOptions, (err, data) => {
-    if (err) {
-    }
-    else {
-    }
-    done();
-  });
-  return flag;
-}
 
 function escapeRegex(text) {
   return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");

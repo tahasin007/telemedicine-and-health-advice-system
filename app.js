@@ -174,8 +174,8 @@ http.listen(port, function () {
   console.log('listening on', port);
 });
 
-require('./models/Appointmet');
-const Appointmet = mongoose.model('appointment');
+require('./models/Appointment');
+const Appointment = mongoose.model('appointment');
 require('./models/Schedule');
 const Schedule = mongoose.model('schedule');
 const moment = require('moment');
@@ -194,7 +194,7 @@ function getDayNo(dayNo){
   return dayNo;
 }
 function intervalFunc() {
-  Appointmet.find({status:{ $ne:'done'}}).exec().then(appointments=>{
+  Appointment.find({status:{ $ne:'done'}}).exec().then(appointments=>{
     appointments.forEach(object=>{
       var flag = moment().isAfter(moment(object.appointmentEnd))
       if(flag == true){

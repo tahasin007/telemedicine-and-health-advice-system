@@ -18,7 +18,7 @@
             {{/if}}
             <b class="text-danger">Doctor</b>
           </div>
-          <ul class="navbar-nav flex-column mt-4">
+          <ul class="navbar-nav flex-column mt-4 general-Title5" style="font-size:13px;">
             <li class="nav-item"><a href="/doctor/{{userName}}" class="nav-link text-dark p-3 mb-2 {{navClass.[0]}}"><i class="fas fa-home text-dark fa-lg mr-3"></i>Dashboard</a></li>
             <!-- <li class="nav-item"><a href="doctorProfile.html" class="nav-link text-dark p-3 mb-2 sidebar-link"><i class="fas fa-user text-dark fa-lg mr-3"></i>Profile</a></li>
             <li class="nav-item"><a href="doctorMail.html" class="nav-link text-dark p-3 mb-2 sidebar-link"><i class="fas fa-envelope text-dark fa-lg mr-3"></i>Send Mail</a></li> -->
@@ -35,7 +35,7 @@
         <div class="col-xl-10 col-lg-9 col-md-8 bg-secondary ml-auto back fixed-top py-1 top-navbar">
           <div class="row align-items-center">
             <div class="col-md-4">
-              <a href="#" class="nav-link text-light  p-3 mb-2"><i class="fas fa-home text-light fa-lg mr-1"></i>Home</a>
+              <a href="#" class="nav-link text-light  p-3 mb-2"><i class="fas fa-home text-light fa-lg mr-1"></i></a>
             </div>
             <div class="col-md-2 ml-auto">
               <ul class="navbar-nav">
@@ -66,49 +66,36 @@
                           <div class="notification-heading ml-3">Notifications</div>
                         </div>
                       </div>
+                      {{#each notification}}
                       <div class="dropdown-divider"></div>
-
                       <div class="notification-wrapper">
                         <div class="notification-item">
                           <div class="row d-flex">
                             <div class="col-2 col-md-2 col-lg-2">
-                              <img src="/images/appointment_notification.png"  width="35" height="35" class="rounded-circle">
+                              <img src="/images/{{category}}.png"  width="35" height="35" class="rounded-circle">
                             </div>
                             <div class="col-10 col-md-10 col-lg-10">
                               <div class="notification-title">
-                                  New Appointment Request
+                                {{title}}
                               </div>
-                              <div class="notification-details" style="word-wrap: break-word">
-                                  Dipok Sarkar Dipu Requested an appointment on 23rd february, 3:30pm
+                              <div class="notification-details" >
+                                {{description}}
                               </div>
-                          </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="dropdown-divider"></div>
-
-                      <div class="notification-wrapper">
-                        <div class="notification-item">
-                          <div class="row d-flex">
-                            <div class="col-2 col-md-2 col-lg-2">
-                              <img src="/images/medical-report.png"  width="35" height="35" class="rounded-circle">
+                              <div class='notification-date float-right text-secondary'>
+                                {{@root.timeDiff time}}
+                              </div>
                             </div>
-                            <div class="col-10 col-md-10 col-lg-10">
-                              <div class="notification-title">
-                                  Medical Prescription
-                              </div>
-                              <div class="notification-details" style="word-wrap: break-word">
-                                  Medical Prescription of Dipok Sarkar Dipu was sent to him
-                              </div>
-                          </div>
                           </div>
                         </div>
                       </div>
+                      {{/each}}
 
                       <div class="dropdown-divider"></div>
-                      <div class="row justify-content-center notification-bottom-msg">
-                        View All
-                      </div>
+                      <a href="/doctor/{{userName}}/notification" style="text-decoration:none;">
+                        <div class="row justify-content-center notification-bottom-msg">
+                          View All
+                        </div>
+                      </a>
                     </div>
                   </li>
 

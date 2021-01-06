@@ -38,11 +38,12 @@
                       {{#iff @root.friends patientId.userName}}
                       <a href="chat/{{patientId.userName}}">
                         <button type="button" class="btn btn-info">
-                          <i class="fas fa-comment-alt text-dark"></i>
+                          <i class="fas fa-comment-alt text-light"></i>
                         </button>
                       </a>
+                      {{/iff}}
                     </td>
-                    {{/iff}}
+
                   </tr>
                   {{/each}}
                 </tbody>

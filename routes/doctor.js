@@ -20,7 +20,7 @@ router.use(methodOverride('_method'));
 
 require('../models/Schedule');
 require('../models/Users');
-require('../models/Appointmet');
+require('../models/Appointment');
 require('../models/Disease');
 require('../models/TempDiagnosis');
 require('../models/Report');
@@ -28,7 +28,7 @@ require('../models/Message');
 require('../models/Notification');
 const Users = mongoose.model('users');
 const Schedule = mongoose.model('schedule');
-const Appointmet = mongoose.model('appointment');
+const Appointment = mongoose.model('appointment');
 const TempDiagnosis = mongoose.model('tempDiagnosis');
 const Disease = mongoose.model('disease');
 const Report = mongoose.model('report');
@@ -40,7 +40,8 @@ const {
   forLoop,
   formatDate,
   formatDateSub,
-  iff
+  iff,
+  timeDiff
 } = require('../helpers/hbs');
 
 
@@ -51,10 +52,170 @@ router.get('/:userName', (req, res) => {
   const userName=req.params.userName;
   const navClass = ["current","sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   Users.findOne({userName:userName}).then((user) => {
-    Appointmet.find({$and:[{docId:user._id},{status:'pending'}]}).populate('docId').populate('patientId').exec().then(result => {
+    Appointment.find({$and:[{docId:user._id},{status:'pending'}]}).populate('docId').populate('patientId').exec().then(result => {
       Users.findOne({userName:userName}).populate('request.userId').exec().then((friendRequest)=>{
-        Appointmet.find({$and:[{docId:user._id},{status:'accepted'}]}).populate('docId').populate('patientId').exec().then(result1 => {
-          res.render('doctor/doctorHome',{
+        Appointment.find({$and:[{docId:user._id},{status:'accepted'}]}).populate('docId').populate('patientId').exec().then(result1 => {
+          Notification.find({userId:user._id}).sort({time:-1}).limit(4).then(notification=>{
+            res.render('doctor/doctorHome',{
+              helpers : {
+                formatDate:formatDate
+              },
+              layout:'mainDoc',
+              userName:userName,
+              friendRequest:friendRequest,
+              image:user.profileImage,
+              id:user._id,
+              apts:result,
+              navClass:navClass,
+              title:'Home',
+              aptCal:result1,
+              notification:notification,
+              timeDiff:timeDiff
+            });
+          });
+        });
+      });
+    });
+  });
+});
+
+
+router.get('/:userName/notification', (req, res) => {
+  const navClass = ["sidebar-link","current","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
+  const userName=req.params.userName;
+  Users.findOne({userName:userName}).then((user)=>{
+    Users.findOne({userName:userName}).populate('request.userId').exec().then((friendRequest)=>{
+      Notification.find({userId:user._id}).sort({time:-1}).limit(4).then(notification=>{
+        Notification.find({userId:user._id}).sort({time:-1}).then(notificationAll=>{
+          res.render('doctor/notification',{
+            layout:'mainDoc',
+            userName:userName,
+            id:user._id,
+            friendRequest:friendRequest,
+            image:user.profileImage,
+            navClass:navClass,
+            title:'Notification',
+            notification:notification,
+            timeDiff:timeDiff,
+            notificationAll:notificationAll
+          });
+        });
+      });
+    });
+  });
+});
+
+router.get('/:userName/doctorProfile', (req, res) => {
+  const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
+  const userName=req.params.userName;
+  Users.findOne({userName:userName}).then((user) => {
+    Users.findOne({userName:userName}).populate('request.userId').exec().then((friendRequest)=>{
+      Notification.find({userId:user._id}).sort({time:-1}).limit(4).then(notification=>{
+        const dob=dateFormat(user.dob, "isoDate");
+        res.render('doctor/doctorProfile',{
+          layout:'mainDoc',
+          userName:userName,
+          id:user._id,
+          friendRequest:friendRequest,
+          image:user.profileImage,
+          user:user,
+          dob:dob,
+          navClass:navClass,
+          title:'Profile',
+          notification:notification,
+          timeDiff:timeDiff
+        });
+      });
+    });
+  });
+});
+
+router.get('/:userName/chat',(req,res) =>{
+  const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","current","sidebar-link"];
+  const userName=req.params.userName;
+  Users.findOne({userName:userName}).then((user)=>{
+    Users.findOne({userName:userName}).populate('request.userId').populate('friendList.friendId').exec().then((friendRequest)=>{
+      Message.find({$or:[{$and:[{senderName:req.params.userName},{receiverName:req.params.receiver}]},{$and:[{senderName:req.params.receiver},{receiverName:req.params.userName}]}]}).then((result)=>{
+        Notification.find({userId:user._id}).sort({time:-1}).limit(4).then(notification=>{
+          res.render('doctor/chat',{
+            layout:'mainDoc',
+            userName:userName,
+            friendRequest:friendRequest,
+            friendList:friendRequest.friendList,
+            image:user.profileImage,
+            id:user._id,
+            navClass:navClass,
+            receiver:req.params.receiver,
+            title:'Message',
+            messages:result,
+            notification:notification,
+            timeDiff:timeDiff
+          });
+        });
+      })
+    })
+  });
+});
+
+router.get('/:userName/chat/:receiver',(req,res) =>{
+  const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
+  const userName=req.params.userName;
+  Users.findOne({userName:userName}).then((user)=>{
+    Users.findOne({userName:userName}).populate('request.userId').populate('friendList.friendId').exec().then((friendRequest)=>{
+      Message.find({$or:[{$and:[{senderName:req.params.userName},{receiverName:req.params.receiver}]},{$and:[{senderName:req.params.receiver},{receiverName:req.params.userName}]}]}).populate('receiver').populate('sender').exec().then((result)=>{
+        Notification.find({userId:user._id}).sort({time:-1}).limit(4).then(notification=>{
+          res.render('doctor/chatUI',{
+            layout:'mainDoc',
+            userName:userName,
+            friendRequest:friendRequest,
+            friendList:friendRequest.friendList,
+            image:user.profileImage,
+            id:user._id,
+            navClass:navClass,
+            receiver:req.params.receiver,
+            title:'Message',
+            messages:result,
+            notification:notification,
+            timeDiff:timeDiff
+          });
+        });
+      });
+    });
+  });
+});
+
+
+router.get('/:userName/videoChat',(req, res)=>{
+  const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","current","sidebar-link"];
+  const userName=req.params.userName;
+  Users.findOne({userName:userName}).then((user)=>{
+    Users.findOne({userName:userName}).populate('request.userId').exec().then((friendRequest)=>{
+      Notification.find({userId:user._id}).sort({time:-1}).limit(4).then(notification=>{
+        res.render('doctor/videoChat',{
+          layout:'mainPatient',
+          userName:userName,
+          friendRequest:friendRequest,
+          image:user.profileImage,
+          id:user._id,
+          navClass:navClass,
+          title:'Message',
+          notification:notification,
+          timeDiff:timeDiff
+        });
+      });
+    });
+  });
+});
+
+
+router.get('/:userName/appointment', (req, res) => {
+  const userName=req.params.userName;
+  const navClass = ["sidebar-link","sidebar-link","sidebar-link","current","sidebar-link","sidebar-link"];
+  Users.findOne({userName:userName}).then((user) => {
+    Users.findOne({userName:userName}).populate('request.userId').exec().then((friendRequest)=>{
+      Appointment.find({$and:[{docId:user._id},{status:'accepted'}]}).populate('docId').populate('patientId').exec().then(result => {
+        Notification.find({userId:user._id}).sort({time:-1}).limit(4).then(notification=>{
+          res.render('doctor/appointmentTable',{
             helpers : {
               formatDate:formatDate
             },
@@ -65,144 +226,14 @@ router.get('/:userName', (req, res) => {
             id:user._id,
             apts:result,
             navClass:navClass,
-            title:'Home',
-            aptCal:result1
+            title:'Appointments',
+            notification:notification,
+            timeDiff:timeDiff
           });
         });
       });
-    })
+    });
   });
-});
-
-
-router.get('/:userName/notification', (req, res) => {
-  const navClass = ["sidebar-link","current","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
-  const userName=req.params.userName;
-  Users.findOne({userName:userName}).then((user)=>{
-    Users.findOne({userName:userName}).populate('request.userId').exec().then((friendRequest)=>{
-      res.render('doctor/notification',{
-        layout:'mainDoc',
-        userName:userName,
-        id:user._id,
-        friendRequest:friendRequest,
-        image:user.profileImage,
-        navClass:navClass,
-        title:'Notification'
-      });
-    })
-  })
-});
-
-router.get('/:userName/doctorProfile', (req, res) => {
-  const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
-  const userName=req.params.userName;
-  Users.findOne({userName:userName}).then((user) => {
-    Users.findOne({userName:userName}).populate('request.userId').exec().then((friendRequest)=>{
-      const dob=dateFormat(user.dob, "isoDate");
-      res.render('doctor/doctorProfile',{
-        layout:'mainDoc',
-        userName:userName,
-        id:user._id,
-        friendRequest:friendRequest,
-        image:user.profileImage,
-        user:user,
-        dob:dob,
-        navClass:navClass,
-        title:'Profile'
-      });
-    })
-  });
-});
-
-router.get('/:userName/chat',(req,res) =>{
-  const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","current","sidebar-link"];
-  const userName=req.params.userName;
-  Users.findOne({userName:userName}).then((user)=>{
-    Users.findOne({userName:userName}).populate('request.userId').populate('friendList.friendId').exec().then((friendRequest)=>{
-      Message.find({$or:[{$and:[{senderName:req.params.userName},{receiverName:req.params.receiver}]},{$and:[{senderName:req.params.receiver},{receiverName:req.params.userName}]}]}).then((result)=>{
-        res.render('doctor/chat',{
-          layout:'mainDoc',
-          userName:userName,
-          friendRequest:friendRequest,
-          friendList:friendRequest.friendList,
-          image:user.profileImage,
-          id:user._id,
-          navClass:navClass,
-          receiver:req.params.receiver,
-          title:'Message',
-          messages:result
-        });
-      });
-    })
-  })
-});
-
-router.get('/:userName/chat/:receiver',(req,res) =>{
-  const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
-  const userName=req.params.userName;
-  Users.findOne({userName:userName}).then((user)=>{
-    Users.findOne({userName:userName}).populate('request.userId').populate('friendList.friendId').exec().then((friendRequest)=>{
-      Message.find({$or:[{$and:[{senderName:req.params.userName},{receiverName:req.params.receiver}]},{$and:[{senderName:req.params.receiver},{receiverName:req.params.userName}]}]}).populate('receiver').populate('sender').exec().then((result)=>{
-        res.render('doctor/chatUI',{
-          layout:'mainDoc',
-          userName:userName,
-          friendRequest:friendRequest,
-          friendList:friendRequest.friendList,
-          image:user.profileImage,
-          id:user._id,
-          navClass:navClass,
-          receiver:req.params.receiver,
-          title:'Message',
-          messages:result
-        });
-      });
-    })
-  })
-});
-
-
-router.get('/:userName/videoChat',(req, res)=>{
-  const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","current","sidebar-link"];
-  const userName=req.params.userName;
-  Users.findOne({userName:userName}).then((user)=>{
-    Users.findOne({userName:userName}).populate('request.userId').exec().then((friendRequest)=>{
-      res.render('doctor/videoChat',{
-        layout:'mainPatient',
-        userName:userName,
-        friendRequest:friendRequest,
-        image:user.profileImage,
-        id:user._id,
-        navClass:navClass,
-        title:'Message'
-      });
-    })
-  })
-});
-
-
-router.get('/:userName/appointment', (req, res) => {
-  const userName=req.params.userName;
-  const navClass = ["sidebar-link","sidebar-link","sidebar-link","current","sidebar-link","sidebar-link"];
-  Users.findOne({userName:userName}).then((user) => {
-    Users.findOne({userName:userName}).populate('request.userId').exec().then((friendRequest)=>{
-      Appointmet.find({$and:[{docId:user._id},{status:'accepted'}]}).populate('docId').populate('patientId').exec().then(result => {
-        res.render('doctor/appointmentTable',{
-          helpers : {
-            formatDate:formatDate
-          },
-          layout:'mainDoc',
-          userName:userName,
-          friendRequest:friendRequest,
-          image:user.profileImage,
-          id:user._id,
-          apts:result,
-          navClass:navClass,
-          title:'Appointmets'
-        });
-      });
-    })
-  });
-
 });
 
 
@@ -212,19 +243,22 @@ router.get('/:userName/schedule', (req, res) => {
   Users.findOne({userName:userName}).then((user)=>{
     Users.findOne({userName:userName}).populate('request.userId').exec().then((friendRequest)=>{
       Schedule.findOne({doctorId:user._id}).then((doctor)=>{
-
-        res.render('doctor/docSchedule',{
-          layout:'mainDoc',
-          userName:userName,
-          friendRequest:friendRequest,
-          image:user.profileImage,
-          id:user._id,
-          schedule:doctor,
-          navClass:navClass,
-          title:'Schedule'
+        Notification.find({userId:user._id}).sort({time:-1}).limit(4).then(notification=>{
+          res.render('doctor/docSchedule',{
+            layout:'mainDoc',
+            userName:userName,
+            friendRequest:friendRequest,
+            image:user.profileImage,
+            id:user._id,
+            schedule:doctor,
+            navClass:navClass,
+            title:'Schedule',
+            notification:notification,
+            timeDiff:timeDiff
+          });
         });
-      });
-    })
+      })
+    });
   });
 });
 
@@ -236,54 +270,62 @@ router.get('/:userName/viewPatient/:aptId', (req, res) => {
   const aptId=req.params.aptId;
   Users.findOne({userName:userName}).then((user)=>{
     Users.findOne({userName:userName}).populate('request.userId').exec().then((friendRequest)=>{
-      Appointmet.findOne({_id:aptId}).populate('docId').populate('patientId').exec().then(result => {
-        res.render('doctor/viewPatient',{
-          helpers : {
-            formatDate:formatDate
-          },
-          layout:'mainDoc',
-          userName:userName,
-          friendRequest:friendRequest,
-          image:user.profileImage,
-          id:user._id,
-          apt:result,
-          name:user.name,
-          navClass:navClass,
-          title:'Patient Appointmet'
+      Appointment.findOne({_id:aptId}).populate('docId').populate('patientId').exec().then(result => {
+        Notification.find({userId:user._id}).sort({time:-1}).limit(4).then(notification=>{
+          res.render('doctor/viewPatient',{
+            helpers : {
+              formatDate:formatDate
+            },
+            layout:'mainDoc',
+            userName:userName,
+            friendRequest:friendRequest,
+            image:user.profileImage,
+            id:user._id,
+            apt:result,
+            name:user.name,
+            navClass:navClass,
+            title:'Patient Appointment',
+            notification:notification,
+            timeDiff:timeDiff
+          });
         });
       });
-    })
-  })
+    });
+  });
 });
 
 router.get('/:userName/newAppointments',(req,res) =>{
   const userName=req.params.userName;
   const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   Users.findOne({userName:userName}).then((user) => {
-    Appointmet.find({$and:[{docId:user._id},{status:'pending'}]}).populate('docId').populate('patientId').exec().then(result => {
+    Appointment.find({$and:[{docId:user._id},{status:'pending'}]}).populate('docId').populate('patientId').exec().then(result => {
       Users.findOne({userName:userName}).populate('request.userId').exec().then((friendRequest)=>{
-        res.render('doctor/newAppointmentRequest',{
-          helpers : {
-            formatDate:formatDate
-          },
-          layout:'mainDoc',
-          userName:userName,
-          friendRequest:friendRequest,
-          image:user.profileImage,
-          id:user._id,
-          apts:result,
-          navClass:navClass,
-          title:'Appoinement Requests'
+        Notification.find({userId:user._id}).sort({time:-1}).limit(4).then(notification=>{
+          res.render('doctor/newAppointmentRequest',{
+            helpers : {
+              formatDate:formatDate
+            },
+            layout:'mainDoc',
+            userName:userName,
+            friendRequest:friendRequest,
+            image:user.profileImage,
+            id:user._id,
+            apts:result,
+            navClass:navClass,
+            title:'Appoinement Requests',
+            notification:notification,
+            timeDiff:timeDiff
+          });
         });
       });
-    })
+    });
   });
 });
 
 router.get('/:userName/acceptPatient/:aptId', (req, res) => {
   const aptId=req.params.aptId;
   const userName=req.params.userName;
-  Appointmet.findById({_id:aptId}).populate('docId').populate('patientId').exec().then(result=>{
+  Appointment.findById({_id:aptId}).populate('docId').populate('patientId').exec().then(result=>{
     Users.findById({_id:result.docId._id}).exec().then(doctor=>{
       Users.findById({_id:result.patientId._id}).exec().then(patient=>{
         result.status = 'accepted';
@@ -317,7 +359,7 @@ router.get('/:userName/acceptPatient/:aptId', (req, res) => {
 router.get('/:userName/rejectPatient/:aptId', (req, res) => {
   const userName=req.params.userName;
   const aptId=req.params.aptId;
-  Appointmet.findById({_id:aptId}).populate('docId').populate('patientId').exec().then(result=>{
+  Appointment.findById({_id:aptId}).populate('docId').populate('patientId').exec().then(result=>{
     Users.findById({_id:result.docId._id}).exec().then(doctor=>{
       Users.findById({_id:result.patientId._id}).exec().then(patient=>{
         result.status = 'rejected';
@@ -349,19 +391,23 @@ router.get('/:userName/editDoctorProfile', (req, res) => {
   const userName=req.params.userName;
   Users.findOne({userName:userName}).then(user=>{
     Users.findOne({userName:userName}).populate('request.userId').exec().then((friendRequest)=>{
-      const dob=dateFormat(user.dob, "isoDate");
-      res.render('doctor/editDoctorProfile',{
-        layout:'mainDoc',
-        userName:userName,
-        friendRequest:friendRequest,
-        image:user.profileImage,
-        id:user._id,
-        user:user,
-        dob:dob,
-        navClass:navClass,
-        title:'Edit Profile'
-      });
-    })
+      Notification.find({userId:user._id}).sort({time:-1}).limit(4).then(notification=>{
+        const dob=dateFormat(user.dob, "isoDate");
+        res.render('doctor/editDoctorProfile',{
+          layout:'mainDoc',
+          userName:userName,
+          friendRequest:friendRequest,
+          image:user.profileImage,
+          id:user._id,
+          user:user,
+          dob:dob,
+          navClass:navClass,
+          title:'Edit Profile',
+          notification:notification,
+          timeDiff:timeDiff
+        });
+      })
+    });
   });
 });
 
@@ -388,17 +434,21 @@ router.get('/:userName/changePassword', (req, res) =>{
   const userName=req.params.userName;
   Users.findOne({userName:userName}).then(user=>{
     Users.findOne({userName:userName}).populate('request.userId').exec().then((friendRequest)=>{
-      res.render('doctor/changePassword',{
-        layout:'mainDoc',
-        userName:userName,
-        id:user._id,
-        friendRequest:friendRequest,
-        image:user.profileImage,
-        user:user,
-        navClass:navClass,
-        title:'Change Password'
-      })
-    })
+      Notification.find({userId:user._id}).sort({time:-1}).limit(4).then(notification=>{
+        res.render('doctor/changePassword',{
+          layout:'mainDoc',
+          userName:userName,
+          id:user._id,
+          friendRequest:friendRequest,
+          image:user.profileImage,
+          user:user,
+          navClass:navClass,
+          title:'Change Password',
+          notification:notification,
+          timeDiff:timeDiff
+        });
+      });
+    });
   });
 });
 
@@ -431,18 +481,22 @@ router.get('/:userName/editSchedule', (req, res) => {
   Users.findOne({userName:userName}).then(user =>{
     Users.findOne({userName:userName}).populate('request.userId').exec().then((friendRequest)=>{
       Schedule.findOne({doctorId:user._id}).then((schedule ) =>{
-        res.render('doctor/editSchedule',{
-          layout:'mainDoc',
-          userName:userName,
-          friendRequest:friendRequest,
-          schedule:schedule ,
-          image:user.profileImage,
-          id:user._id,
-          navClass:navClass,
-          title:'Edit Schedule'
+        Notification.find({userId:user._id}).sort({time:-1}).limit(4).then(notification=>{
+          res.render('doctor/editSchedule',{
+            layout:'mainDoc',
+            userName:userName,
+            friendRequest:friendRequest,
+            schedule:schedule ,
+            image:user.profileImage,
+            id:user._id,
+            navClass:navClass,
+            title:'Edit Schedule',
+            notification:notification,
+            timeDiff:timeDiff
+          });
         });
-      });
-    })
+      })
+    });
   });
 });
 
@@ -574,27 +628,31 @@ router.get('/:userName/showSlot/:dayNo',(req,res) =>{
   Users.findOne({userName:userName}).then((user) =>{
     Users.findOne({userName:userName}).populate('request.userId').exec().then((friendRequest)=>{
       Schedule.findOne({doctorId:user._id}).then((schedule) =>{
-        tempTime=schedule.start[dayNo];
-        const len=schedule.slot[dayNo].length;
-        for(let i=0;i<len;i++){
-          const tempArr=addThirtyMin(tempTime);
-          tempTime=tempArr[1];
-          const status = schedule.slot[dayNo][i];
-          let condition;
-          if(status == 0)condition = 'Free'
-          else if(status == 1)condition = 'Booked'
-          timeObj.push({start:tempArr[0],end:tempArr[1],status:condition})
-        }
-        res.render('doctor/docScheduleSlot',{
-          layout:'mainDoc',
-          userName:userName,
-          friendRequest:friendRequest,
-          day:dayArr[dayNo],
-          timeObj:timeObj,
-          image:user.profileImage,
-          id:user._id,
-          navClass:navClass,
-          title:'Schedule Slot'
+        Notification.find({userId:user._id}).sort({time:-1}).limit(4).then(notification=>{
+          tempTime=schedule.start[dayNo];
+          const len=schedule.slot[dayNo].length;
+          for(let i=0;i<len;i++){
+            const tempArr=addThirtyMin(tempTime);
+            tempTime=tempArr[1];
+            const status = schedule.slot[dayNo][i];
+            let condition;
+            if(status == 0)condition = 'Free'
+            else if(status == 1)condition = 'Booked'
+            timeObj.push({start:tempArr[0],end:tempArr[1],status:condition})
+          }
+          res.render('doctor/docScheduleSlot',{
+            layout:'mainDoc',
+            userName:userName,
+            friendRequest:friendRequest,
+            day:dayArr[dayNo],
+            timeObj:timeObj,
+            image:user.profileImage,
+            id:user._id,
+            navClass:navClass,
+            title:'Schedule Slot',
+            notification:notification,
+            timeDiff:timeDiff
+          });
         });
       });
     })
@@ -645,26 +703,29 @@ router.get('/:userName/patient', (req, res) => {
   const navClass = ["sidebar-link","sidebar-link","current","sidebar-link","sidebar-link","sidebar-link"];
   Users.findOne({userName:userName}).then((user) => {
     Users.findOne({userName:userName}).populate('request.userId').exec().then((friendRequest)=>{
-      Appointmet.find({$and:[{docId:user._id},{status:'done'}]}).populate('docId').populate('patientId').exec().then(result => {
-        res.render('doctor/patientTable',{
-          helpers : {
-            formatDate:formatDate,
-            iff:iff
-          },
-          layout:'mainDoc',
-          userName:userName,
-          friendRequest:friendRequest,
-          image:user.profileImage,
-          id:user._id,
-          apts:result,
-          navClass:navClass,
-          title:'Patients',
-          friends: user.friendList
+      Appointment.find({$and:[{docId:user._id},{status:'done'}]}).populate('docId').populate('patientId').exec().then(result => {
+        Notification.find({userId:user._id}).sort({time:-1}).limit(4).then(notification=>{
+          res.render('doctor/patientTable',{
+            helpers : {
+              formatDate:formatDate,
+              iff:iff
+            },
+            layout:'mainDoc',
+            userName:userName,
+            friendRequest:friendRequest,
+            image:user.profileImage,
+            id:user._id,
+            apts:result,
+            navClass:navClass,
+            title:'Patients',
+            friends: user.friendList,
+            notification:notification,
+            timeDiff:timeDiff
+          });
         });
       });
     });
   });
-
 });
 
 router.put('/:userName/editPrescription/:patId/:aptId',(req, res)=>{
@@ -776,7 +837,7 @@ router.put('/:userName/editPrescription/:patId/:aptId',(req, res)=>{
       },
 
       {
-        text:'Appointmet Date',absolutePosition: {x:45, y:270},style:'label'
+        text:'Appointment Date',absolutePosition: {x:45, y:270},style:'label'
       },
       {
         text:req.body.appointmentDate,absolutePosition: {x:225, y:270}, style:'value'
@@ -798,10 +859,10 @@ router.put('/:userName/editPrescription/:patId/:aptId',(req, res)=>{
         },
         absolutePosition: {x:135, y:355},
         layout: {
-				fillColor: function (rowIndex, node, columnIndex) {
-					return (rowIndex % 2 === 0) ? '#CCCCCC' : null;
-				}
-			}
+          fillColor: function (rowIndex, node, columnIndex) {
+            return (rowIndex % 2 === 0) ? '#CCCCCC' : null;
+          }
+        }
       },
       {
         text:'Medication Details',absolutePosition: {x:45, y:370+len*30},style:'label'
@@ -813,10 +874,10 @@ router.put('/:userName/editPrescription/:patId/:aptId',(req, res)=>{
         },
         absolutePosition: {x:120, y:390+len*30},
         layout: {
-				fillColor: function (rowIndex, node, columnIndex) {
-					return (rowIndex % 2 === 0) ? '#CCCCCC' : null;
-				}
-			}
+          fillColor: function (rowIndex, node, columnIndex) {
+            return (rowIndex % 2 === 0) ? '#CCCCCC' : null;
+          }
+        }
       },
       {
         text:'Advice/Instructions to Patient:',absolutePosition: {x:45, y:475+Len*30},style:'label'
@@ -858,8 +919,8 @@ router.put('/:userName/editPrescription/:patId/:aptId',(req, res)=>{
         bold: false
       },
       tableExample: {
-			margin: [0, 5, 0, 15]
-		}
+        margin: [0, 5, 0, 15]
+      }
     }
   };
 
@@ -869,57 +930,61 @@ router.put('/:userName/editPrescription/:patId/:aptId',(req, res)=>{
   pdfDoc.end();
   Users.findOne({userName:userName}).then((user)=>{
     Report.findOne({aptId:aptId}).then((report) => {
-      if(report){
-        report.disease=req.body.diseaseName;
-        report.symptom=req.body.symptom;
-        report.symptomDetails=req.body.symptomDetails;
-        report.observation = req.body.info;
-        report.medicine_name=req.body.medicine_name;
-        report.daily_dose=req.body.daily_dose;
-        report.description=req.body.description;
-        report.pdf=string;
-        report.date=req.body.date;
-        report.save().then((result) =>{
+      Appointment.findOne({_id:aptId}).then(appointment =>{
+        if(report){
+          report.disease=req.body.diseaseName;
+          report.symptom=req.body.symptom;
+          report.symptomDetails=req.body.symptomDetails;
+          report.observation = req.body.info;
+          report.medicine_name=req.body.medicine_name;
+          report.daily_dose=req.body.daily_dose;
+          report.description=req.body.description;
+          report.pdf=string;
+          report.date=req.body.date;
+          report.save().then((result) =>{
 
-          res.redirect('/doctor/'+userName+'/patient');
-        })
-      }
-      else{
-        const report = new Report({
-          aptId:aptId,
-          patientId:patientId,
-          docId:user._id,
-          id:user._id,
-          observation:ovservation,
-          disease:req.body.diseaseName,
-          symptom:req.body.symptom,
-          symptomDetails:req.body.symptomDetails,
-          medicine_name:req.body.medicine_name,
-          daily_dose:req.body.daily_dose,
-          description:req.body.description,
-          date:req.body.date,
-          pdf:string
-        });
-        report.save().then((result)=>{
-          const notification_patient = new Notification({
-            title: 'Medical Prescription',
-            description: user.name+' sent your medical prescription',
-            category: 'report',
-            userId: patientId
+            res.redirect('/doctor/'+userName+'/patient');
+          })
+        }
+        else{
+          const report = new Report({
+            aptId:aptId,
+            patientId:patientId,
+            docId:user._id,
+            id:user._id,
+            observation:ovservation,
+            disease:req.body.diseaseName,
+            symptom:req.body.symptom,
+            symptomDetails:req.body.symptomDetails,
+            medicine_name:req.body.medicine_name,
+            daily_dose:req.body.daily_dose,
+            description:req.body.description,
+            date:req.body.date,
+            pdf:string
           });
-          notification_patient.save();
+          report.save().then((result)=>{
+            const notification_patient = new Notification({
+              title: 'Medical Prescription',
+              description: user.name+' sent your medical prescription',
+              category: 'report',
+              userId: patientId
+            });
+            notification_patient.save();
 
-          const notification_doctor = new Notification({
-            title: 'Medical Prescription',
-            description: 'Prescription of '+req.body.patName+ ' was sent',
-            category: 'report',
-            userId: user._id
+            const notification_doctor = new Notification({
+              title: 'Medical Prescription',
+              description: 'Prescription of '+req.body.patName+ ' was sent',
+              category: 'report',
+              userId: user._id
+            });
+            notification_doctor.save();
+            appointment.reportSent = 'Yes';
+            appointment.pdf = string;
+            appointment.save();
+            res.redirect('/doctor/'+userName+'/patient');
           });
-          notification_doctor.save();
-          
-          res.redirect('/doctor/'+userName+'/patient');
-        });
-      }
+        }
+      });
     });
   });
 });
@@ -931,25 +996,30 @@ router.get('/:userName/medicalPrescription/:patId/:aptId',(req, res) => {
   const patientId=req.params.patientId;
   Users.findOne({userName:userName}).then((user) => {
     Users.findOne({userName:userName}).populate('request.userId').exec().then((friendRequest)=>{
-      Appointmet.findOne({_id:req.params.aptId}).populate('docId').populate('patientId').exec().then(result => {
+      Appointment.findOne({_id:req.params.aptId}).populate('docId').populate('patientId').exec().then(result => {
         Report.findOne({aptId:req.params.aptId}).then(report=>{
-          res.render('doctor/prescription',{
-            helpers : {
-              formatDate:formatDate
-            },
-            layout:'mainDoc',
-            userName:userName,
-            friendRequest:friendRequest,
-            image:user.profileImage,
-            id:user._id,
-            apt:result,
-            report:report,
-            navClass:navClass,
-            title:'Medical Prescription'
+          Notification.find({userId:user._id}).sort({time:-1}).limit(4).then(notification=>{
+            res.render('doctor/prescription',{
+              helpers : {
+                formatDate:formatDate
+              },
+              layout:'mainDoc',
+              userName:userName,
+              friendRequest:friendRequest,
+              image:user.profileImage,
+              id:user._id,
+              apt:result,
+              report:report,
+              navClass:navClass,
+              title:'Medical Prescription',
+              notification:notification,
+              timeDiff:timeDiff
+
+            });
           });
         });
       });
-    })
+    });
   });
 });
 
@@ -959,25 +1029,29 @@ router.get('/:userName/editPrescription/:patId/:aptId',(req, res)=>{
   const date=moment().format('LLLL');
   Users.findOne({userName:req.params.userName}).then((user) => {
     Users.findOne({userName:req.params.userName}).populate('request.userId').exec().then((friendRequest)=>{
-      Appointmet.findOne({_id:req.params.aptId}).populate('docId').populate('patientId').exec().then(result => {
+      Appointment.findOne({_id:req.params.aptId}).populate('docId').populate('patientId').exec().then(result => {
         Report.findOne({aptId:req.params.aptId}).then(report=>{
-          res.render('doctor/editPrescription',{
-            helpers : {
-              formatDate:formatDate
-            },
-            layout:'mainDoc',
-            userName:req.params.userName,
-            friendRequest:friendRequest,
-            image:user.profileImage,
-            id:user._id,
-            title:'Medical Prescription',
-            date:date,
-            report:report,
-            apt:result,
+          Notification.find({userId:user._id}).sort({time:-1}).limit(4).then(notification=>{
+            res.render('doctor/editPrescription',{
+              helpers : {
+                formatDate:formatDate
+              },
+              layout:'mainDoc',
+              userName:req.params.userName,
+              friendRequest:friendRequest,
+              image:user.profileImage,
+              id:user._id,
+              title:'Medical Prescription',
+              date:date,
+              report:report,
+              apt:result,
+              notification:notification,
+              timeDiff:timeDiff
+            });
           });
-        });
+        })
       })
-    })
+    });
   });
 });
 

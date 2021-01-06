@@ -33,6 +33,23 @@
   font-size: 15px;
 }
 
+.notification-details-main{
+  font-family: 'Philosopher', sans-serif;
+  font-size: 13px;
+  width:100%;
+}
+
+.notification-title-main{
+  font-family: 'Oswald', sans-serif;
+  font-size: 17px;
+}
+
+.notification-date{
+  font-size: 11px;
+  font-style: Italic;
+  font-family: 'Noto Sans JP', sans-serif;', serif;
+}
+
 .request-user-title{
   font-family: 'Oswald', sans-serif;
   font-size: 17px;
@@ -130,4 +147,8 @@
 
 .general-Title8{
  font-family: 'Source Sans Pro', sans-serif;', serif;
+}
+
+.table-text-align td,tr{
+text-align: center;
 }

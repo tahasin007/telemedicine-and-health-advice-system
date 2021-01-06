@@ -17,7 +17,6 @@ const Users = mongoose.model('users');
 require('../models/Contact');
 const Contact = mongoose.model('contact');
 
-
 router.get('/:userName',(req,res) => {
   const navClass = ["current","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
@@ -251,7 +250,7 @@ router.get('/:userName/changePassword',(req, res) =>{
 });
 
 
-router.get('/:userName/grantAccess/:id',(req,res) => {  
+router.get('/:userName/grantAccess/:id',(req,res) => {
   Users.findOne({_id:req.params.id}).then((user) => {
     user.status ='Registered'
     user.save().then((result)=>{
