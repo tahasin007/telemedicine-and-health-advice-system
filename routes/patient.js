@@ -371,13 +371,13 @@ router.get('/:userName/diagnosisRes', (req, res) =>{
 router.get('/:userName/disease/:diseaseName',(req, res)=>{
   const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   const diseaseName=req.params.diseaseName.replace('%20',' ');
-  Users.findOne({userName:userName}).then((user)=>{
+  Users.findOne({userName:req.params.userName}).then((user)=>{
     DiseaseInfo.findOne({diseaseName:diseaseName}).then((disease) =>{
-      Users.findOne({userName:userName}).populate('request.userId').exec().then((friendRequest)=>{
+      Users.findOne({userName:req.params.userName}).populate('request.userId').exec().then((friendRequest)=>{
         Notification.find({userId:user._id}).sort({time:-1}).limit(4).then(notification=>{
           res.render('patient/diseaseInfo',{
             layout:'mainPatient',
-            userName:req.params.userName,
+            userName:user.userName,
             id:user._id,
             friendRequest:friendRequest,
             navClass:navClass,
@@ -429,7 +429,7 @@ router.get('/:userName/viewDocProfile/:id', (req, res) => {
     Users.findOne({_id:req.params.id}).then((user) => {
       Users.findOne({userName:userName}).populate('request.userId').exec().then((friendRequest)=>{
         Schedule.findOne({doctorId:user._id}).then((schedule) => {
-          Notification.find({userId:user._id}).sort({time:-1}).limit(4).then(notification=>{
+          Notification.find({userId:usr._id}).sort({time:-1}).limit(4).then(notification=>{
             res.render('patient/viewDocProfile',{
               layout:'mainPatient',
               userName:userName,

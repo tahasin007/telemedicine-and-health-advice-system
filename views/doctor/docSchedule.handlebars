@@ -13,7 +13,7 @@
         <div class="pt-md-5 mt-md-3 mb-5 col-xl-12">
          <!-- Form starts for Profile edit -->
          <div class="container">
-          <h3 class="text-center mb-3">Schedule</h3>
+          <h3 class="text-center mb-3 general-Title7">Schedule</h3>
           <div class="col-12 align-items-center">
             <table class="table table-borderless table-hover">
               <thead class="thead-dark">
@@ -25,117 +25,117 @@
                 </tr>
               </thead>
               <tbody>
+
+                {{#if schedule.start.[0]}}
                 <tr>
                   <th scope="row" class="text-center bg-light text-dark">Saturday</th>
                   <td class="text-center">{{schedule.start.[0]}}</td>
                   <td class="text-center">{{schedule.end.[0]}}</td>
                   <td class="text-center">
-                    {{#if schedule.start.[0]}}
                     <a href="showSlot/{{schedule.day.[0]}}">
                       <button type="button" class="btn btn-outline-dark btn-sm">
                         <i class="fa fa-list-alt" aria-hidden="true"></i>
                       </button>
                     </a>
-                    {{/if}}
                   </td>
                 </tr>
+                {{/if}}
+
+                {{#if schedule.start.[1]}}
                 <tr>
                   <th scope="row "class="text-center bg-light text-dark">Sunday</th>
                   <td class="text-center">{{schedule.start.[1]}}</td>
                   <td class="text-center">{{schedule.end.[1]}}</td>
                   <td class="text-center">
-                    {{#if schedule.start.[1]}}
                     <a href="showSlot/{{schedule.day.[1]}}">
                       <button type="button" class="btn btn-outline-dark btn-sm">
                         <i class="fa fa-list-alt" aria-hidden="true"></i>
                       </button>
                     </a>
-                    {{/if}}
                   </td>
                 </tr>
+                {{/if}}
 
+                {{#if schedule.start.[2]}}
                 <tr>
                   <th scope="row" class="text-center bg-light text-dark">Monday</th>
                   <td class="text-center">{{schedule.start.[2]}}</td>
                   <td class="text-center">{{schedule.end.[2]}}</td>
                   <td class="text-center">
-                    {{#if schedule.start.[2]}}
                     <a href="showSlot/{{schedule.day.[2]}}">
                       <button type="button" class="btn btn-outline-dark btn-sm">
                         <i class="fa fa-list-alt" aria-hidden="true"></i>
                       </button>
                     </a>
-                    {{/if}}
                   </td>
                 </tr>
+                {{/if}}
+
+                {{#if schedule.start.[3]}}
                 <tr>
                   <th scope="row" class="text-center bg-light text-dark">Tuesday</th>
                   <td class="text-center">{{schedule.start.[3]}}</td>
                   <td class="text-center">{{schedule.end.[3]}}</td>
                   <td class="text-center">
-                    {{#if schedule.start.[3]}}
                     <a href="showSlot/{{schedule.day.[3]}}">
                       <button type="button" class="btn btn-outline-dark btn-sm"><i class="fa fa-list-alt" aria-hidden="true"></i></button>
                     </a>
-                    {{/if}}
                   </td>
                 </tr>
+                {{/if}}
+
+                {{#if schedule.start.[4]}}
                 <tr>
                   <th scope="row" class="text-center bg-light text-dark">Wednesday</th>
                   <td class="text-center">{{schedule.start.[4]}}</td>
                   <td class="text-center">{{schedule.end.[4]}}</td>
                   <td class="text-center">
-                    {{#if schedule.start.[4]}}
                     <a href="showSlot/{{schedule.day.[4]}}">
                       <button type="button" class="btn btn-outline-dark btn-sm"><i class="fa fa-list-alt" aria-hidden="true"></i></button>
                     </a>
-                    {{/if}}
                   </td>
                 </tr>
+                {{/if}}
+
+                {{#if schedule.start.[5]}}
                 <tr>
                   <th scope="row" class="text-center bg-light text-dark">Thrusday</th>
                   <td class="text-center">{{schedule.start.[5]}}</td>
-                  <td class="text-center">{{schedule.end.[5]}}</td> 
+                  <td class="text-center">{{schedule.end.[5]}}</td>
                   <td class="text-center">
-                    {{#if schedule.start.[5]}}
                     <a href="showSlot/{{schedule.day.[5]}}">
                       <button type="button" class="btn btn-outline-dark btn-sm"><i class="fa fa-list-alt" aria-hidden="true"></i></button>
                     </a>
-                    {{/if}}
                   </td>
                 </tr>
+                {{/if}}
+
+                {{#if schedule.start.[6]}}
                 <tr>
                   <th scope="row"class="text-center bg-light text-dark">Friday</th>
                   <td class="text-center">{{schedule.start.[6]}}</td>
                   <td class="text-center">{{schedule.end.[6]}}</td>
                   <td class="text-center">
-                    {{#if schedule.start.[6]}}
                     <a href="showSlot/{{schedule.day.[6]}}">
                       <button type="button" class="btn btn-outline-dark btn-sm"><i class="fa fa-list-alt" aria-hidden="true"></i></button>
                     </a>
-                    {{/if}}
                   </td>
                 </tr>
+                {{/if}}
               </tbody>
             </table>
 
             <a href="editSchedule" style="text-decoration: none">
               <div class="row justify-content-center align-items-center">
-                <button type="button" class="btn btn-outline-dark">Edit Schedule</button>
+                <button type="button" class="btn btn-dark"><i class="fas fa-edit mr-1"></i>Edit Schedule</button>
               </div>
             </a>
 
 
           </div>
-        </div>              
+        </div>
       </div>
     </div>
   </div>
 </div>
 </section>
-
-
-
-
-
-

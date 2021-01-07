@@ -186,7 +186,7 @@ router.get('/:userName/chat/:receiver',(req,res) =>{
 
 
 router.get('/:userName/videoChat',(req, res)=>{
-  const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","current","sidebar-link"];
+  const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link","current"];
   const userName=req.params.userName;
   Users.findOne({userName:userName}).then((user)=>{
     Users.findOne({userName:userName}).populate('request.userId').exec().then((friendRequest)=>{
@@ -332,6 +332,7 @@ router.get('/:userName/acceptPatient/:aptId', (req, res) => {
         console.log(doctor)
         console.log(patient)
         result.save().then((r)=>{
+          var video_id = cryptoRandomString({length: 5});
           const notification_patient = new Notification({
             title: 'Appointment Approved',
             description: 'Appointment with '+doctor.name+' has been scheduled on '+ moment(result.appointmentDate).format('LLLL'),
@@ -340,6 +341,14 @@ router.get('/:userName/acceptPatient/:aptId', (req, res) => {
           });
           notification_patient.save();
 
+          const notification_patient_video = new Notification({
+            title: 'Video Conference ID',
+            description: 'Use Room Id: '+ video_id +' for your appointment with '+doctor.name+' on '+ moment(result.appointmentDate).format('LLLL'),
+            category: 'video-id',
+            userId: result.patientId._id
+          });
+          notification_patient_video.save();
+
           const notification_doctor = new Notification({
             title: 'Appointment Approved',
             description: 'Appointment with '+patient.name+ ' has been scheduled on '+ moment(result.appointmentDate).format('LLLL'),
@@ -347,6 +356,14 @@ router.get('/:userName/acceptPatient/:aptId', (req, res) => {
             userId:result.docId._id
           });
           notification_doctor.save();
+
+          const notification_doctor_video = new Notification({
+            title: 'Video Conference ID',
+            description: 'Use Room Id: '+ video_id +' for your appointment with '+patient.name+' on '+ moment(result.appointmentDate).format('LLLL'),
+            category: 'video-id',
+            userId:result.docId._id
+          });
+          notification_doctor_video.save();
 
           res.redirect('/doctor/'+userName);
         })

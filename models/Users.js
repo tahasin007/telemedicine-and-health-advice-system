@@ -37,7 +37,11 @@ const UserSchema = new Schema({
     friendId:{type: Schema.Types.ObjectId,ref:'users'},
     friendName:{type: String, default:''}
   }],
-  totalRequest:{type: Number, default: 0}
+  totalRequest:{type: Number, default: 0},
+  time : {
+    type : Date,
+    default: Date.now
+  }
   // google:{type: String,default:''},
   // googleTokens:{type:String,default:''}
 });

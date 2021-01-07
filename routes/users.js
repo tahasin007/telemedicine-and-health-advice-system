@@ -39,16 +39,16 @@ router.get('/docRegister', (req, res) => {
 
 router.post('/login', function(req, res, next) {
   passport.authenticate('local.signup', function(err, user, info) {
-    if (err) { 
+    if (err) {
       return next(err); }
-    if (!user) { 
+    if (!user) {
       req.flash('error_msg', info.message);
       return res.redirect('/users/login'); }
     req.logIn(user, function(err) {
       if (err) {
        return next(err); }
       User.findOne({$or:[{email: req.body.email},{userName: req.body.email}]}).then(user => {
-        if(user.role=='patient')return res.redirect('../patient/'+user.userName);
+        if(user.role=='patient')return res.redirect('../patient/'+user.userName+'/doctors');
         if(user.role=='admin')return res.redirect('../admin/'+user.userName);
         if(user.role=='doctor'){
           if(user.status=='Registered')return res.redirect('../doctor/'+user.userName);
@@ -96,7 +96,7 @@ router.post('/register', (req, res) => {
             password: req.body.password,
             role:'patient',
           });
-          
+
           bcrypt.genSalt(10, (err, salt) => {
             bcrypt.hash(newUser.password, salt, (err, hash) => {
               if(err) throw err;
@@ -115,7 +115,7 @@ router.post('/register', (req, res) => {
         }
       });
   }
-}); 
+});
 
 router.post('/docRegister', (req, res) => {
   let errors = [];
@@ -153,7 +153,7 @@ router.post('/docRegister', (req, res) => {
             role:'doctor',
             status:'Pending'
           });
-          
+
           bcrypt.genSalt(10, (err, salt) => {
             bcrypt.hash(newUser.password, salt, (err, hash) => {
               if(err) throw err;
@@ -172,7 +172,7 @@ router.post('/docRegister', (req, res) => {
         }
       });
   }
-}); 
+});
 
 // Logout User
 router.get('/logout', (req, res) => {

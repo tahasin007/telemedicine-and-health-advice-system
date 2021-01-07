@@ -1,4 +1,4 @@
-  
+
     <!-- navbar -->
     {{> _docNav}}
     <!-- end of navbar -->
@@ -16,9 +16,12 @@
                 <h3 class="text-info font-weight-bold text-center mb-3">Doctor Profile</h3>
               </div>
 
-
               <div class="col-12 text-center">
+              {{#if image}}
+              <img src="/uploads/{{image}}"  width="100" class="rounded">
+              {{else}}
               <img src="/images/doc1.png"  width="100" class="rounded">
+              {{/if}}
               <hr style="height:3px">
               </div>
 
@@ -60,7 +63,7 @@
                   <div class="col-6 plabel">Degree:</div>
                   <div class="col-6 bg-light">{{user.degree}}</div>
               </div>
-                
+
               </div>
               </div>
 
@@ -72,10 +75,3 @@
       </div>
     </div>
     </section>
-  
-
-
-
-
-
-
