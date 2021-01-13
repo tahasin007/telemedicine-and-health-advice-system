@@ -21,10 +21,10 @@ router.get('/:userName',(req,res) => {
   const navClass = ["current","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
   Users.findOne({userName:userName}).then((user)=>{
-    Users.find({}).limit(4).then(users =>{
-      Users.countDocuments({role:'patient'}).then(countUser =>{
-        Users.countDocuments({role:'doctor'}).then(countDocs =>{
-          Contact.countDocuments({}).then(contact=>{
+    Users.find({$or:[{role:'doctor'},{role:'patient'}]}).then(users =>{
+      Users.find({role:'patient'}).then(countUser =>{
+        Users.find({role:'doctor'}).then(countDocs =>{
+          Contact.find({}).then(contact=>{
             res.render('admin/adminHome',{
               layout:'mainAdmin',
               users: users,
@@ -34,7 +34,7 @@ router.get('/:userName',(req,res) => {
               docCount:countDocs,
               contact:contact,
               navClass:navClass,
-              title:'Home'
+              title:'Home',
             });
           })
         });
@@ -42,6 +42,7 @@ router.get('/:userName',(req,res) => {
     });
   })
 });
+
 
 
 router.get('/:userName/contact',(req, res)=>{

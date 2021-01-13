@@ -2,6 +2,7 @@
 {{> _adminNav}}
 <!-- end of navbar -->
 <!-- cards -->
+
 <section>
   <div class="container-fluid">
     <div class="row">
@@ -14,7 +15,7 @@
                   <i class="fas fa-user fa-3x text-danger"></i>
                   <div class="text-right text-secondary">
                     <h5>Patients</h5>
-                    <h3>{{userCount}}</h3>
+                    <h3>{{userCount.length}}</h3>
                   </div>
                 </div>
               </div>
@@ -32,7 +33,7 @@
                     <i class="fas fa-user-md fa-3x text-primary"></i>
                     <div class="text-right text-secondary">
                       <h5>Doctors</h5>
-                      <h3>{{docCount}}</h3>
+                      <h3>{{docCount.length}}</h3>
                     </div>
                   </div>
                 </div>
@@ -58,8 +59,8 @@
         <div class="col-xl-10 col-lg-9 col-md-8 ml-auto ">
           <div class="row justify-content-center">
             <div class="col-xl-10 col-10 mb-4 mb-xl-0">
-              <h3 class="text-muted text-center mb-3 general-Title7">New Users</h3>
-              <table class="table text-center table-striped">
+              <h3 class="text-muted text-center mb-3 general-Title7">Users</h3>
+              <table id = 'all-users-table' class="table text-center table-striped">
                 <thead class='thead-dark'>
                   <tr class="text-muted">
 
@@ -78,24 +79,32 @@
                     <td>{{name}}</td>
                     <td>{{email}}</td>
                     <td>{{role}}</td>
-                      {{!-- <td>
-                        <a href="viewPatient.html">
-                          <button type="button" class="btn btn-primary">View</button></a>
-                          <a href="admin.html">
-                          <button type="button" class="btn btn-danger">Delete</button></a>
-                        </td> --}}
-                      </tr>
-                      {{else}}<p class="text-muted general-Title3">NO Users to Show</p>
+                    {{!-- <td>
+                    <a href="viewPatient.html">
+                    <button type="button" class="btn btn-primary">View</button></a>
+                    <a href="admin.html">
+                    <button type="button" class="btn btn-danger">Delete</button></a>
+                  </td> --}}
+                </tr>
+                {{else}}<p class="text-muted general-Title3">NO Users to Show</p>
 
-                      {{/each}}
+                {{/each}}
 
-                    </tbody>
-                  </table>
+              </tbody>
+            </table>
 
-                </div>
-              </div>
-            </div>
           </div>
         </div>
-      </section>
-    <!-- end of tables -->
+      </div>
+    </div>
+  </div>
+</section>
+<!-- end of tables -->
+<script>
+$(document).ready(function() {
+    $('#all-users-table').DataTable( {
+        "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+        "pageLength": 5
+    } );
+} );
+</script>

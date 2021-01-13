@@ -1,121 +1,104 @@
+<style>
+.card-deck {
+  margin: 0 -15px;
+  justify-content: space-evenly;
+}
+
+.card-img-top{
+  max-width: 80%;
+  max-height: 150px;
+  margin-left: auto;
+  margin-right: auto;
+  opacity: .85;
+}
+.card-deck .card {
+  margin: 0 0 1rem;
+}
+.card-title {
+    font-size: 20px;
+    line-height: 1.1em;
+    color: #32325d;
+    margin-bottom: 0.2em;
+  }
+
+@media (min-width: 576px) and (max-width: 767.98px) {
+  .card-deck .card {
+    -ms-flex: 0 0 32%;
+    flex: 0 0 32%;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 991.98px) {
+  .card-deck .card {
+    -ms-flex: 0 0 32%;
+    flex: 0 0 32%;
+  }
+}
+
+@media (min-width: 992px)
+{
+  .card-deck .card {
+    -ms-flex: 0 0 18%;
+    flex: 0 0 18%;
+  }
+}
+
+.card{
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+    border-radius: 16px;
+    box-shadow: 0 20px 40px -14px rgba(0,0,0,0.25);
+  }
+</style>
 
 <!-- navbar -->
 {{> _patientNav}}
 <!-- end of navbar -->
 
-<!-- patient table -->
+
 <section>
   <div class="container-fluid">
     <div class="row">
       <div class="col-xl-10 col-lg-9 col-md-8 ml-auto mt-4">
         <div class="pt-md-5 mt-md-3 mb-5 col-xl-12">
-          <h3 class="text-muted text-center mb-3">Find Doctors</h3>
-          <div class="container">
-            <!-- Start of SearchBox -->
-            <div class="row justify-content-center">
-              <div class="col-10 col-xs-12">
-                <form action="/patient/{{userName}}/doctors" method="GET">
-                  <div class="input-group">
-                    <input type="text" class="form-control" id="search" name="search" placeholder="Search By Name">
-                    <span class="input-group-btn">
-                      <button class="btn btn-default" type="submit"><i class="fas fa-search"></i></button>
-                    </span>
-                  </div>
 
-                </div>
-                <!-- <div class="form-group mt-3 col-4 col-xs-5">
-                  <select class="form-control" id="speciality">
-                    <option>Allergist</option>
-                    <option>Pulmonologist</option>
-                    <option>Physician</option>
-                    <option>Gastroenterologist</option>
-                    <option>Hematologist</option>
-                  </select>
-                </div> -->
-
-                <!-- <div class="form-group mt-3 col-4 col-xs-5">
-                  <select class="form-control" id="sort">
-                    <option>Sort By Name</option>
-                    <option>Sort By Experience</option>
-                  </select>
-                </div> -->
-
-              </form>
-            </div>
-          </div>
           <!-- End of SearchBox -->
-          <div class="row">
-            <div class="col-12">
-              <table class="table table-bordered mt-3">
-                <thead>
-                  <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Email</th>
-                    <th scope="col">Speciality</th>
-                    <th scope="col">Experience</th>
-                    <th scope="col">View Profile</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {{#each doctors}}
-                  <tr>
-                    <th scope="row">{{add @index 1}}</th>
-                    <td>{{name}}</td>
-                    <td>{{email}}</td>
-                    <td>{{speciality}}</td>
-                    <td>{{experience}}</td>
-                    <td>
-                      <div class="row justify-content-center">
-                        <a href="viewDocProfile/{{id}}"><i class="fas fa-eye text-info ml-2"></i>
-                        </a>
-                      </div>
-                    </td>
-                  </tr>
-                  {{else}}
+          <div class="container">
 
-                  {{/each}}
+            <div class="card-deck">
+              {{#each doctors}}
+              <div class="card bg-light">
+                {{#if profileImage}}
+                <img class="card-img-top" src="/uploads/{{profileImage}}" alt="doctor image">
+                {{else}}
+                <img class="card-img-top" src="/images/docNew.jpg" alt="doctor image">
+                {{/if}}
 
-                </tbody>
-              </table>
+                <div class="card-body">
+                  <h5 class="card-title">{{name}}</h5>
+                  <p class="card-text">{{speciality}}</p>
+                  <div style="text-align:center;">
+                    <a href="viewDocProfile/{{id}}">
+                      <i class="fas fa-eye text-info ml-2"  data-toggle="tooltip" data-placement="top" title="View Profile"></i>
+                    </a>
+                  </div>
+                </div>
+              </div>
+              {{/each}}
+
             </div>
+
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 </section>
-<!-- end of table -->
-
-<script>
-$(function(){
-  $('#search').autocomplete({
-    source: function(req,res){
-      console.log(req,res)
-      $.ajax({
-        url:"autocomplete/",
-        dataType:"jsonp",
-        type:"GET",
-        data:req,
-        success: function(data){
-          console.log(data);
-          res(data)
-
-        },
-        error: function(err){
-          console.log(err.status);
-        }
-      });
-    },
-
-    minLength:1,
-    select: function(event,ui){
-      if(ui.item){
-        $('#search').val(ui.item.label);
-      }
-    }
-  });
-
+<script type="text/javascript">
+$(document).ready(function() {
+  //initializing tooltip
+  $('[data-toggle="tooltip"]').tooltip();
+  $('html').css('overflow', 'hidden');
 });
 </script>

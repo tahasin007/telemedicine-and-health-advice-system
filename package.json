@@ -22,7 +22,7 @@
     "cors": "^2.8.5",
     "crypto-random-string": "^3.3.0",
     "currency-formatter": "^1.5.6",
-    "date-and-time": "^0.13.1",
+    "date-and-time": "^0.14.2",
     "dateformat": "^3.0.3",
     "email-existence": "^0.1.6",
     "express": "^4.17.1",

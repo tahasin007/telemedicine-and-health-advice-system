@@ -48,7 +48,7 @@ router.post('/login', function(req, res, next) {
       if (err) {
        return next(err); }
       User.findOne({$or:[{email: req.body.email},{userName: req.body.email}]}).then(user => {
-        if(user.role=='patient')return res.redirect('../patient/'+user.userName+'/doctors');
+        if(user.role=='patient')return res.redirect('../patient/'+user.userName);
         if(user.role=='admin')return res.redirect('../admin/'+user.userName);
         if(user.role=='doctor'){
           if(user.status=='Registered')return res.redirect('../doctor/'+user.userName);

@@ -21,10 +21,14 @@
               <!-- left column -->
               <div class="col-xl-4 col-md-12">
                 <div class="text-center">
-                  <img src="/images/admin.png" width=100 class="avatar img-circle" alt="avatar">
-                  <h6>Upload a different photo...</h6>
+                  {{#if image}}
+                  <img src="/uploads/{{image}}" id ='profilepic' width=100 class="avatar img-circle" alt="avatar">
+                  {{else}}
+                  <img src="/images/admin.png" id ='profilepic' width=100 class="avatar img-circle" alt="avatar">
+                  {{/if}}
 
-                  <input type="file" class="form-control" id="upload_image" name="profileImage">
+                  <h6>Upload a different photo...</h6>
+                  <input type="file" class="form-control" id="upload_image" name="profileImage" style="overflow: hidden;">
                 </div>
               </div>
 
@@ -61,7 +65,7 @@
 
                 <div class="form-group">
                   <label class="col-md-3 control-label"></label>
-                  <button type="submit" class="btn btn-primary">Submit</button>
+                  <button type="submit" id='update-profile' class="btn btn-primary">Submit</button>
                   <a href="adminProfile"><input type="button" class="btn btn-dark" value="Cancel"></a>
                 </div>
               </form>
@@ -76,33 +80,3 @@
   </div>
 </div>
 </section>
-
-
-<script>
-$(document).ready(function(){
-  $('#upload_image').on('change', function(){
-    const profileImage = $('#upload_image');
-    if(profileImage.val()!=''){
-      const formData = new FormData();
-      formData.append('profileImage',profileImage[0].files[0]);
-      const id=$('#userId').val();
-      $.ajax({
-        url: '/uploadProfileImage/'+id,
-        type: 'POST',
-        data: formData,
-        processData: false,
-        contentType: false,
-        success: function(){
-          profileImage.val('');
-        }
-      })
-    }
-  });
-});
-</script>
-
-
-
-
-
-

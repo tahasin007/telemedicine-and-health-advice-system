@@ -14,7 +14,6 @@ const UserSchema = new Schema({
   experience:{type: String},
   degree:{type: String},
   chamber:{type: String,},
-  date: {type: Date,default: Date.now},
   dob:{type: Date},
   nationality:{type: String},
   speciality:{type: String},

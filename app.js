@@ -35,7 +35,6 @@ app.engine('handlebars', expressHandlebars({
 
 }));
 
-
 app.set('view engine', 'handlebars');
 
 // Map global promise - get rid of warning
@@ -169,7 +168,7 @@ app.use('/chat',chat);
 io.of('/stream').on('connection', stream);
 
 
-const port = process.env.PORT || 5050;
+const port = process.env.PORT || 4000;
 http.listen(port, function () {
   console.log('listening on', port);
 });

@@ -21,10 +21,14 @@
             <!-- left column -->
             <div class="col-xl-4 col-md-12">
               <div class="text-center">
-                <img src="/images/admin.png" width=100 class="avatar img-circle" alt="avatar">
+                {{#if image}}
+                <img src="/uploads/{{image}}" id ='profilepic' width=100 class="avatar img-circle" alt="avatar">
+                {{else}}
+                <img src="/images/admin.png" id ='profilepic' width=100 class="avatar img-circle" alt="avatar">
+                {{/if}}
                 <h6>Upload a different photo...</h6>
 
-                <input type="file" class="form-control" id="upload_image" name="profileImage">
+                <input type="file" class="form-control" id="upload_image" name="profileImage" style="overflow: hidden;">
               </div>
             </div>
 
@@ -32,7 +36,7 @@
             <div class="col-xl-8 col-md-12 personal-info">
               <h3>Personal info</h3>
 
-              
+
                 <input type="hidden" name="_method" value="PUT">
                 <div class="form-group">
                   <label class="col-lg-3 control-label">Full Name:</label>
@@ -100,34 +104,3 @@
 </div>
 </div>
 </section>
-
-<script>
-$(document).ready(function(){
-  $('#upload_image').on('change', function(){
-    const profileImage = $('#upload_image');
-    if(profileImage.val()!=''){
-      const formData = new FormData();
-      formData.append('profileImage',profileImage[0].files[0]);
-      const id=$('#userId').val();
-      $.ajax({
-        url: '/uploadProfileImage/'+id,
-        type: 'POST',
-        data: formData,
-        processData: false,
-        contentType: false,
-        success: function(){
-          profileImage.val('');
-        }
-      })
-    }
-  });
-});
-</script>
-
-
-
-
-
-
-
-
