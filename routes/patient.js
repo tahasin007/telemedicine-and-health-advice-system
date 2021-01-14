@@ -234,7 +234,7 @@ router.get('/:userName/videoChat',(req, res)=>{
           friendRequest:friendRequest,
           image:user.profileImage,
           navClass:navClass,
-          title:'Message',
+          title:'Video Conference',
           notification:notification,
           timeDiff:timeDiff
         });
