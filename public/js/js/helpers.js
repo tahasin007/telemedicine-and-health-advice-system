@@ -59,7 +59,7 @@ export default {
         }
       });
     }
-    
+
     else{
       throw new Error('User media not available');
     }
@@ -68,15 +68,7 @@ export default {
 
   getIceServer(){
     return {
-      iceServers: [{   urls: [ "stun:bn-turn1.xirsys.com" ]},
-      {   username: "kchi1Oq_yUeLZrH35oQgeZJZsIMf3pFHO44FwNZ_EYpMO7Eo7PitZnL7H50oPOJEAAAAAF__kG5Vbmtub3du", 
-      credential: "936fffce-55ff-11eb-be0f-0242ac140004",  
-      urls: [       "turn:bn-turn1.xirsys.com:80?transport=udp",      
-      "turn:bn-turn1.xirsys.com:3478?transport=udp",      
-      "turn:bn-turn1.xirsys.com:80?transport=tcp",     
-      "turn:bn-turn1.xirsys.com:3478?transport=tcp",     
-      "turns:bn-turn1.xirsys.com:443?transport=tcp",   
-      "turns:bn-turn1.xirsys.com:5349?transport=tcp" ]}]
+      iceServers: [{   urls: [ "stun:bn-turn1.xirsys.com" ]}, {   username: "diOgtiSLWv0HLzbmuQEhYl89DNP4L-n64shiquYRhGpAWvUnv9YKlRJa_-fEAGHeAAAAAF__loNVbmtub3du",   credential: "3368c2d8-5603-11eb-8f76-0242ac140004",   urls: [       "turn:bn-turn1.xirsys.com:80?transport=udp",       "turn:bn-turn1.xirsys.com:3478?transport=udp",       "turn:bn-turn1.xirsys.com:80?transport=tcp",       "turn:bn-turn1.xirsys.com:3478?transport=tcp",       "turns:bn-turn1.xirsys.com:443?transport=tcp",       "turns:bn-turn1.xirsys.com:5349?transport=tcp"   ]}]
     };
   },
 
