@@ -1,5 +1,11 @@
 const express = require('express');
 const router = express.Router();
+const mongoose = require('mongoose');
+
+require('../models/Users');
+const Users = mongoose.model('users');
+require('../models/Message');
+const Message = mongoose.model('message');
 
 router.post('/:name',(req,res,next) => {
   const params = req.params.name.split('.');

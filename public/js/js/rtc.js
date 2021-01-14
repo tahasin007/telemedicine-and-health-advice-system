@@ -103,14 +103,15 @@ window.addEventListener('load', ()=>{
 
       function init(createOffer, partnerName){
         pc[partnerName] = new RTCPeerConnection({
-          iceServers: [{   urls: [ "stun:bn-turn1.xirsys.com",
-          'stun:stun.l.google.com:19302',
-          'stun:stun.services.mozilla.com' ]},
-          {   username: "CtE3SC4QssSYep4LR1esVgvJScCW1rZUYeVaa8xAn1WHcpL0MvR7VuYa84IwmOvQAAAAAF__oPNVbmtub3du",  
-          credential: "6c2dd83c-5609-11eb-9194-0242ac140004",  
-          urls: [       "turn:bn-turn1.xirsys.com:80?transport=udp", 
-          "turn:bn-turn1.xirsys.com:80?transport=tcp",    ]}],
-          iceTransportPolicy: "relay"
+          iceServers: [{   urls: [ "stun:bn-turn1.xirsys.com" ]},
+          {   username: "8ClFlhv-_2-qBM7kglJ173Utq_SD-qhHNuzaZbqA0Yvum9gBmjTsdlfmSl6FVQ47AAAAAF__xV5Vbmtub3du",
+          credential: "20d9ac2e-561f-11eb-97c2-0242ac140004",
+          urls: [       "turn:bn-turn1.xirsys.com:80?transport=udp",
+          "turn:bn-turn1.xirsys.com:3478?transport=udp",
+          "turn:bn-turn1.xirsys.com:80?transport=tcp",
+          "turn:bn-turn1.xirsys.com:3478?transport=tcp",
+          "turns:bn-turn1.xirsys.com:443?transport=tcp",
+          "turns:bn-turn1.xirsys.com:5349?transport=tcp"   ]}]
         });
 
         if(screen && screen.getTracks().length){

@@ -1,7 +1,6 @@
 <!-- navbar -->
 {{> _patientNav}}
 <!-- end of navbar -->
-
 <!-- patient table -->
 <section>
   <div class="container-fluid">
@@ -31,7 +30,7 @@
                     <td>{{formatDate appointmentDate 'LLLL'}}</td>
                     <td>
                       {{#eq reportSent 'Yes'}}
-                      <a href="/patient/{{patientId.userName}}/report/{{_id}}">
+                      <a href="/prescriptions/{{pdf}}">
                           <button type="button" class="btn btn-green btn-sm">
                             <i class="fa fa-download text-dark"></i>
                           </button>

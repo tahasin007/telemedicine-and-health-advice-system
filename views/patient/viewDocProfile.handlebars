@@ -23,9 +23,9 @@
             <div class="col-xl-4 col-lg-4 col-md-12 text-center pl-0">
               <div class="card_profile">
                 {{#if doctor.profileImage}}
-                <img src="/images/docNew.jpg" alt="John" width="100">
+                <img src="/uploads/{{doctor.profileImage}}" alt="John" width="100">
                 {{else}}
-                <img src="/uploads/profileImage" alt="John" width="100">
+                <img src="/images/docNew.jpg" alt="John" width="100">
                 {{/if}}
                 <h2>{{doctor.name}}</h2>
                 <p>{{doctor.education}}</p>
