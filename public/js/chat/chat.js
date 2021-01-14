@@ -17,39 +17,63 @@ $(document).ready(function() {
         var message=data.text;
         var sender=data.sender;
         var room=data.room.split('.');
-        $.ajax({
-            url:'/chat/getProfileImage',
-            type: 'POST',
-            data:{
-                userName: sender
-            },
-            success: function(data){
-                if(room[0]== $('#name-user').val()){
-                    console.log(data)
-                    if(typeof data == '')
-                    {
-                        $('#chat').append('<div class="msg right-msg m-2"><div class="msg-img" style="background-image: url(/uploads/default.jpg)"></div><div class="msg-bubble"><div class="msg-info"> <div class="msg-info-name">'+sender+'</div></div><div class="msg-text">'+message+'</div></div></div>');
-                    }
-                    else{
-                        $('#chat').append('<div class="msg right-msg m-2"><div class="msg-img" style="background-image: url(/uploads/'+data+')"></div><div class="msg-bubble"><div class="msg-info"> <div class="msg-info-name">'+sender+'</div></div><div class="msg-text">'+message+'</div></div></div>');
-                    }
+        console.log(data)
+        if(room[0]== $('#name-user').val()){
+            console.log("hello")
+            // if(typeof data == '')
+            // {
+            //     $('#chat').append('<div class="msg right-msg m-2"><div class="msg-img" style="background-image: url(/uploads/default.jpg)"></div><div class="msg-bubble"><div class="msg-info"> <div class="msg-info-name">'+sender+'</div></div><div class="msg-text">'+message+'</div></div></div>');
+            // }
+            // else{
+            //     $('#chat').append('<div class="msg right-msg m-2"><div class="msg-img" style="background-image: url(/uploads/'+data+')"></div><div class="msg-bubble"><div class="msg-info"> <div class="msg-info-name">'+sender+'</div></div><div class="msg-text">'+message+'</div></div></div>');
+            // }
+            $('#chat').append('<div class="msg right-msg m-2"><div class="msg-img" style="background-image: url(/uploads/'+data+')"></div><div class="msg-bubble"><div class="msg-info"> <div class="msg-info-name">'+sender+'</div></div><div class="msg-text">'+message+'</div></div></div>');
 
-                }
-                else{
-                    if(typeof data == '')
-                    {
-                        $('#chat').append('<div class="msg left-msg m-2"><div class="msg-img" style="background-image: url(/uploads/default.jpg)"></div><div class="msg-bubble"><div class="msg-info"><div class="msg-info-name">'+sender+'</div></div><div class="msg-text">'+message+'</div></div></div>');
-                    }
-                    else{
-                        $('#chat').append('<div class="msg left-msg m-2"><div class="msg-img" style="background-image: url(/uploads/'+data+')"></div><div class="msg-bubble"><div class="msg-info"><div class="msg-info-name">'+sender+'</div></div><div class="msg-text">'+message+'</div></div></div>');
-                    }
+        }
+        else{
+            // if(typeof data == '')
+            // {
+            //     $('#chat').append('<div class="msg left-msg m-2"><div class="msg-img" style="background-image: url(/uploads/default.jpg)"></div><div class="msg-bubble"><div class="msg-info"><div class="msg-info-name">'+sender+'</div></div><div class="msg-text">'+message+'</div></div></div>');
+            // }
+            // else{
+            //     $('#chat').append('<div class="msg left-msg m-2"><div class="msg-img" style="background-image: url(/uploads/'+data+')"></div><div class="msg-bubble"><div class="msg-info"><div class="msg-info-name">'+sender+'</div></div><div class="msg-text">'+message+'</div></div></div>');
+            // }
+            $('#chat').append('<div class="msg left-msg m-2"><div class="msg-img" style="background-image: url(/uploads/'+data+')"></div><div class="msg-bubble"><div class="msg-info"><div class="msg-info-name">'+sender+'</div></div><div class="msg-text">'+message+'</div></div></div>');
 
-                }
-            },
-            error: function(err){
-              console.log(err.status);
-          }
-      });
+        }
+      //   $.ajax({
+      //       url:'/chat/getProfileImage',
+      //       type: 'POST',
+      //       data:{
+      //           userName: sender
+      //       },
+      //       success: function(data){
+      //           if(room[0]== $('#name-user').val()){
+      //               console.log("hello")
+      //               if(typeof data == '')
+      //               {
+      //                   $('#chat').append('<div class="msg right-msg m-2"><div class="msg-img" style="background-image: url(/uploads/default.jpg)"></div><div class="msg-bubble"><div class="msg-info"> <div class="msg-info-name">'+sender+'</div></div><div class="msg-text">'+message+'</div></div></div>');
+      //               }
+      //               else{
+      //                   $('#chat').append('<div class="msg right-msg m-2"><div class="msg-img" style="background-image: url(/uploads/'+data+')"></div><div class="msg-bubble"><div class="msg-info"> <div class="msg-info-name">'+sender+'</div></div><div class="msg-text">'+message+'</div></div></div>');
+      //               }
+      //
+      //           }
+      //           else{
+      //               if(typeof data == '')
+      //               {
+      //                   $('#chat').append('<div class="msg left-msg m-2"><div class="msg-img" style="background-image: url(/uploads/default.jpg)"></div><div class="msg-bubble"><div class="msg-info"><div class="msg-info-name">'+sender+'</div></div><div class="msg-text">'+message+'</div></div></div>');
+      //               }
+      //               else{
+      //                   $('#chat').append('<div class="msg left-msg m-2"><div class="msg-img" style="background-image: url(/uploads/'+data+')"></div><div class="msg-bubble"><div class="msg-info"><div class="msg-info-name">'+sender+'</div></div><div class="msg-text">'+message+'</div></div></div>');
+      //               }
+      //
+      //           }
+      //       },
+      //       error: function(err){
+      //         console.log(err.status);
+      //     }
+      // });
     })
     $('#message_form').on('submit', function(e){
         e.preventDefault();
@@ -82,7 +106,7 @@ $(document).ready(function() {
             error: function(err){
               console.log(err.status);
           }
-      })
+      });
     });
 });
 
