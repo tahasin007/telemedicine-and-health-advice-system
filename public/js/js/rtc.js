@@ -74,7 +74,7 @@ window.addEventListener('load', ()=>{
                         });
 
                         let answer = await pc[data.sender].createAnswer();
-                        
+
                         await pc[data.sender].setLocalDescription(answer);
 
                         socket.emit('sdp', {description:pc[data.sender].localDescription, to:data.sender, sender:socketId});
@@ -102,8 +102,11 @@ window.addEventListener('load', ()=>{
         }
 
         function init(createOffer, partnerName){
-            pc[partnerName] = new RTCPeerConnection(h.getIceServer());
-            
+            pc[partnerName] = new RTCPeerConnection({
+              iceServers: [{   urls: [ "stun:bn-turn1.xirsys.com" ]}, {   username: "diOgtiSLWv0HLzbmuQEhYl89DNP4L-n64shiquYRhGpAWvUnv9YKlRJa_-fEAGHeAAAAAF__loNVbmtub3du",   credential: "3368c2d8-5603-11eb-8f76-0242ac140004",   urls: [       "turn:bn-turn1.xirsys.com:80?transport=udp",       "turn:bn-turn1.xirsys.com:3478?transport=udp",       "turn:bn-turn1.xirsys.com:80?transport=tcp",       "turn:bn-turn1.xirsys.com:3478?transport=tcp",       "turns:bn-turn1.xirsys.com:443?transport=tcp",       "turns:bn-turn1.xirsys.com:5349?transport=tcp"   ]}],
+              iceTransportPolicy: "relay"
+            });
+
             if(screen && screen.getTracks().length){
                 screen.getTracks().forEach((track)=>{
                     pc[partnerName].addTrack(track, screen);//should trigger negotiationneeded event
@@ -137,7 +140,7 @@ window.addEventListener('load', ()=>{
             if(createOffer){
                 pc[partnerName].onnegotiationneeded = async ()=>{
                     let offer = await pc[partnerName].createOffer();
-                    
+
                     await pc[partnerName].setLocalDescription(offer);
 
                     socket.emit('sdp', {description:pc[partnerName].localDescription, to:partnerName, sender:socketId});
@@ -163,7 +166,7 @@ window.addEventListener('load', ()=>{
                 else{
                     //video elem
                     $('.main-section').show();
-            
+
 
                 }
             };
@@ -247,7 +250,7 @@ window.addEventListener('load', ()=>{
 
             for(let p in pc){
                 let pName = pc[p];
-                
+
                 if(typeof pc[pName] == 'object'){
                     h.replaceTrack(track, pc[pName]);
                 }
@@ -304,7 +307,7 @@ window.addEventListener('load', ()=>{
             e.preventDefault();
 
             let elem = document.getElementById('toggle-video');
-            
+
             if(myStream.getVideoTracks()[0].enabled){
                 e.target.classList.remove('fa-video');
                 e.target.classList.add('fa-video-slash');
@@ -330,7 +333,7 @@ window.addEventListener('load', ()=>{
             e.preventDefault();
 
             let elem = document.getElementById('toggle-mute');
-            
+
             if(myStream.getAudioTracks()[0].enabled){
                 e.target.classList.remove('fa-microphone-alt');
                 e.target.classList.add('fa-microphone-alt-slash');
@@ -404,7 +407,7 @@ window.addEventListener('load', ()=>{
         //When user choose to record own video
         document.getElementById('record-video').addEventListener('click', ()=>{
             h.toggleModal('recording-options-modal', false);
-            
+
             if(myStream && myStream.getTracks().length){
                 startRecording(myStream);
             }
