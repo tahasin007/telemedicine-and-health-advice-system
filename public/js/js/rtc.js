@@ -109,10 +109,10 @@ window.addEventListener('load', ()=>{
           {   username: "CtE3SC4QssSYep4LR1esVgvJScCW1rZUYeVaa8xAn1WHcpL0MvR7VuYa84IwmOvQAAAAAF__oPNVbmtub3du",  
           credential: "6c2dd83c-5609-11eb-9194-0242ac140004",  
           urls: [       "turn:bn-turn1.xirsys.com:80?transport=udp", 
-          "turn:bn-turn1.xirsys.com:3478?transport=tcp",    ]}],
+          "turn:bn-turn1.xirsys.com:80?transport=tcp",    ]}],
           iceTransportPolicy: "relay"
         });
-        
+
         if(screen && screen.getTracks().length){
           screen.getTracks().forEach((track)=>{
             pc[partnerName].addTrack(track, screen);//should trigger negotiationneeded event
