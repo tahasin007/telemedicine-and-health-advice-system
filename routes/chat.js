@@ -7,6 +7,12 @@ const Users = mongoose.model('users');
 require('../models/Message');
 const Message = mongoose.model('message');
 
+router.post('/getImage', (req, res, next)=>{
+  Users.findOne({userName:req.body.userName}).then((user)=>{
+    res.send(user.profileImage);
+  })
+});
+
 router.post('/:name',(req,res,next) => {
   const params = req.params.name.split('.');
   const sender=params[0];
@@ -28,10 +34,6 @@ router.post('/:name',(req,res,next) => {
   }
 });
 
-router.post('/getProfileImage', (req, res)=>{
-Users.findOne({userName:req.body.userName}).then((user)=>{
-  res.send(user.profileImage);
-})
-});
+
 
 module.exports = router;

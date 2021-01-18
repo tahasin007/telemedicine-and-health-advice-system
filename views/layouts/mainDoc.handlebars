@@ -3,18 +3,22 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- icon -->
+  <link rel = "icon" href ="/images/logo.png" type = "image/x-icon">
+  <!-- icon -->
+  <script src='https://use.fontawesome.com/releases/v5.0.13/js/all.js'></script>
+
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
   <link href="/fontawesome-free-5.12.1-web/css/all.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css">
   <link rel="stylesheet" href="/css/styleNotification.css">
   <link rel="stylesheet" href="/css/wickedpicker.css">
 
-  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
-  <script src="//code.jquery.com/jquery-1.12.4.js"></script>
-  <script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
   <link href='/fullcalendar-5.5.0/lib/main.css' rel='stylesheet' />
+
   <!-- Google fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Oswald&display=swap" rel="stylesheet">
@@ -29,12 +33,20 @@
   <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@600&display=swap" rel="stylesheet">
   <!-- Google fonts -->
 
-  <!-- icon -->
-  <link rel = "icon" href ="/images/logo.png" type = "image/x-icon">
+
   <script type="module" src='/js/rtc.js'></script>
   <script type="module" src='/js/events.js'></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/webrtc-adapter/7.3.0/adapter.min.js" integrity="sha256-2qQheewaqnZlXJ3RJRghVUwD/3fD9HNqxh4C+zvgmF4=" crossorigin="anonymous"></script>
   <script src='https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.8/FileSaver.min.js'></script>
+
+  <!-- jquiry cdn -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <!-- jquiry cdn -->
+
+  <!-- jquery autocomplete cdn -->
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+  <script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <!-- jquery autocomplete cdn -->
 
   <title>{{title}}</title>
 
@@ -42,25 +54,17 @@
 <body>
 
   {{{body}}}
-  <script type="text/javascript" src="/js/profilePicture.js"></script>
-  <script src="https://cdn.ckeditor.com/4.14.0/standard/ckeditor.js"></script>
-  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+
+  <script src='/fullcalendar-5.5.0/lib/main.js'></script>
+  <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script> -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
 
-  <script type="text/javascript" src="/js/script.js"></script>
+
   <script src="/socket.io/socket.io.js"></script>
   <script src="/js/chat/chat.js"></script>
   <script src="/js/chat/friend.js"></script>
 
-
-  <script src='https://use.fontawesome.com/releases/v5.0.13/js/all.js'></script>
-
-  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
-  <script src="//code.jquery.com/jquery-1.12.4.js"></script>
-  <script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-  <script src='/fullcalendar-5.5.0/lib/main.js'></script>
   <script type="text/javascript">
   (function($){
     $.deparam = $.deparam || function(uri){
@@ -74,7 +78,8 @@
     }
   })(jQuery);
   </script>
-
+  <script type="text/javascript" src="/js/profilePicture.js"></script>
+  <script type="text/javascript" src="/js/script.js"></script>
 
 </body>
 </html>

@@ -121,16 +121,13 @@ $(document).ready(function() {
 $(function(){
   $('#search').autocomplete({
     source: function(req,res){
-      console.log(req,res)
       $.ajax({
         url:"autocomplete/",
         dataType:"jsonp",
         type:"GET",
         data:req,
         success: function(data){
-          console.log(data);
-          res(data)
-
+          res(data);
         },
         error: function(err){
           console.log(err.status);

@@ -1,3 +1,10 @@
+<style media="screen">
+.card-summary-item{
+  border-radius: 2%;
+  margin-bottom: 2%;
+}
+</style>
+
 <!-- start of navbar -->
 {{> _patientNav}}
 <!-- end of navbar -->
@@ -5,38 +12,429 @@
 
 <section>
   <div class="container-fluid">
-    <div class="row flex justify-content-center">
+    <div class="row">
       <div class="col-xl-10 col-lg-9 col-md-8 ml-auto mt-4">
         <div class="pt-md-5 mt-md-3 mb-5 col-xl-12">
           {{> _message}}
 
-          <!-- <div class="col-12 text-center general-Title1">
-            <h3>Patient Home</h3>
+          <div class="card-summary-content">
+            <div class="summary-title general-Title1">
+              <h3>Corona Virus Worldmeter</h3>
+            </div>
+
+            <div clas="row">
+              <div class="col-12 m-3">
+                <div class="card">
+                  <ul class="list-group list-group-flush">
+                    <li class="list-group-item general-Title4 font-weight-bold bg-light" style="border: none">
+                      <div class="row">
+                        <div class="col-3 col-sm-6 text-secondary">
+                          Total Cases
+                        </div>
+                        <div class="col-6 col-sm-6 text-dark">
+                          {{@root.globalSummary.cases}}
+                        </div>
+                      </div>
+                    </li>
+
+                    <li class="list-group-item general-Title4 font-weight-bold bg-light" style="border: none">
+                      <div class="row">
+                        <div class="col-3 col-sm-6 text-secondary">
+                          Actiive Cases
+                        </div>
+                        <div class="col-6 col-sm-6 text-dark">
+                          {{@root.globalSummary.active}}
+                        </div>
+                      </div>
+                    </li>
+
+                    <li class="list-group-item general-Title4 font-weight-bold bg-light" style="border: none">
+                      <div class="row">
+                        <div class="col-3 col-sm-6 text-secondary">
+                          Total Deaths
+                        </div>
+                        <div class="col-6 col-sm-6 text-dark">
+                          {{@root.globalSummary.deaths}}
+                        </div>
+                      </div>
+                    </li>
+
+                    <li class="list-group-item general-Title4 font-weight-bold bg-light" style="border: none">
+                      <div class="row">
+                        <div class="col-3 col-sm-6 text-secondary">
+                          Total Recovered
+                        </div>
+                        <div class="col-6 col-sm-6 text-dark">
+                          {{@root.globalSummary.recovered}}
+                        </div>
+                      </div>
+                    </li>
+
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+
+              <div class="col-lg-3 col-md-4 col-sm-6">
+                <div class="card card-summary-item">
+                  <div class="card-header text-center general-Title8">
+                    Daily New Cases
+                  </div>
+                  <div class="card-body text-center">
+                    <h5 class="card-title general-Title7 text-warning">{{@root.globalSummary.todayCases}}</h5>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-lg-3 col-md-4 col-sm-6">
+                <div class="card card-summary-item">
+                  <div class="card-header text-center general-Title8">
+                    Daily New Deaths
+                  </div>
+                  <div class="card-body text-center">
+                    <h5 class="card-title general-Title7 text-danger">{{@root.globalSummary.todayDeaths}}</h5>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-lg-3 col-md-4 col-sm-6">
+                <div class="card card-summary-item">
+                  <div class="card-header text-center general-Title8">
+                    Daily Recovered
+                  </div>
+                  <div class="card-body text-center">
+                    <h5 class="card-title general-Title7 text-success">{{@root.globalSummary.todayRecovered}}</h5>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-lg-3 col-md-4 col-sm-6">
+                <div class="card card-summary-item">
+                  <div class="card-header text-center general-Title8">
+                    Critical Condition
+                  </div>
+                  <div class="card-body text-center">
+                    <h5 class="card-title general-Title7 text-danger">{{@root.globalSummary.critical}}</h5>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
           </div>
-          <div class="col-12 text-center general-Title2">
-            <h3>Patient Home</h3>
+          <div class="row buttons mt-3">
+            <div class="col-6">
+              <button type="button" class="btn btn-info mr-1" id='btn-today'>Now</button>
+              <button type="button" class="btn btn-light mr-1" id='btn-yesterday'>Yesterday</button>
+              <button type="button" class="btn btn-light" id='btn-2days-ago'>2 Days Ago</button>
+            </div>
           </div>
-          <div class="col-12 text-center general-Title3">
-            <h3>Patient Home</h3>
+          <div class="info-table-today table-responsive mt-1">
+            <table class="table text-center table-bordered" id='corona-update-today'>
+              <thead class="bg-info text-light">
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Country</th>
+                  <th scope="col">Total Cases</th>
+                  <th scope="col">New Cases</th>
+
+                  <th scope="col">Total Deaths</th>
+                  <th scope="col">New Deaths</th>
+                  <th scope="col">Active Cases</th>
+                  <th scope="col">Total Recovered</th>
+                  <th scope="col">New Recovered</th>
+                  <th scope="col">Critical Cases</th>
+                  <th scope="col">Total Tests</th>
+                  <th scope="col">Case Per People</th>
+                  <th scope="col">Death Per People</th>
+                  <th scope="col">Test Per People</th>
+                </tr>
+              </thead>
+              <tbody>
+                {{#each @root.countriesInfo}}
+                <tr>
+                  <th scope="row">{{add @index 1}}</th>
+                  <td><img src="{{countryInfo.flag}}" width=15 height=15>{{country}}</td>
+                  <td>{{cases}}</td>
+
+                  {{#eq todayCases 0}}
+                  <td>{{todayCases}}</td>
+                  {{else}}
+                  <td class='' style="background-color:#F9FFB0;">{{todayCases}}</td>
+                  {{/eq}}
+
+                  <td>{{deaths}}</td>
+
+                  {{#eq todayDeaths 0}}
+                  <td>{{todayDeaths}}</td>
+                  {{else}}
+                  <td class='text-light' style="background-color:#D81515;">{{todayDeaths}}</td>
+                  {{/eq}}
+
+                  <td>{{active}}</td>
+                  <td>{{recovered}}</td>
+
+                  {{#eq todayRecovered 0}}
+                  <td>{{todayRecovered}}</td>
+                  {{else}}
+                  <td class='' style="background-color:#B6E2A8;">{{todayRecovered}}</td>
+                  {{/eq}}
+
+                  <td>{{critical}}</td>
+                  <td>{{tests}}</td>
+                  <td>{{oneCasePerPeople}}</td>
+                  <td>{{oneDeathPerPeople}}</td>
+                  <td>{{oneTestPerPeople}}</td>
+                </tr>
+                {{/each}}
+              </tbody>
+            </table>
           </div>
-          <div class="col-12 text-center general-Title4">
-            <h3>Patient Home</h3>
+
+
+          <div class="info-table-yesterday table-responsive mt-1" style="display:none;">
+            <table class="table text-center table-bordered" id='corona-update-yesterday'>
+              <thead class="bg-info text-light">
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Country</th>
+                  <th scope="col">Total Cases</th>
+                  <th scope="col">New Cases</th>
+
+                  <th scope="col">Total Deaths</th>
+                  <th scope="col">New Deaths</th>
+                  <th scope="col">Active Cases</th>
+                  <th scope="col">Total Recovered</th>
+                  <th scope="col">New Recovered</th>
+                  <th scope="col">Critical Cases</th>
+                  <th scope="col">Total Tests</th>
+                  <th scope="col">Case Per People</th>
+                  <th scope="col">Death Per People</th>
+                  <th scope="col">Test Per People</th>
+                </tr>
+              </thead>
+              <tbody>
+                {{#each @root.countriesInfoYesterday}}
+                <tr>
+                  <th scope="row">{{add @index 1}}</th>
+                  <td><img src="{{countryInfo.flag}}" width=15 height=15>{{country}}</td>
+                  <td>{{cases}}</td>
+
+                  {{#eq todayCases 0}}
+                  <td>{{todayCases}}</td>
+                  {{else}}
+                  <td class='' style="background-color:#F9FFB0;">{{todayCases}}</td>
+                  {{/eq}}
+
+                  <td>{{deaths}}</td>
+
+                  {{#eq todayDeaths 0}}
+                  <td>{{todayDeaths}}</td>
+                  {{else}}
+                  <td class='text-light' style="background-color:#D81515;">{{todayDeaths}}</td>
+                  {{/eq}}
+
+                  <td>{{active}}</td>
+                  <td>{{recovered}}</td>
+
+                  {{#eq todayRecovered 0}}
+                  <td>{{todayRecovered}}</td>
+                  {{else}}
+                  <td class='' style="background-color:#B6E2A8;">{{todayRecovered}}</td>
+                  {{/eq}}
+
+                  <td>{{critical}}</td>
+                  <td>{{tests}}</td>
+                  <td>{{oneCasePerPeople}}</td>
+                  <td>{{oneDeathPerPeople}}</td>
+                  <td>{{oneTestPerPeople}}</td>
+                </tr>
+                {{/each}}
+              </tbody>
+            </table>
           </div>
-          <div class="col-12 text-center general-Title5">
-            <h3>Patient Home</h3>
+
+
+          <div class="info-table-twoDaysAgo table-responsive mt-1" style="display:none;">
+            <table class="table text-center table-bordered" id='corona-update-twoDaysAgo'>
+              <thead class="bg-info text-light">
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Country</th>
+                  <th scope="col">Total Cases</th>
+                  <th scope="col">New Cases</th>
+
+                  <th scope="col">Total Deaths</th>
+                  <th scope="col">New Deaths</th>
+                  <th scope="col">Active Cases</th>
+                  <th scope="col">Total Recovered</th>
+                  <th scope="col">New Recovered</th>
+                  <th scope="col">Critical Cases</th>
+                  <th scope="col">Total Tests</th>
+                  <th scope="col">Case Per People</th>
+                  <th scope="col">Death Per People</th>
+                  <th scope="col">Test Per People</th>
+                </tr>
+              </thead>
+              <tbody>
+                {{#each @root.countriesInfoTwoDaysAgo}}
+                <tr>
+                  <th scope="row">{{add @index 1}}</th>
+                  <td><img src="{{countryInfo.flag}}" width=15 height=15>{{country}}</td>
+                  <td>{{cases}}</td>
+
+                  {{#eq todayCases 0}}
+                  <td>{{todayCases}}</td>
+                  {{else}}
+                  <td class='' style="background-color:#F9FFB0;">{{todayCases}}</td>
+                  {{/eq}}
+
+                  <td>{{deaths}}</td>
+
+                  {{#eq todayDeaths 0}}
+                  <td>{{todayDeaths}}</td>
+                  {{else}}
+                  <td class='text-light' style="background-color:#D81515;">{{todayDeaths}}</td>
+                  {{/eq}}
+
+                  <td>{{active}}</td>
+                  <td>{{recovered}}</td>
+
+                  {{#eq todayRecovered 0}}
+                  <td>{{todayRecovered}}</td>
+                  {{else}}
+                  <td class='' style="background-color:#B6E2A8;">{{todayRecovered}}</td>
+                  {{/eq}}
+
+                  <td>{{critical}}</td>
+                  <td>{{tests}}</td>
+                  <td>{{oneCasePerPeople}}</td>
+                  <td>{{oneDeathPerPeople}}</td>
+                  <td>{{oneTestPerPeople}}</td>
+                </tr>
+                {{/each}}
+              </tbody>
+            </table>
           </div>
-          <div class="col-12 text-center general-Title6">
-            <h3>Patient Home</h3>
-          </div>
-          <div class="col-12 text-center general-Title7">
-            <h3>Patient Home</h3>
-          </div>
-          <div class="col-12 text-center general-Title8">
-            <h3>Patient Home</h3>
-          </div> -->
+
+
 
         </div>
       </div>
     </div>
   </div>
+
 </section>
+
+<script>
+$(document).ready(function() {
+  var t1 = $('#corona-update-today').DataTable( {
+    "columnDefs": [ {
+      "searchable": false,
+      "orderable": false,
+      "targets": 0
+    }],
+    "lengthMenu": [ [25, 50, 100, -1], [25, 50, 100, "All"] ],
+    "pageLength": 25,
+    "order": [[ 1, 'asc' ]]
+  } );
+
+  t1.on( 'order.dt search.dt', function () {
+    t1.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+      cell.innerHTML = i+1;
+    } );
+  } ).draw();
+
+
+  var t2 = $('#corona-update-yesterday').DataTable( {
+    "columnDefs": [ {
+      "searchable": false,
+      "orderable": false,
+      "targets": 0
+    }],
+    "lengthMenu": [ [25, 50, 100, -1], [25, 50, 100, "All"] ],
+    "pageLength": 25,
+    "order": [[ 1, 'asc' ]]
+  } );
+
+  t2.on( 'order.dt search.dt', function () {
+    t2.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+      cell.innerHTML = i+1;
+    } );
+  } ).draw();
+
+
+  var t3 = $('#corona-update-twoDaysAgo').DataTable( {
+    "columnDefs": [ {
+      "searchable": false,
+      "orderable": false,
+      "targets": 0
+    }],
+    "lengthMenu": [ [25, 50, 100, -1], [25, 50, 100, "All"] ],
+    "pageLength": 25,
+    "order": [[ 1, 'asc' ]]
+  } );
+
+  t3.on( 'order.dt search.dt', function () {
+    t3.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+      cell.innerHTML = i+1;
+    } );
+  } ).draw();
+
+
+  $("#btn-yesterday").click(function(){
+    $( "#btn-2days-ago" ).removeClass( "btn-info" ).addClass( "btn-light" );
+    $( "#btn-yesterday" ).removeClass( "btn-light" ).addClass( "btn-info" );
+    $( "#btn-today" ).removeClass( "btn-info" ).addClass( "btn-light" );
+    $('.info-table-today').hide(800);
+    $('.info-table-twoDaysAgo').hide(800);
+    $('.info-table-yesterday').show(800);
+  });
+
+  $("#btn-today").click(function(){
+    $( "#btn-2days-ago" ).removeClass( "btn-info" ).addClass( "btn-light" );
+    $( "#btn-yesterday" ).removeClass( "btn-info" ).addClass( "btn-light" );
+    $( "#btn-today" ).removeClass( "btn-light" ).addClass( "btn-info" );
+    $('.info-table-today').show(800);
+    $('.info-table-twoDaysAgo').hide(800);
+    $('.info-table-yesterday').hide(800);
+  });
+
+  $("#btn-2days-ago").click(function(){
+    $( "#btn-2days-ago" ).removeClass( "btn-light" ).addClass( "btn-info" );
+    $( "#btn-yesterday" ).removeClass( "btn-info" ).addClass( "btn-light" );
+    $( "#btn-today" ).removeClass( "btn-info" ).addClass( "btn-light" );
+    $('.info-table-today').hide(800);
+    $('.info-table-twoDaysAgo').show(800);
+    $('.info-table-yesterday').hide(800);
+  });
+
+} );
+</script>
+
+<!-- <div class="col-12 text-center general-Title1">
+<h3>Patient Home</h3>
+</div>
+<div class="col-12 text-center general-Title2">
+<h3>Patient Home</h3>
+</div>
+<div class="col-12 text-center general-Title3">
+<h3>Patient Home</h3>
+</div>
+<div class="col-12 text-center general-Title4">
+<h3>Patient Home</h3>
+</div>
+<div class="col-12 text-center general-Title5">
+<h3>Patient Home</h3>
+</div>
+<div class="col-12 text-center general-Title6">
+<h3>Patient Home</h3>
+</div>
+<div class="col-12 text-center general-Title7">
+<h3>Patient Home</h3>
+</div>
+<div class="col-12 text-center general-Title8">
+<h3>Patient Home</h3>
+</div> -->

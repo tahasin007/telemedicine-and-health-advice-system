@@ -10,7 +10,7 @@ const bcrypt = require('bcryptjs');
 const moment = require('moment');
 const nodemailer = require('nodemailer');
 var randomstring = require("randomstring");
-
+var api = require('novelcovid');
 
 // Method override middleware
 router.use(methodOverride('_method'));
@@ -42,6 +42,9 @@ const {
   timeDiff
 } = require('../helpers/hbs');
 
+api.settings({
+  baseUrl: 'https://corona.lmao.ninja'
+});
 
 
 
@@ -50,25 +53,36 @@ router.get('/:userName',(req, res) => {
   const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
   Users.findOne({userName:userName}).then((users) =>{
-    Users.findOne({userName:userName}).populate('request.userId').exec().then((friendRequest)=>{
-      Notification.find({userId:users._id}).sort({time:-1}).limit(4).then(notification=>{
-        res.render('patient/patientHome',{
-          layout:'mainPatient',
-          userName:userName,
-          id:users._id,
-          friendRequest:friendRequest,
-          image:users.profileImage,
-          user:users,
-          navClass:navClass,
-          title:'Home Page',
-          notification:notification,
-          timeDiff:timeDiff
+    Users.findOne({userName:userName}).populate('request.userId').exec().then(friendRequest => {
+      Notification.find({userId:users._id}).sort({time:-1}).limit(4).then(notification => {
+        api.all().then(globalSummary => {
+          api.countries().then(countriesInfo => {
+            api.yesterday.countries().then(countriesInfoYesterday => {
+              api.twoDaysAgo.countries().then(countriesInfoTwoDaysAgo =>{
+                res.render('patient/patientHome',{
+                  layout:'mainPatient',
+                  userName:userName,
+                  id:users._id,
+                  friendRequest:friendRequest,
+                  image:users.profileImage,
+                  user:users,
+                  navClass:navClass,
+                  title:'Home Page',
+                  notification:notification,
+                  timeDiff:timeDiff,
+                  globalSummary:globalSummary,
+                  countriesInfo:countriesInfo,
+                  countriesInfoYesterday:countriesInfoYesterday,
+                  countriesInfoTwoDaysAgo:countriesInfoTwoDaysAgo
+                });
+              });
+            });
+          });
         });
       });
     });
   });
 });
-
 
 router.get('/:userName/notification', (req, res) => {
   const navClass = ["current","sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
@@ -650,6 +664,7 @@ router.get('/:userName/appointment/:date',(req, res)=>{
     });
   });
 });
+
 
 router.post('/:userName/appointment/:id',(req, res)=>{
   const symptom=req.body.symptom;

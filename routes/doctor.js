@@ -56,6 +56,7 @@ router.get('/:userName', (req, res) => {
       Users.findOne({userName:userName}).populate('request.userId').exec().then((friendRequest)=>{
         Appointment.find({$and:[{docId:user._id},{status:'accepted'}]}).populate('docId').populate('patientId').exec().then(result1 => {
           Notification.find({userId:user._id}).sort({time:-1}).limit(4).then(notification=>{
+            console.log(notification);
             res.render('doctor/doctorHome',{
               helpers : {
                 formatDate:formatDate
