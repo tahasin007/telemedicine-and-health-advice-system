@@ -6,7 +6,9 @@
 <section>
   <div>
     <div class="container-fluid">
-      {{> _message}}
+      <div class="fixed-top">
+        {{> _message}}
+      </div>
 
       <div class="container-fluid mt-5 ml-4" id='room-create'>
         <div class="row">
@@ -40,90 +42,90 @@
 
 
       {{!-- <div class="custom-modal" id='recording-options-modal'>
-        <div class="custom-modal-content">
-          <div class="row text-center">
-            <div class="col-md-6 mb-2">
-              <span class="record-option" id='record-video'>Record video</span>
-            </div>
-            <div class="col-md-6 mb-2">
-              <span class="record-option" id='record-screen'>Record screen</span>
-            </div>
-          </div>
+      <div class="custom-modal-content">
+      <div class="row text-center">
+      <div class="col-md-6 mb-2">
+      <span class="record-option" id='record-video'>Record video</span>
+    </div>
+    <div class="col-md-6 mb-2">
+    <span class="record-option" id='record-screen'>Record screen</span>
+  </div>
+</div>
 
-          <div class="row mt-3">
-            <div class="col-md-12 text-center">
-              <button class="btn btn-outline-danger" id='closeModal'>Close</button>
-            </div>
-          </div>
-        </div>
-      </div> --}}
+<div class="row mt-3">
+<div class="col-md-12 text-center">
+<button class="btn btn-outline-danger" id='closeModal'>Close</button>
+</div>
+</div>
+</div>
+</div> --}}
 
 
-      <div class="modal fade" id="recording-options-modal" tabindex="-1" role="dialog" aria-labelledby="recording-options-modal" aria-hidden="true" data-keyboard="false" data-backdrop="false">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLongTitle">Choose Options</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <button type="button" class="btn btn-info" id="record-screen">Record screen</button>
-              <button type="button" class="btn btn-info" id="record-video">Record video</button>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            </div>
-          </div>
-        </div>
+<div class="modal fade" id="recording-options-modal" tabindex="-1" role="dialog" aria-labelledby="recording-options-modal" aria-hidden="true" data-keyboard="false" data-backdrop="false">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Choose Options</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
-
-
-
-
-
-
-      <div class="container-fluid">
-        <div class="local_video">
-          <video class="local-video" disablePictureInPicture id='local' volume='0' autoplay muted></video>
-        </div>
-
-        <div class="row">
-          <div class="col-md-12 main" id='main-section'>
-            <div class="row mt-2 mb-2" id='videos'></div>
-          </div>
-        </div>
+      <div class="modal-body">
+        <button type="button" class="btn btn-info" id="record-screen">Record screen</button>
+        <button type="button" class="btn btn-info" id="record-video">Record video</button>
       </div>
-
-
-
-
-
-
-      <div class="cntbtn">
-        <button class="btn btn-success  btn-no-effect rounded-circle" id='toggle-video' title="Hide Video">
-          <i class="fas fa-video text-white" id='toggle-video-icon'></i>
-        </button>
-
-        <button class="btn btn-success  btn-no-effect rounded-circle" id='toggle-mute' title="Mute">
-          <i class="fas fa-microphone text-white" id="toggle-mute-icon"></i>
-        </button>
-
-        <button class="btn btn-danger  btn-no-effect rounded-circle" id='end-call' title="End Call">
-          <a href="/patient/{{userName}}/videoChat"><i class="fas fa-phone-slash text-white"></i>
-        </button>
-
-        <button class="btn btn-success  btn-no-effect rounded-circle" id='share-screen' title="Share screen">
-          <i class="fa fa-desktop text-white"></i>
-        </button>
-
-        <button  class="btn btn-success btn-no-effect rounded-circle" id='record' title="Record" data-target="#recording-options-modal" data-toggle="modal">
-          <i class="fa fa-dot-circle text-white"></i>
-        </button>
-
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
       </div>
     </div>
+  </div>
+</div>
+
+
+
+
+
+
+<div class="container-fluid">
+  <div class="local_video">
+    <video class="local-video" disablePictureInPicture id='local' volume='0' autoplay muted></video>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12 main" id='main-section'>
+      <div class="row mt-2 mb-2" id='videos'></div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+<div class="cntbtn">
+  <button class="btn btn-success  btn-no-effect rounded-circle" id='toggle-video' title="Hide Video">
+    <i class="fas fa-video text-white" id='toggle-video-icon'></i>
+  </button>
+
+  <button class="btn btn-success  btn-no-effect rounded-circle" id='toggle-mute' title="Mute">
+    <i class="fas fa-microphone text-white" id="toggle-mute-icon"></i>
+  </button>
+
+  <button class="btn btn-danger  btn-no-effect rounded-circle" id='end-call' title="End Call">
+    <a href="/patient/{{userName}}/videoChat"><i class="fas fa-phone-slash text-white"></i>
+    </button>
+
+    <button class="btn btn-success  btn-no-effect rounded-circle" id='share-screen' title="Share screen">
+      <i class="fa fa-desktop text-white"></i>
+    </button>
+
+    <button  class="btn btn-success btn-no-effect rounded-circle" id='record' title="Record" data-target="#recording-options-modal" data-toggle="modal">
+      <i class="fa fa-dot-circle text-white"></i>
+    </button>
 
   </div>
+</div>
+
+</div>
 </section>

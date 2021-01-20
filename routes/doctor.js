@@ -41,7 +41,9 @@ const {
   formatDate,
   formatDateSub,
   iff,
-  timeDiff
+  timeDiff,
+  isUnread,
+  unreadCount
 } = require('../helpers/hbs');
 
 
@@ -55,8 +57,7 @@ router.get('/:userName', (req, res) => {
     Appointment.find({$and:[{docId:user._id},{status:'pending'}]}).populate('docId').populate('patientId').exec().then(result => {
       Users.findOne({userName:userName}).populate('request.userId').exec().then((friendRequest)=>{
         Appointment.find({$and:[{docId:user._id},{status:'accepted'}]}).populate('docId').populate('patientId').exec().then(result1 => {
-          Notification.find({userId:user._id}).sort({time:-1}).limit(4).then(notification=>{
-            console.log(notification);
+          Notification.find({userId:user._id}).sort({time:-1}).then(notification=>{
             res.render('doctor/doctorHome',{
               helpers : {
                 formatDate:formatDate
@@ -71,7 +72,9 @@ router.get('/:userName', (req, res) => {
               title:'Home',
               aptCal:result1,
               notification:notification,
-              timeDiff:timeDiff
+              timeDiff:timeDiff,
+              isUnread:isUnread,
+              unreadCount:unreadCount
             });
           });
         });
@@ -86,7 +89,7 @@ router.get('/:userName/notification', (req, res) => {
   const userName=req.params.userName;
   Users.findOne({userName:userName}).then((user)=>{
     Users.findOne({userName:userName}).populate('request.userId').exec().then((friendRequest)=>{
-      Notification.find({userId:user._id}).sort({time:-1}).limit(4).then(notification=>{
+      Notification.find({userId:user._id}).sort({time:-1}).then(notification=>{
         Notification.find({userId:user._id}).sort({time:-1}).then(notificationAll=>{
           res.render('doctor/notification',{
             layout:'mainDoc',
@@ -98,7 +101,9 @@ router.get('/:userName/notification', (req, res) => {
             title:'Notification',
             notification:notification,
             timeDiff:timeDiff,
-            notificationAll:notificationAll
+            notificationAll:notificationAll,
+            isUnread:isUnread,
+            unreadCount:unreadCount
           });
         });
       });
@@ -111,7 +116,7 @@ router.get('/:userName/doctorProfile', (req, res) => {
   const userName=req.params.userName;
   Users.findOne({userName:userName}).then((user) => {
     Users.findOne({userName:userName}).populate('request.userId').exec().then((friendRequest)=>{
-      Notification.find({userId:user._id}).sort({time:-1}).limit(4).then(notification=>{
+      Notification.find({userId:user._id}).sort({time:-1}).then(notification=>{
         const dob=dateFormat(user.dob, "isoDate");
         res.render('doctor/doctorProfile',{
           layout:'mainDoc',
@@ -124,7 +129,9 @@ router.get('/:userName/doctorProfile', (req, res) => {
           navClass:navClass,
           title:'Profile',
           notification:notification,
-          timeDiff:timeDiff
+          timeDiff:timeDiff,
+          isUnread:isUnread,
+          unreadCount:unreadCount
         });
       });
     });
@@ -137,7 +144,7 @@ router.get('/:userName/chat',(req,res) =>{
   Users.findOne({userName:userName}).then((user)=>{
     Users.findOne({userName:userName}).populate('request.userId').populate('friendList.friendId').exec().then((friendRequest)=>{
       Message.find({$or:[{$and:[{senderName:req.params.userName},{receiverName:req.params.receiver}]},{$and:[{senderName:req.params.receiver},{receiverName:req.params.userName}]}]}).then((result)=>{
-        Notification.find({userId:user._id}).sort({time:-1}).limit(4).then(notification=>{
+        Notification.find({userId:user._id}).sort({time:-1}).then(notification=>{
           res.render('doctor/chat',{
             layout:'mainDoc',
             userName:userName,
@@ -150,7 +157,9 @@ router.get('/:userName/chat',(req,res) =>{
             title:'Message',
             messages:result,
             notification:notification,
-            timeDiff:timeDiff
+            timeDiff:timeDiff,
+            isUnread:isUnread,
+            unreadCount:unreadCount
           });
         });
       })
@@ -164,8 +173,11 @@ router.get('/:userName/chat/:receiver',(req,res) =>{
   Users.findOne({userName:userName}).then((user)=>{
     Users.findOne({userName:userName}).populate('request.userId').populate('friendList.friendId').exec().then((friendRequest)=>{
       Message.find({$or:[{$and:[{senderName:req.params.userName},{receiverName:req.params.receiver}]},{$and:[{senderName:req.params.receiver},{receiverName:req.params.userName}]}]}).populate('receiver').populate('sender').exec().then((result)=>{
-        Notification.find({userId:user._id}).sort({time:-1}).limit(4).then(notification=>{
+        Notification.find({userId:user._id}).sort({time:-1}).then(notification=>{
           res.render('doctor/chatUI',{
+            helpers : {
+              formatDate:formatDate
+            },
             layout:'mainDoc',
             userName:userName,
             friendRequest:friendRequest,
@@ -177,7 +189,9 @@ router.get('/:userName/chat/:receiver',(req,res) =>{
             title:'Message',
             messages:result,
             notification:notification,
-            timeDiff:timeDiff
+            timeDiff:timeDiff,
+            isUnread:isUnread,
+            unreadCount:unreadCount
           });
         });
       });
@@ -191,7 +205,7 @@ router.get('/:userName/videoChat',(req, res)=>{
   const userName=req.params.userName;
   Users.findOne({userName:userName}).then((user)=>{
     Users.findOne({userName:userName}).populate('request.userId').exec().then((friendRequest)=>{
-      Notification.find({userId:user._id}).sort({time:-1}).limit(4).then(notification=>{
+      Notification.find({userId:user._id}).sort({time:-1}).then(notification=>{
         res.render('doctor/videoChat',{
           layout:'mainPatient',
           userName:userName,
@@ -201,7 +215,9 @@ router.get('/:userName/videoChat',(req, res)=>{
           navClass:navClass,
           title:'Video Conference',
           notification:notification,
-          timeDiff:timeDiff
+          timeDiff:timeDiff,
+          isUnread:isUnread,
+          unreadCount:unreadCount
         });
       });
     });
@@ -215,7 +231,7 @@ router.get('/:userName/appointment', (req, res) => {
   Users.findOne({userName:userName}).then((user) => {
     Users.findOne({userName:userName}).populate('request.userId').exec().then((friendRequest)=>{
       Appointment.find({$and:[{docId:user._id},{status:'accepted'}]}).populate('docId').populate('patientId').exec().then(result => {
-        Notification.find({userId:user._id}).sort({time:-1}).limit(4).then(notification=>{
+        Notification.find({userId:user._id}).sort({time:-1}).then(notification=>{
           res.render('doctor/appointmentTable',{
             helpers : {
               formatDate:formatDate
@@ -229,7 +245,9 @@ router.get('/:userName/appointment', (req, res) => {
             navClass:navClass,
             title:'Appointments',
             notification:notification,
-            timeDiff:timeDiff
+            timeDiff:timeDiff,
+            isUnread:isUnread,
+            unreadCount:unreadCount
           });
         });
       });
@@ -244,7 +262,7 @@ router.get('/:userName/schedule', (req, res) => {
   Users.findOne({userName:userName}).then((user)=>{
     Users.findOne({userName:userName}).populate('request.userId').exec().then((friendRequest)=>{
       Schedule.findOne({doctorId:user._id}).then((doctor)=>{
-        Notification.find({userId:user._id}).sort({time:-1}).limit(4).then(notification=>{
+        Notification.find({userId:user._id}).sort({time:-1}).then(notification=>{
           res.render('doctor/docSchedule',{
             layout:'mainDoc',
             userName:userName,
@@ -255,7 +273,9 @@ router.get('/:userName/schedule', (req, res) => {
             navClass:navClass,
             title:'Schedule',
             notification:notification,
-            timeDiff:timeDiff
+            timeDiff:timeDiff,
+            isUnread:isUnread,
+            unreadCount:unreadCount
           });
         });
       })
@@ -272,7 +292,7 @@ router.get('/:userName/viewPatient/:aptId', (req, res) => {
   Users.findOne({userName:userName}).then((user)=>{
     Users.findOne({userName:userName}).populate('request.userId').exec().then((friendRequest)=>{
       Appointment.findOne({_id:aptId}).populate('docId').populate('patientId').exec().then(result => {
-        Notification.find({userId:user._id}).sort({time:-1}).limit(4).then(notification=>{
+        Notification.find({userId:user._id}).sort({time:-1}).then(notification=>{
           res.render('doctor/viewPatient',{
             helpers : {
               formatDate:formatDate
@@ -287,7 +307,9 @@ router.get('/:userName/viewPatient/:aptId', (req, res) => {
             navClass:navClass,
             title:'Patient Appointment',
             notification:notification,
-            timeDiff:timeDiff
+            timeDiff:timeDiff,
+            isUnread:isUnread,
+            unreadCount:unreadCount
           });
         });
       });
@@ -301,7 +323,7 @@ router.get('/:userName/newAppointments',(req,res) =>{
   Users.findOne({userName:userName}).then((user) => {
     Appointment.find({$and:[{docId:user._id},{status:'pending'}]}).populate('docId').populate('patientId').exec().then(result => {
       Users.findOne({userName:userName}).populate('request.userId').exec().then((friendRequest)=>{
-        Notification.find({userId:user._id}).sort({time:-1}).limit(4).then(notification=>{
+        Notification.find({userId:user._id}).sort({time:-1}).then(notification=>{
           res.render('doctor/newAppointmentRequest',{
             helpers : {
               formatDate:formatDate
@@ -315,7 +337,9 @@ router.get('/:userName/newAppointments',(req,res) =>{
             navClass:navClass,
             title:'Appoinement Requests',
             notification:notification,
-            timeDiff:timeDiff
+            timeDiff:timeDiff,
+            isUnread:isUnread,
+            unreadCount:unreadCount
           });
         });
       });
@@ -330,8 +354,6 @@ router.get('/:userName/acceptPatient/:aptId', (req, res) => {
     Users.findById({_id:result.docId._id}).exec().then(doctor=>{
       Users.findById({_id:result.patientId._id}).exec().then(patient=>{
         result.status = 'accepted';
-        console.log(doctor)
-        console.log(patient)
         result.save().then((r)=>{
           var video_id = cryptoRandomString({length: 5});
           const notification_patient = new Notification({
@@ -409,7 +431,7 @@ router.get('/:userName/editDoctorProfile', (req, res) => {
   const userName=req.params.userName;
   Users.findOne({userName:userName}).then(user=>{
     Users.findOne({userName:userName}).populate('request.userId').exec().then((friendRequest)=>{
-      Notification.find({userId:user._id}).sort({time:-1}).limit(4).then(notification=>{
+      Notification.find({userId:user._id}).sort({time:-1}).then(notification=>{
         const dob=dateFormat(user.dob, "isoDate");
         res.render('doctor/editDoctorProfile',{
           layout:'mainDoc',
@@ -422,7 +444,9 @@ router.get('/:userName/editDoctorProfile', (req, res) => {
           navClass:navClass,
           title:'Edit Profile',
           notification:notification,
-          timeDiff:timeDiff
+          timeDiff:timeDiff,
+          isUnread:isUnread,
+          unreadCount:unreadCount
         });
       })
     });
@@ -452,7 +476,7 @@ router.get('/:userName/changePassword', (req, res) =>{
   const userName=req.params.userName;
   Users.findOne({userName:userName}).then(user=>{
     Users.findOne({userName:userName}).populate('request.userId').exec().then((friendRequest)=>{
-      Notification.find({userId:user._id}).sort({time:-1}).limit(4).then(notification=>{
+      Notification.find({userId:user._id}).sort({time:-1}).then(notification=>{
         res.render('doctor/changePassword',{
           layout:'mainDoc',
           userName:userName,
@@ -463,7 +487,9 @@ router.get('/:userName/changePassword', (req, res) =>{
           navClass:navClass,
           title:'Change Password',
           notification:notification,
-          timeDiff:timeDiff
+          timeDiff:timeDiff,
+          isUnread:isUnread,
+          unreadCount:unreadCount
         });
       });
     });
@@ -499,7 +525,7 @@ router.get('/:userName/editSchedule', (req, res) => {
   Users.findOne({userName:userName}).then(user =>{
     Users.findOne({userName:userName}).populate('request.userId').exec().then((friendRequest)=>{
       Schedule.findOne({doctorId:user._id}).then((schedule ) =>{
-        Notification.find({userId:user._id}).sort({time:-1}).limit(4).then(notification=>{
+        Notification.find({userId:user._id}).sort({time:-1}).then(notification=>{
           res.render('doctor/editSchedule',{
             layout:'mainDoc',
             userName:userName,
@@ -510,7 +536,9 @@ router.get('/:userName/editSchedule', (req, res) => {
             navClass:navClass,
             title:'Edit Schedule',
             notification:notification,
-            timeDiff:timeDiff
+            timeDiff:timeDiff,
+            isUnread:isUnread,
+            unreadCount:unreadCount
           });
         });
       })
@@ -646,7 +674,7 @@ router.get('/:userName/showSlot/:dayNo',(req,res) =>{
   Users.findOne({userName:userName}).then((user) =>{
     Users.findOne({userName:userName}).populate('request.userId').exec().then((friendRequest)=>{
       Schedule.findOne({doctorId:user._id}).then((schedule) =>{
-        Notification.find({userId:user._id}).sort({time:-1}).limit(4).then(notification=>{
+        Notification.find({userId:user._id}).sort({time:-1}).then(notification=>{
           tempTime=schedule.start[dayNo];
           const len=schedule.slot[dayNo].length;
           for(let i=0;i<len;i++){
@@ -669,7 +697,9 @@ router.get('/:userName/showSlot/:dayNo',(req,res) =>{
             navClass:navClass,
             title:'Schedule Slot',
             notification:notification,
-            timeDiff:timeDiff
+            timeDiff:timeDiff,
+            isUnread:isUnread,
+            unreadCount:unreadCount
           });
         });
       });
@@ -722,7 +752,7 @@ router.get('/:userName/patient', (req, res) => {
   Users.findOne({userName:userName}).then((user) => {
     Users.findOne({userName:userName}).populate('request.userId').exec().then((friendRequest)=>{
       Appointment.find({$and:[{docId:user._id},{status:'done'}]}).populate('docId').populate('patientId').exec().then(result => {
-        Notification.find({userId:user._id}).sort({time:-1}).limit(4).then(notification=>{
+        Notification.find({userId:user._id}).sort({time:-1}).then(notification=>{
           res.render('doctor/patientTable',{
             helpers : {
               formatDate:formatDate,
@@ -738,7 +768,9 @@ router.get('/:userName/patient', (req, res) => {
             title:'Patients',
             friends: user.friendList,
             notification:notification,
-            timeDiff:timeDiff
+            timeDiff:timeDiff,
+            isUnread:isUnread,
+            unreadCount:unreadCount
           });
         });
       });
@@ -1016,7 +1048,7 @@ router.get('/:userName/medicalPrescription/:patId/:aptId',(req, res) => {
     Users.findOne({userName:userName}).populate('request.userId').exec().then((friendRequest)=>{
       Appointment.findOne({_id:req.params.aptId}).populate('docId').populate('patientId').exec().then(result => {
         Report.findOne({aptId:req.params.aptId}).then(report=>{
-          Notification.find({userId:user._id}).sort({time:-1}).limit(4).then(notification=>{
+          Notification.find({userId:user._id}).sort({time:-1}).then(notification=>{
             res.render('doctor/prescription',{
               helpers : {
                 formatDate:formatDate
@@ -1031,8 +1063,9 @@ router.get('/:userName/medicalPrescription/:patId/:aptId',(req, res) => {
               navClass:navClass,
               title:'Medical Prescription',
               notification:notification,
-              timeDiff:timeDiff
-
+              timeDiff:timeDiff,
+              isUnread:isUnread,
+              unreadCount:unreadCount
             });
           });
         });
@@ -1049,7 +1082,7 @@ router.get('/:userName/editPrescription/:patId/:aptId',(req, res)=>{
     Users.findOne({userName:req.params.userName}).populate('request.userId').exec().then((friendRequest)=>{
       Appointment.findOne({_id:req.params.aptId}).populate('docId').populate('patientId').exec().then(result => {
         Report.findOne({aptId:req.params.aptId}).then(report=>{
-          Notification.find({userId:user._id}).sort({time:-1}).limit(4).then(notification=>{
+          Notification.find({userId:user._id}).sort({time:-1}).then(notification=>{
             res.render('doctor/editPrescription',{
               helpers : {
                 formatDate:formatDate
@@ -1064,7 +1097,9 @@ router.get('/:userName/editPrescription/:patId/:aptId',(req, res)=>{
               report:report,
               apt:result,
               notification:notification,
-              timeDiff:timeDiff
+              timeDiff:timeDiff,
+              isUnread:isUnread,
+              unreadCount:unreadCount
             });
           });
         })

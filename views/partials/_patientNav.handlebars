@@ -61,16 +61,16 @@
                   </div>
                 </li>
 
-                <li class="nav-item dropdown">
+                <li class="nav-item dropdown" id='notification-div'>
                   <a href="" class="nav-link text-primary"  id="notification-dropdown"  role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="fas fa-bell text-info fa-lg mr-1"></i></a>
-                    {{#gt notification.length 0}}
-                    <span class="notification-number">{{notification.length}}
+                    {{#isUnread notification}}
+                    <span class="notification-number">{{@root.unreadCount notification}}
                     </span>
                     {{else}}
                     <span class="notification-number" style="display:none">
                     </span>
-                    {{/gt}}
+                    {{/isUnread}}
 
                     <div class="dropdown-menu dropdown-menu-right notification" aria-labelledby="notification-dropdown">
                       <div class="row">

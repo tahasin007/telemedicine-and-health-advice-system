@@ -9,6 +9,9 @@
         <div class="pt-md-5 mt-md-3 mb-5 col-xl-12">
           {{#if apts}}
           <h3 class="text-dark text-center mb-3 general-Title5">Medical History</h3>
+          <div class="fixed-top fixed-top-alert" id="doc-table-alert">
+
+          </div>
           <div class="container align-items-center">
 
             <div class="table responsive">
@@ -31,13 +34,13 @@
                     <td>
                       {{#eq reportSent 'Yes'}}
                       <a href="/prescriptions/{{pdf}}">
-                          <button type="button" class="btn btn-green btn-sm">
+                          <button type="button" class="btn btn-success btn-sm">
                             <i class="fa fa-download text-dark"></i>
                           </button>
                       </a>
                       {{else}}
-                          <button type="button" class="btn btn-green btn-sm" disabled>
-                            <i class="fas fa-file-times"></i>
+                          <button type="button" class="btn btn-danger btn-sm cant-download-file">
+                            <i class="fas fa-ban"></i>
                           </button>
                       {{/eq}}
                     </td>
@@ -64,3 +67,12 @@
   </div>
 </section>
 <!-- end of table -->
+
+<script type="text/javascript">
+$('.cant-download-file').on('click',function(){
+  $( "#doc-table-alert" ).append('<div class="alert alert-info text-center" role="alert">The Prescription is not Prepared</div>');
+  window.setTimeout(function() {
+    $(".fixed-top-alert").empty();
+  }, 3000);
+});
+</script>

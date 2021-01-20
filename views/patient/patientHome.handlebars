@@ -388,27 +388,27 @@ $(document).ready(function() {
     $( "#btn-2days-ago" ).removeClass( "btn-info" ).addClass( "btn-light" );
     $( "#btn-yesterday" ).removeClass( "btn-light" ).addClass( "btn-info" );
     $( "#btn-today" ).removeClass( "btn-info" ).addClass( "btn-light" );
-    $('.info-table-today').hide(800);
-    $('.info-table-twoDaysAgo').hide(800);
-    $('.info-table-yesterday').show(800);
+    $('.info-table-today').hide(10);
+    $('.info-table-twoDaysAgo').hide(10);
+    $('.info-table-yesterday').show(10);
   });
 
   $("#btn-today").click(function(){
     $( "#btn-2days-ago" ).removeClass( "btn-info" ).addClass( "btn-light" );
     $( "#btn-yesterday" ).removeClass( "btn-info" ).addClass( "btn-light" );
     $( "#btn-today" ).removeClass( "btn-light" ).addClass( "btn-info" );
-    $('.info-table-today').show(800);
-    $('.info-table-twoDaysAgo').hide(800);
-    $('.info-table-yesterday').hide(800);
+    $('.info-table-today').show(10);
+    $('.info-table-twoDaysAgo').hide(10);
+    $('.info-table-yesterday').hide(10);
   });
 
   $("#btn-2days-ago").click(function(){
     $( "#btn-2days-ago" ).removeClass( "btn-light" ).addClass( "btn-info" );
     $( "#btn-yesterday" ).removeClass( "btn-info" ).addClass( "btn-light" );
     $( "#btn-today" ).removeClass( "btn-info" ).addClass( "btn-light" );
-    $('.info-table-today').hide(800);
-    $('.info-table-twoDaysAgo').show(800);
-    $('.info-table-yesterday').hide(800);
+    $('.info-table-today').hide(10);
+    $('.info-table-twoDaysAgo').show(10);
+    $('.info-table-yesterday').hide(10);
   });
 
 } );

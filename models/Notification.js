@@ -22,6 +22,10 @@ var notificationSchema = mongoose.Schema({
   },
   videoId:{
     type: String
+  },
+  unread:{
+    type: String,
+    default: 'yes'
   }
 });
 

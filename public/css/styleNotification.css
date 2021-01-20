@@ -4,6 +4,9 @@
 
 .notification{
   min-width:420px;
+  max-height:450px;
+  overflow-y:auto;
+  overflow-x:hidden;
 }
 
 .notification-heading{
@@ -13,13 +16,13 @@
 
 .notification-wrapperFriend{
   overflow:auto;
-  max-height:250px;
+
 }
 
 .notification-wrapper{
-  /* overflow:auto; */
-  /* min-height:250px; */
-  /* width:100%; */
+  /* overflow:auto;
+  min-height:250px;
+   width:100%; */
 }
 
 .notification-details{

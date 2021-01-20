@@ -27,20 +27,20 @@ $(document).ready(function() {
         if(room[0]== $('#name-user').val()){
           if(typeof data == '')
           {
-            $('#chat').append('<div class="msg right-msg m-2"><div class="msg-img" style="background-image: url(/uploads/default.jpg)"></div><div class="msg-bubble"><div class="msg-info"> <div class="msg-info-name">'+sender+'</div></div><div class="msg-text">'+message+'</div></div></div>');
+            $('#chat').append('<div class="msg right-msg m-2"><div class="msg-img" style="background-image: url(/uploads/default.jpg)"></div><div class="msg-bubble"><div class="msg-info"> <div class="msg-info-name">'+sender+'</div><div class="msg-info-time ml-4">'+data.time+'</div></div><div class="msg-text">'+message+'</div></div></div>');
           }
           else{
-            $('#chat').append('<div class="msg right-msg m-2"><div class="msg-img" style="background-image: url(/uploads/'+data+')"></div><div class="msg-bubble"><div class="msg-info"> <div class="msg-info-name">'+sender+'</div></div><div class="msg-text">'+message+'</div></div></div>');
+            $('#chat').append('<div class="msg right-msg m-2"><div class="msg-img" style="background-image: url(/uploads/'+data.image+')"></div><div class="msg-bubble"><div class="msg-info"> <div class="msg-info-name">'+sender+'</div><div class="msg-info-time ml-4">'+data.time+'</div></div><div class="msg-text">'+message+'</div></div></div>');
           }
 
         }
         else{
           if(typeof data == '')
           {
-            $('#chat').append('<div class="msg left-msg m-2"><div class="msg-img" style="background-image: url(/uploads/default.jpg)"></div><div class="msg-bubble"><div class="msg-info"><div class="msg-info-name">'+sender+'</div></div><div class="msg-text">'+message+'</div></div></div>');
+            $('#chat').append('<div class="msg left-msg m-2"><div class="msg-img" style="background-image: url(/uploads/default.jpg)"></div><div class="msg-bubble"><div class="msg-info"><div class="msg-info-name">'+sender+'</div><div class="msg-info-time ml-4">'+data.time+'</div></div><div class="msg-text">'+message+'</div></div></div>');
           }
           else{
-            $('#chat').append('<div class="msg left-msg m-2"><div class="msg-img" style="background-image: url(/uploads/'+data+')"></div><div class="msg-bubble"><div class="msg-info"><div class="msg-info-name">'+sender+'</div></div><div class="msg-text">'+message+'</div></div></div>');
+            $('#chat').append('<div class="msg left-msg m-2"><div class="msg-img" style="background-image: url(/uploads/'+data.image+')"></div><div class="msg-bubble"><div class="msg-info"><div class="msg-info-name">'+sender+'</div><div class="msg-info-time ml-4">'+data.time+'</div></div><div class="msg-text">'+message+'</div></div></div>');
           }
         }
       },

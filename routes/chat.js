@@ -1,15 +1,36 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
+const moment = require('moment');
+
 
 require('../models/Users');
 const Users = mongoose.model('users');
 require('../models/Message');
 const Message = mongoose.model('message');
+require('../models/Notification');
+const Notification = mongoose.model('notification');
+
+router.post('/updateNav', (req, res) => {
+  Users.findOne({userName:req.body.userName}).exec().then(user => {
+    Notification.find({userId:user._id}).then(notifications => {
+      notifications.forEach(notification =>{
+        notification.unread = 'no';
+        notification.save();
+      });
+    });
+  });
+  res.send('success');
+});
 
 router.post('/getImage', (req, res, next)=>{
   Users.findOne({userName:req.body.userName}).then((user)=>{
-    res.send(user.profileImage);
+    var current_time =  moment().format('LLL');
+    var data={
+      image:user.profileImage,
+      time:current_time
+    };
+    res.send(data);
   })
 });
 
