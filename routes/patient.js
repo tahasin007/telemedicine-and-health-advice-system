@@ -51,7 +51,7 @@ api.settings({
 
 
 //Patient Home Route
-router.get('/:userName',(req, res) => {
+router.get('/:userName', ensureAuthenticated, (req, res) => {
   const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
   Users.findOne({userName:userName}).then((users) =>{
@@ -88,7 +88,7 @@ router.get('/:userName',(req, res) => {
   });
 });
 
-router.get('/:userName/notification', (req, res) => {
+router.get('/:userName/notification', ensureAuthenticated, (req, res) => {
   const navClass = ["current","sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
   Users.findOne({userName:userName}).then((user)=>{
@@ -115,7 +115,7 @@ router.get('/:userName/notification', (req, res) => {
   });
 });
 
-router.get('/:userName/symptompChecker',(req, res) => {
+router.get('/:userName/symptompChecker', ensureAuthenticated, (req, res) => {
   const navClass = ["sidebar-link","current","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
   Users.findOne({userName:userName}).then((user)=>{
@@ -139,7 +139,7 @@ router.get('/:userName/symptompChecker',(req, res) => {
   });
 });
 
-router.post('/:userName/symptompChecker', (req, res) => {
+router.post('/:userName/symptompChecker', ensureAuthenticated, (req, res) => {
   let obj = JSON.parse(JSON.stringify(req.body))
   const arr=req.body.arr;
   const userName=req.params.userName;
@@ -187,7 +187,7 @@ router.post('/:userName/symptompChecker', (req, res) => {
 });
 
 
-router.get('/:userName/chat',(req, res)=>{
+router.get('/:userName/chat', ensureAuthenticated, (req, res)=>{
   const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","current","sidebar-link"];
   const userName=req.params.userName;
   const search=req.query.search;
@@ -219,7 +219,7 @@ router.get('/:userName/chat',(req, res)=>{
   });
 });
 
-router.get('/:userName/chat/:receiver',(req, res)=>{
+router.get('/:userName/chat/:receiver', ensureAuthenticated, (req, res)=>{
   const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
   Users.findOne({userName:userName}).then((user)=>{
@@ -253,7 +253,7 @@ router.get('/:userName/chat/:receiver',(req, res)=>{
   });
 });
 
-router.get('/:userName/videoChat',(req, res)=>{
+router.get('/:userName/videoChat', ensureAuthenticated, (req, res)=>{
   const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link","current"];
   const userName=req.params.userName;
   Users.findOne({userName:userName}).then((user) => {
@@ -279,7 +279,7 @@ router.get('/:userName/videoChat',(req, res)=>{
 
 
 //show all doctors
-router.get('/:userName/doctors', (req, res) => {
+router.get('/:userName/doctors', ensureAuthenticated, (req, res) => {
   const navClass = ["sidebar-link","sidebar-link","current","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
   const search=req.query.search;
@@ -332,7 +332,7 @@ router.get('/:userName/doctors', (req, res) => {
   }
 });
 
-router.get('/:userName/autocomplete', (req,res,next) => {
+router.get('/:userName/autocomplete', ensureAuthenticated, (req,res,next) => {
   var regex= new RegExp(req.query["term"],'i');
   Users.find({$and:[{name:regex},{role:'doctor'}]}).then((users) => {
 
@@ -349,7 +349,7 @@ router.get('/:userName/autocomplete', (req,res,next) => {
 });
 
 //Routing for Show medical history of patient
-router.get('/:userName/report',(req, res) =>{
+router.get('/:userName/report', ensureAuthenticated, (req, res) =>{
   const navClass = ["sidebar-link","sidebar-link","sidebar-link","current","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
   Users.findOne({userName:userName}).then((user) => {
@@ -381,7 +381,7 @@ router.get('/:userName/report',(req, res) =>{
   });
 });
 
-router.get('/:userName/diagnosisRes', (req, res) =>{
+router.get('/:userName/diagnosisRes', ensureAuthenticated, (req, res) =>{
   const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
   Users.findOne({userName:userName }).then((user) => {
@@ -410,7 +410,7 @@ router.get('/:userName/diagnosisRes', (req, res) =>{
   });
 });
 
-router.get('/:userName/disease/:diseaseName',(req, res)=>{
+router.get('/:userName/disease/:diseaseName', ensureAuthenticated, (req, res)=>{
   const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   const diseaseName=req.params.diseaseName.replace('%20',' ');
   Users.findOne({userName:req.params.userName}).then((user)=>{
@@ -438,7 +438,7 @@ router.get('/:userName/disease/:diseaseName',(req, res)=>{
 });
 
 
-router.get('/:userName/patientProfile',(req, res) => {
+router.get('/:userName/patientProfile', ensureAuthenticated, (req, res) => {
   const userName=req.params.userName;
   const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   Users.findOne({userName:userName}).then((users) =>{
@@ -467,7 +467,7 @@ router.get('/:userName/patientProfile',(req, res) => {
 
 
 
-router.get('/:userName/viewDocProfile/:id', (req, res) => {
+router.get('/:userName/viewDocProfile/:id', ensureAuthenticated, (req, res) => {
   const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
   const id=req.params.id;
@@ -499,7 +499,7 @@ router.get('/:userName/viewDocProfile/:id', (req, res) => {
 });
 
 
-router.get('/:userName/editPatientProfile',(req, res) => {
+router.get('/:userName/editPatientProfile', ensureAuthenticated, (req, res) => {
   const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
   Users.findOne({userName:userName}).then((user) => {
@@ -525,7 +525,7 @@ router.get('/:userName/editPatientProfile',(req, res) => {
   });
 });
 
-router.put('/:userName/editPatientProfile' ,(req, res) =>{
+router.put('/:userName/editPatientProfile', ensureAuthenticated, (req, res) =>{
   const userName=req.params.userName;
 
   Users.findOne({userName:userName}).then((user) =>{
@@ -541,7 +541,7 @@ router.put('/:userName/editPatientProfile' ,(req, res) =>{
 
 
 
-router.get('/:userName/changePassword', (req, res) =>{
+router.get('/:userName/changePassword', ensureAuthenticated, (req, res) =>{
   const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
   Users.findOne({userName:userName}).then(user=>{
@@ -566,7 +566,7 @@ router.get('/:userName/changePassword', (req, res) =>{
 });
 
 
-router.put('/:userName/changePassword', (req, res) =>{
+router.put('/:userName/changePassword', ensureAuthenticated, (req, res) =>{
   const userName=req.params.userName;
   Users.findOne({userName:userName}).then(user =>{
     bcrypt.compare(req.body.currentPassword, user.password, function(err, result) {
@@ -589,7 +589,7 @@ router.put('/:userName/changePassword', (req, res) =>{
 
 
 //routing for appointments by slot
-router.get('/:userName/makeAppointment/:doc/:dayNo', (req, res) =>{
+router.get('/:userName/makeAppointment/:doc/:dayNo', ensureAuthenticated, (req, res) =>{
   const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   const userName=req.params.userName;
   const timeObj = [];
@@ -633,7 +633,7 @@ router.get('/:userName/makeAppointment/:doc/:dayNo', (req, res) =>{
 });
 
 //routing for appointments booking by slot
-router.get('/:userName/makeAppointment/:doc/:dayNo/:slot',(req, res) => {
+router.get('/:userName/makeAppointment/:doc/:dayNo/:slot', ensureAuthenticated, (req, res) => {
   const patient=req.params.userName;
   const docID = req.params.doc;
   const dayNo=req.params.dayNo;
@@ -678,7 +678,7 @@ router.get('/:userName/makeAppointment/:doc/:dayNo/:slot',(req, res) => {
   });
 });
 
-router.get('/:userName/appointment/:date',(req, res)=>{
+router.get('/:userName/appointment/:date', ensureAuthenticated, (req, res)=>{
   const appointmentDate = req.params.date.replace('%20',' ');
   const navClass = ["sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   const userName = req.params.userName;
@@ -708,7 +708,7 @@ router.get('/:userName/appointment/:date',(req, res)=>{
 });
 
 
-router.post('/:userName/appointment/:id',(req, res)=>{
+router.post('/:userName/appointment/:id', ensureAuthenticated, (req, res)=>{
   const symptom=req.body.symptom;
   const medication=req.body.medication;
   Appointment.findOne({_id:req.params.id}).then((appointment)=>{
