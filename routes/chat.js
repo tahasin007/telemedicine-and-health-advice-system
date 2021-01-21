@@ -25,7 +25,7 @@ router.post('/updateNav', (req, res) => {
 
 router.post('/getImage', (req, res, next)=>{
   Users.findOne({userName:req.body.userName}).then((user)=>{
-    var current_time =  moment().format('LLL');
+    var current_time =  moment().add(6, 'hours').format('LLL');
     var data={
       image:user.profileImage,
       time:current_time
