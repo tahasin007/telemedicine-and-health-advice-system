@@ -55,26 +55,29 @@ router.get('/:userName', (req, res) => {
   const navClass = ["current","sidebar-link","sidebar-link","sidebar-link","sidebar-link","sidebar-link"];
   Users.findOne({userName:userName}).then((user) => {
     Appointment.find({$and:[{docId:user._id},{status:'pending'}]}).populate('docId').populate('patientId').exec().then(result => {
-      Users.findOne({userName:userName}).populate('request.userId').exec().then((friendRequest)=>{
-        Appointment.find({$and:[{docId:user._id},{status:'accepted'}]}).populate('docId').populate('patientId').exec().then(result1 => {
-          Notification.find({userId:user._id}).sort({time:-1}).then(notification=>{
-            res.render('doctor/doctorHome',{
-              helpers : {
-                formatDate:formatDate
-              },
-              layout:'mainDoc',
-              userName:userName,
-              friendRequest:friendRequest,
-              image:user.profileImage,
-              id:user._id,
-              apts:result,
-              navClass:navClass,
-              title:'Home',
-              aptCal:result1,
-              notification:notification,
-              timeDiff:timeDiff,
-              isUnread:isUnread,
-              unreadCount:unreadCount
+      Appointment.find({$and:[{docId:user._id},{$or:[{status:'done'},{status:'accepted'}]}]}).populate('docId').populate('patientId').exec().then(allApts => {
+        Users.findOne({userName:userName}).populate('request.userId').exec().then((friendRequest)=>{
+          Appointment.find({$and:[{docId:user._id},{status:'accepted'}]}).populate('docId').populate('patientId').exec().then(result1 => {
+            Notification.find({userId:user._id}).sort({time:-1}).then(notification=>{
+              res.render('doctor/doctorHome',{
+                helpers : {
+                  formatDate:formatDate
+                },
+                layout:'mainDoc',
+                userName:userName,
+                friendRequest:friendRequest,
+                image:user.profileImage,
+                id:user._id,
+                apts:result,
+                navClass:navClass,
+                title:'Home',
+                aptCal:result1,
+                notification:notification,
+                timeDiff:timeDiff,
+                isUnread:isUnread,
+                unreadCount:unreadCount,
+                allApts:allApts
+              });
             });
           });
         });

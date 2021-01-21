@@ -196,6 +196,9 @@ router.get('/:userName/chat',(req, res)=>{
       Users.find({role:'doctor'}).then((users) => {
         Notification.find({userId:user._id}).sort({time:-1}).then(notification=>{
           res.render('patient/chat',{
+            helpers : {
+              formatDate:formatDate,
+            },
             layout:'mainPatient',
             userName:userName,
             id:user._id,
@@ -225,6 +228,9 @@ router.get('/:userName/chat/:receiver',(req, res)=>{
         Users.find({role:'doctor'}).then((users) => {
           Notification.find({userId:user._id}).sort({time:-1}).then(notification=>{
             res.render('patient/chatUI',{
+              helpers : {
+                formatDate:formatDate,
+              },
               layout:'mainPatient',
               userName:userName,
               id:user._id,

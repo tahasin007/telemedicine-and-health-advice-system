@@ -98,7 +98,7 @@
     <script>
     var startTime, endTime, eventTitle;
     var timeObj = new Array();
-    "{{#each aptCal}}"
+    "{{#each allApts}}"
     startTime = "{{formatDate appointmentDate ''}}".split("+");
     startTime = startTime[0];
     endTime = "{{formatDate appointmentEnd ''}}".split("+");
