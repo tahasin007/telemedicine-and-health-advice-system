@@ -1,23 +1,35 @@
 Online Appointment System using Nodejs
 
 Features
->Symptom Checker
->Seek appointment to a particular doctors
->Video call with doctor
->Install messaging between patient and doctor
->Live corona update
->E-prescription from doctors
+
+1.Symptom Checker
+
+2.Seek appointment to a particular doctors
+
+3.Video call with doctor
+
+4.Install messaging between patient and doctor
+
+5.Live corona update
+
+6.E-prescription from doctors
 
 Instruction
->Download Project
->Install Nodejs and MongoDB
->Run 'npm install' 
->Enter 'localhost:5050' in browser
+
+->Download Project
+->Install Nodejs and MongoDB
+->Run 'npm install' 
+->Enter 'localhost:5050' in browser
 
 Enter Patient Profile
+
 username : dipu
+
 password : 1234
 
+
 Enter Doctor Profile
+
 username : rifat
+
 password : 1234
