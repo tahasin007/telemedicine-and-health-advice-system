@@ -19,7 +19,7 @@ Instruction
 ->Download Project
 ->Install Nodejs and MongoDB
 ->Run 'npm install' 
-->Enter 'localhost:5050' in browser
+->Enter 'localhost:5000' in browser
 
 Enter Patient Profile
 
