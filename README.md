@@ -34,4 +34,4 @@ username : rifat
 
 password : 1234
 
-Live Porject Link: https://angthas.herokuapp.com/
+Live Project Link: https://angthas.herokuapp.com/
