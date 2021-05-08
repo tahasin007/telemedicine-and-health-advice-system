@@ -4,7 +4,7 @@ Features
 
 1.Symptom Checker
 
-2.Seek appointment to a particular doctor
+2.Request appointment with a particular doctor
 
 3.Video call with doctor
 
