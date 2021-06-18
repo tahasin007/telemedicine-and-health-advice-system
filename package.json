@@ -30,7 +30,7 @@
     "express-session": "^1.17.1",
     "express-validator": "^6.9.0",
     "formidable": "^1.2.2",
-    "handlebars": "^4.7.6",
+    "handlebars": "^4.7.7",
     "handlebars-dateformat": "^1.1.1",
     "handlebars-helpers": "^0.10.0",
     "highlight.js": "^10.5.0",
