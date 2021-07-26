@@ -30,7 +30,7 @@
     "express-session": "^1.17.1",
     "express-validator": "^6.9.0",
     "formidable": "^1.2.2",
-    "handlebars": "^4.7.6",
+    "handlebars": "^4.7.7",
     "handlebars-dateformat": "^1.1.1",
     "handlebars-helpers": "^0.10.0",
     "highlight.js": "^10.5.0",
@@ -54,7 +54,7 @@
     "pdfmake": "^0.1.69",
     "popper.js": "^1.16.1",
     "randomstring": "^1.1.5",
-    "socket.io": "^2.3.0"
+    "socket.io": "^2.4.0"
   },
   "devDependencies": {}
 }
