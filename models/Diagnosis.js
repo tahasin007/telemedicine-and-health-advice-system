@@ -1,24 +1,23 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
 
 // Create Schema
 const DiagnosisSchema = new Schema({
-  diseaseId:{
+  diseaseId: {
     type: Schema.Types.ObjectId,
-    ref:'disease'
+    ref: 'disease',
   },
-  patientId:{
+  patientId: {
     type: Schema.Types.ObjectId,
-    ref:'users'
+    ref: 'users',
   },
-  probability:{
-    type : Number
+  probability: {
+    type: Number,
   },
   diagnosisDate: {
     type: Date,
-    default: Date.now
-  }
-});
+    default: Date.now,
+  },
+})
 
-
-mongoose.model('diagnosis', DiagnosisSchema);
+mongoose.model('diagnosis', DiagnosisSchema)

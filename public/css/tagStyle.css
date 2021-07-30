@@ -1,23 +1,21 @@
-.tagInput{
+.tagInput {
   height: 100%;
   display: -webkit-box;
   display: flex;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
-          flex-flow: column nowrap;
+  flex-flow: column nowrap;
   -webkit-box-align: center;
-          align-items: center;
+  align-items: center;
   -webkit-box-pack: center;
-          justify-content: center;
+  justify-content: center;
   font: 16px Arial;
 }
-
-
 
 .tagInput tags {
   min-width: 150px;
   max-width: 600px;
-  min-height:150px;
+  min-height: 150px;
   margin: 0;
 }
 
@@ -26,17 +24,18 @@
   top: 10px;
   right: 10px;
   cursor: pointer;
-  font: 600 .8em Arial;
+  font: 600 0.8em Arial;
   white-space: nowrap;
 }
 
 .tagInput .disabled tags {
   display: none;
 }
-.tagInput .disabled tags + input, .disabled tags + textarea {
+.tagInput .disabled tags + input,
+.disabled tags + textarea {
   display: inline-block !important;
   width: 350px;
-  padding: .5em;
+  padding: 0.5em;
   border: 1px inset;
 }
 
@@ -48,7 +47,7 @@
 }
 
 .tagInput a:hover {
-  opacity: .8;
+  opacity: 0.8;
 }
 
 .tagInput a > img {

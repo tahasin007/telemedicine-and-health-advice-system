@@ -1,53 +1,51 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
 
 // Create Schema
 const AppointmentSchema = new Schema({
-  scheduleId:{
+  scheduleId: {
     type: Schema.Types.ObjectId,
-    ref:'schedule'
+    ref: 'schedule',
   },
-  docId:{
+  docId: {
     type: Schema.Types.ObjectId,
-    ref:'users'
+    ref: 'users',
   },
-  patientId:{
+  patientId: {
     type: Schema.Types.ObjectId,
-    ref:'users'
+    ref: 'users',
   },
-  appointmentType:{
-    type: String
+  appointmentType: {
+    type: String,
   },
-  appointmentDate:{
-    type: Date
+  appointmentDate: {
+    type: Date,
   },
-  appointmentEnd:{
-    type: Date
+  appointmentEnd: {
+    type: Date,
   },
-  slotNo:{
-    type: Number
+  slotNo: {
+    type: Number,
   },
-  dayNo:{
-    type: Number
+  dayNo: {
+    type: Number,
   },
-  status:{
-    type: String
+  status: {
+    type: String,
   },
-  symptoms:{
-    type:String
+  symptoms: {
+    type: String,
   },
-  medication:{
-    type:String
+  medication: {
+    type: String,
   },
-  reportSent:{
-    type:String,
-    default:'No'
+  reportSent: {
+    type: String,
+    default: 'No',
   },
-  pdf:{
-    type:String
-  }
+  pdf: {
+    type: String,
+  },
+})
 
-});
-
-
-mongoose.model('appointment', AppointmentSchema);
+mongoose.model('appointment', AppointmentSchema)

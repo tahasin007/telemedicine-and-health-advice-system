@@ -1,24 +1,21 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
 
 // Create Schema
 const DiseaseSchema = new Schema({
-  name:{
+  name: {
     type: String,
   },
-  symptom:[
-    {type: String}
-  ],
+  symptom: [{ type: String }],
   // probability:{
   // 	type:Number
   // },
-  treatment:{
-  	type:String
+  treatment: {
+    type: String,
   },
-  docType:{
-    type:String
-  }
-});
+  docType: {
+    type: String,
+  },
+})
 
-
-mongoose.model('disease', DiseaseSchema);
+mongoose.model('disease', DiseaseSchema)

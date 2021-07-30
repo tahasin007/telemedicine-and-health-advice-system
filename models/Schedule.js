@@ -1,28 +1,19 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
 
 // Create Schema
 const ScheduleSchema = new Schema({
-  doctorId:{
+  doctorId: {
     type: Schema.Types.ObjectId,
-    ref:'users'
+    ref: 'users',
   },
 
-  start:[
-  {type: String}
-  ],
-  end:[
-  {type: String}
-  ],
+  start: [{ type: String }],
+  end: [{ type: String }],
 
-  slot:[
-  {type: Array}
-  ],
+  slot: [{ type: Array }],
 
-  day:[
-  {type: Number}
-  ],
-});
+  day: [{ type: Number }],
+})
 
-
-mongoose.model('schedule', ScheduleSchema);
+mongoose.model('schedule', ScheduleSchema)

@@ -1,25 +1,28 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
 
 // Create Schema
 const TempDiagnosisSchema = new Schema({
-  patientId:{
+  patientId: {
     type: Schema.Types.ObjectId,
-    ref:'users'
+    ref: 'users',
   },
-  matching:[{
-    diseaseName:{type:String},
-    matchPercent:{type:Number},
-    docType:{type:String}
-  }],
-  symptoms:[{
-      type:String,
-    }],
+  matching: [
+    {
+      diseaseName: { type: String },
+      matchPercent: { type: Number },
+      docType: { type: String },
+    },
+  ],
+  symptoms: [
+    {
+      type: String,
+    },
+  ],
   diagnosisDate: {
     type: Date,
-    default: Date.now
-  }
-});
+    default: Date.now,
+  },
+})
 
-
-mongoose.model('tempDiagnosis', TempDiagnosisSchema);
+mongoose.model('tempDiagnosis', TempDiagnosisSchema)
